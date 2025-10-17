@@ -9,7 +9,7 @@ El sistema está estructurado alrededor de varias entidades y sus interacciones,
 ```mermaid
 classDiagram
     class IPersona {
-        +GetCuit(d): Cuit/Cuit
+        +GetCuit(d): Cuit/Cuil
         +GetRazonSocial(d): RazonSocial
         +GetDomicilio(d): Domicilio
         -Baja()
@@ -42,12 +42,12 @@ classDiagram
 
     class Cliente {
         +ID
-        +Cuit/Cuit
+        +Cuit/Cuil
         +RazonSocial
         +Domicilio
         +List<Factura> Facturas
         --
-        +GetCuit(d): Cuit/Cuit
+        +GetCuit(d): Cuit/Cuil
         +GetRazonSocial(d): RazonSocial
         +GetDomicilio(d): Domicilio
         +Alta(id,cuit,razonsocial,domicilio)
@@ -75,6 +75,7 @@ classDiagram
         +GetNroFactura(d): Numero
         +GetFechaFactura(d): Fecha
         +EmitirFactura()
+        +Alta(id)
         +Consulta(id): Factura
     }
 
@@ -107,8 +108,6 @@ classDiagram
 
     class Menu {
         -LimpiarPantalla()
-        -MostrarErrores()
-        -MostrarConfirmacionesOExcepciones()
     }
 
     IPersona <|-- Cliente
