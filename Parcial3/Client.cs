@@ -12,9 +12,10 @@ namespace Parcial3
         public string CuitCuil { get; set; }
         public string LegalName { get; set; }
         public string Address { get; set; }
+        public List<Invoice> Invoices { get; set; }
         public Client() 
         {
-
+            Invoices = new List<Invoice>();
         }
         public Client (int id, string cuitCuil, string legalName, string address)
         {
@@ -22,6 +23,7 @@ namespace Parcial3
             CuitCuil = cuitCuil;
             LegalName = legalName;
             Address = address;
+            Invoices = new List<Invoice>();
         }
     }
 }
