@@ -65,7 +65,7 @@ namespace Parcial3
             throw new NotImplementedException();
         }
 
-        public void Down()
+        public void Delete()
         {
             throw new NotImplementedException();
         }
@@ -80,7 +80,7 @@ namespace Parcial3
             throw new NotImplementedException();
         }
 
-        public void Up()
+        public void Register()
         {
             throw new NotImplementedException();
         }
