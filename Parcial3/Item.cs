@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parcial3.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Parcial3
 {
-    public class Item
+    public class Item : IItem
     {
         public int Id { get; set; }
         public string Description { get; set; }
@@ -22,5 +23,34 @@ namespace Parcial3
             Invoice = invoice;
         }
 
+        public void GetDescription()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetCuantity()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetAmount()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetDescription(string description)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCuantity(string cuantity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetAmount(int amount)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

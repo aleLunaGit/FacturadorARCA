@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parcial3.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Parcial3
 {
-    public class Client
+    public class Client : IPerson
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -32,6 +33,61 @@ namespace Parcial3
             LegalName = legalName;
             Address = address;
             Invoices = new List<Invoice>();
+        }
+
+        public void GetCuilCuit()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCuilCuit(int cuilCuit)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetRazonSocial()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetRazonSocial(int razonSocial)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetDomicilio()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetDomicilio(int domicilio)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Down()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void List()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Up()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Read()
+        {
+            throw new NotImplementedException();
         }
     }
 }

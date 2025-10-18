@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parcial3.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Parcial3
 {
-    public class Invoice
+    public class Invoice : IFactura
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -30,6 +31,61 @@ namespace Parcial3
             AmountTotal = amountTotal;
             Client = client;
             Items = new List<Item>();
+        }
+
+        void IFactura.GetType()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetNumber()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetDate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetAmountTotal()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetType(string type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetNumber(int number)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetDate(DateTime date)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetAmountTotal(int amountTotal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowPreviewInvoice()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Up()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Read()
+        {
+            throw new NotImplementedException();
         }
     }
 }
