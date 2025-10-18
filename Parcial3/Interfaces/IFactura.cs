@@ -17,6 +17,5 @@ namespace Parcial3.Interfaces
         void SetDate(DateTime date);
         void SetAmountTotal(int amountTotal);
         void ShowPreviewInvoice();
-        void ReadInvoice(int id);
     }
 }
