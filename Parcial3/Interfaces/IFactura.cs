@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parcial3.Interfaces
 {
-    public interface IFactura
+    public interface IFactura : ICrudFactura
     {
         void GetType();
         void GetNumber();
