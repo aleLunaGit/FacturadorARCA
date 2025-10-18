@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Parcial3.Interfaces
 {
-    public interface IPersona : ICrud
+    public interface IPerson : ICrud
     {
         void GetCuilCuit();
         void SetCuilCuit(int cuilCuit);

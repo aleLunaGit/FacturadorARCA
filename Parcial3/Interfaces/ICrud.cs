@@ -8,12 +8,12 @@ namespace Parcial3.Interfaces
 {
     public interface ICrud:ICrudFactura
     {
-        void Down();
+        void Delete();
         void Update();
         void List();
     }
     public interface ICrudFactura {
-        void Up();
+        void Register();
         void Read();
 
     }
