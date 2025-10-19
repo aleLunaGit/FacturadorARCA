@@ -22,10 +22,16 @@ namespace Parcial3
         [Required]
         public string Address { get; set; }
         public List<Invoice> Invoices { get; set; }
-        public Client() 
+        
+        public Client()
+        {
+
+        }
+        
+       /* public Client() 
         {
             Invoices = new List<Invoice>();
-        }
+        } */
         public Client (int id, string cuitCuil, string legalName, string address)
         {
             Id = id;
