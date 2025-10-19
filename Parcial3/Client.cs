@@ -44,17 +44,17 @@ namespace Parcial3
 
        
 
-        public void Delete(int id)
+        public static void Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(int id)
+        public static void Update(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void List()
+        public static void List()
         {
             throw new NotImplementedException();
         }
@@ -68,12 +68,12 @@ namespace Parcial3
             string cuitCuil = Console.ReadLine();
             Console.WriteLine("Ingrese la direccion del cliente");
             string address = Console.ReadLine();
-            Client registrarCliente = new Client{ 
+            Client registerClient = new Client{ 
                 LegalName = legalName,
                 CuitCuil = cuitCuil,
                 Address = address
             };   
-            context.Clients.Add(registrarCliente);
+            context.Clients.Add(registerClient);
             context.SaveChanges();
         }
 
