@@ -22,6 +22,12 @@ namespace Parcial3
         public int AmountTotal { get; set; }
         public Client Client { get; set; }
         public List<Item> Items { get; set; }
+        
+
+
+
+        public Invoice() { }
+
         public Invoice(int id, string type, int number, DateTime date, int amountTotal, Client client, List<Item> items)
         {
             Id = id;
@@ -78,12 +84,13 @@ namespace Parcial3
             throw new NotImplementedException();
         }
 
-        public void Up()
+
+        public void Read()
         {
             throw new NotImplementedException();
         }
 
-        public void Read()
+        public void Register()
         {
             throw new NotImplementedException();
         }

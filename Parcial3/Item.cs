@@ -14,6 +14,14 @@ namespace Parcial3
         public int Quantity { get; set; }
         public int Price { get; set; }
         public Invoice Invoice { get; set; }
+        public object InvoiceId { get; internal set; }
+
+
+        public Item()
+        {
+
+        }
+
         public Item(int id, string description, int quantity, int price, Invoice invoice) 
         {
             Id = id;
