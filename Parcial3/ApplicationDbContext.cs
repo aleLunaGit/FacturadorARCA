@@ -42,7 +42,7 @@ namespace Parcial3
             modelBuilder.Entity<Client>()
                 .HasMany(c => c.Invoices)
                 .WithOne(f => f.Client)
-                .HasForeignKey(f => f.ClienteId);
+                .HasForeignKey(f => f.ClientId);
 
             // Relación: Una Factura tiene muchos Items
             modelBuilder.Entity<Invoice>()

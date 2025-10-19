@@ -22,7 +22,7 @@ namespace Parcial3
         public int AmountTotal { get; set; }
         public Client Client { get; set; }
         public List<Item> Items { get; set; }
-        
+        public int  ClientId { get; internal set; }
 
 
 
