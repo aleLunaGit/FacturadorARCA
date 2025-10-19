@@ -71,24 +71,12 @@ namespace Parcial3
 
         public int GetAmountTotal() => this.AmountTotal;
 
-        public void SetType(string type)
-        {
-            this.Type = type;
-        }
+        public void SetType(string type)=> this.Type = type;
 
-        public void SetNumber(int number)
-        {
-            this.Number = number;
-        }
+        public void SetNumber(int number)=> this.Number = number;
 
-        public void SetDate(DateTime date)
-        {
-            this.Date = date;
-        }
+        public void SetDate(DateTime date)=> this.Date = date;
 
-        public void SetAmountTotal(int amountTotal)
-        {
-            this.AmountTotal = amountTotal;
-        }
+        public void SetAmountTotal(int amountTotal)=> this.AmountTotal = amountTotal;
     }
 }

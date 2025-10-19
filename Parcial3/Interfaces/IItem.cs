@@ -8,11 +8,11 @@ namespace Parcial3.Interfaces
 {
     public interface IItem
     {
-        void GetDescription();
-        void GetCuantity();
-        void GetAmount();
+        string GetDescription();
+        int GetCuantity();
+        int GetPrice();
         void SetDescription(string description);
-        void SetCuantity(string cuantity);
-        void SetAmount(int amount);
+        void SetCuantity(int cuantity);
+        void SetPrice(int Price);
     }
 }

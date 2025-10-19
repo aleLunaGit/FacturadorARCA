@@ -94,23 +94,14 @@ namespace Parcial3
         }
         public string GetCuilCuit() => this.CuitCuil;
 
-        public void SetCuilCuit(string cuilCuit)
-        {
-            this.CuitCuil = cuilCuit;
-        }
+        public void SetCuilCuit(string cuilCuit)=> this.CuitCuil = cuilCuit;
 
         public string GetLegalName() => this.LegalName;
 
-        public void SetLegalName(string legalName)
-        {
-            this.LegalName = legalName;
-        }
+        public void SetLegalName(string legalName)=> this.LegalName = legalName;
 
         public string GetAddress() => this.Address;
 
-        public void SetAddress(string Address)
-        {
-            this.Address = Address;
-        }
+        public void SetAddress(string Address)=> this.Address = Address;
     }
 }
