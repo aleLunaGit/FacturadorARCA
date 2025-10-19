@@ -8,11 +8,11 @@ namespace Parcial3.Interfaces
 {
     public interface IPerson : ICrud
     {
-        void GetCuilCuit();
-        void SetCuilCuit(int cuilCuit);
-        void GetRazonSocial();
-        void SetRazonSocial(int razonSocial);
-        void GetDomicilio();
-        void SetDomicilio(int domicilio);
+        string GetCuilCuit();
+        void SetCuilCuit(string CuitCuil);
+        string GetLegalName();
+        void SetLegalName(string LegalName);
+        string GetAddress();
+        void SetAddress(string Address);
     }
 }

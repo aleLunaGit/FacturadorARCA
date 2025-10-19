@@ -1,4 +1,5 @@
 ﻿using Parcial3.Interfaces;
+using Parcial3.Server;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,7 +27,9 @@ namespace Parcial3
 
 
 
-        public Invoice() { }
+        public Invoice() { 
+            Items = new List<Item>();
+        }
 
         public Invoice(int id, string type, int number, DateTime date, int amountTotal, Client client, List<Item> items)
         {
@@ -39,45 +42,7 @@ namespace Parcial3
             Items = new List<Item>();
         }
 
-        void IFactura.GetType()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GetNumber()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GetDate()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GetAmountTotal()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetType(string type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetNumber(int number)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetDate(DateTime date)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetAmountTotal(int amountTotal)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public void ShowPreviewInvoice()
         {
@@ -85,14 +50,45 @@ namespace Parcial3
         }
 
 
-        public void Read()
+        public static void Read()
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            Console.WriteLine("Ingrese la ID");
+            int id = int.Parse(Console.ReadLine());
+            context.Invoices.Find(id);
+        }
+
+        public static void Register()
         {
             throw new NotImplementedException();
         }
 
-        public void Register()
+        public string GetType() => this.Type;
+
+        public int GetNumber() => this.Number;
+
+        public DateTime GetDate() => this.Date;
+
+        public int GetAmountTotal() => this.AmountTotal;
+
+        public void SetType(string type)
         {
-            throw new NotImplementedException();
+            this.Type = type;
+        }
+
+        public void SetNumber(int number)
+        {
+            this.Number = number;
+        }
+
+        public void SetDate(DateTime date)
+        {
+            this.Date = date;
+        }
+
+        public void SetAmountTotal(int amountTotal)
+        {
+            this.AmountTotal = amountTotal;
         }
     }
 }
