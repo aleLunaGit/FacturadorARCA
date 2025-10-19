@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  db-sqlserver:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: arca-sql-server
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "TuClaveSegura!123"
+      TZ: "America/Argentina/Buenos_Aires"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+
+volumes:
+  sqlserver-data:
