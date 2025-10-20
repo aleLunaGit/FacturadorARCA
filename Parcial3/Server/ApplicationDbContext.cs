@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Parcial3
+namespace Parcial3.Server
 {
     public class ApplicationDbContext : DbContext
     {

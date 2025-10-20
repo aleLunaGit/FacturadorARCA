@@ -8,10 +8,10 @@ namespace Parcial3.Interfaces
 {
     public interface IFactura : ICrudFactura
     {
-        void GetType();
-        void GetNumber();
-        void GetDate();
-        void GetAmountTotal();
+        string GetType();
+        int GetNumber();
+        DateTime GetDate();
+        int GetAmountTotal();
         void SetType(string type);
         void SetNumber(int number);
         void SetDate(DateTime date);

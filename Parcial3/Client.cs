@@ -1,4 +1,5 @@
 ﻿using Parcial3.Interfaces;
+using Parcial3.Server;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,21 +14,21 @@ namespace Parcial3
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int Id { get; private set; }
         [Required]
 
-        public string CuitCuil { get; set; }
+        public string CuitCuil { get; private set; }
         [Required]
-        public string LegalName { get; set; }
+        public string LegalName { get; private set; }
         [Required]
-        public string Address { get; set; }
-        public List<Invoice> Invoices { get; set; }
+        public string Address { get; private set; }
+        public List<Invoice> Invoices { get; private set; }
         
         public Client()
         {
-
+            Invoices = new List<Invoice>();
         }
-        
+        public static ApplicationDbContext context { get; set; }
        /* public Client() 
         {
             Invoices = new List<Invoice>();
@@ -41,42 +42,14 @@ namespace Parcial3
             Invoices = new List<Invoice>();
         }
 
-        public void GetCuilCuit()
+       
+
+        public void Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public void SetCuilCuit(int cuilCuit)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GetRazonSocial()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetRazonSocial(int razonSocial)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GetDomicilio()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetDomicilio(int domicilio)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update()
+        public void Update(int id)
         {
             throw new NotImplementedException();
         }
@@ -86,14 +59,58 @@ namespace Parcial3
             throw new NotImplementedException();
         }
 
-        public void Register()
+        public static void Register()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Registro de Cliente");
+            Console.WriteLine("Ingrese la RazonSocial");
+            string legalName = Console.ReadLine();
+            Console.WriteLine("Ingrese el Cuit/Cuil del cliente");
+            string cuitCuil = Console.ReadLine();
+            Console.WriteLine("Ingrese la direccion del cliente");
+            string address = Console.ReadLine();
+            Client registrarCliente = new Client{ 
+                LegalName = legalName,
+                CuitCuil = cuitCuil,
+                Address = address
+            };   
+            context.Clients.Add(registrarCliente);
+            context.SaveChanges();
         }
 
-        public void Read()
+        public static void Read()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Buscar al cliente por ID");
+            Console.WriteLine("Ingrese la ID del cliente");
+            int id = int.Parse(Console.ReadLine());
+            Client cliente =context.Clients.Find(id);
+            if (cliente != null)
+            {
+                Console.WriteLine($"{cliente.Id}\nRazon Social: {cliente.LegalName}\nDireccion: {cliente.Address}\nCuit/Cuil: {cliente.CuitCuil}");
+            }
+            else
+            {
+                Console.WriteLine($"No se encontró ningún cliente con el ID: {id}");
+            }
+        }
+        public string GetCuilCuit() => this.CuitCuil;
+
+        public void SetCuilCuit(string cuilCuit)
+        {
+            this.CuitCuil = cuilCuit;
+        }
+
+        public string GetLegalName() => this.LegalName;
+
+        public void SetLegalName(string legalName)
+        {
+            this.LegalName = legalName;
+        }
+
+        public string GetAddress() => this.Address;
+
+        public void SetAddress(string Address)
+        {
+            this.Address = Address;
         }
     }
 }
