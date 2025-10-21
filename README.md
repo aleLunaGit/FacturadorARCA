@@ -6,4 +6,4 @@ Este `README.md` describe la estructura de un sistema de gestión de facturació
 
 El sistema está estructurado alrededor de varias entidades y sus interacciones, utilizando interfaces para definir contratos y herencia para reutilizar comportamiento.
 
-![Diagrama Facturador Arca](https://github.com/user-attachments/assets/3fb93fbd-2d17-4755-a150-c663ff0c40f0)
+![FacturadorV2](https://github.com/user-attachments/assets/b74d5c17-0ec8-4050-839d-90fd9786fa19)
