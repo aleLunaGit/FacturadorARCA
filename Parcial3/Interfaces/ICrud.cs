@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Parcial3.Interfaces
 {
-    public interface ICrud:ICrudFactura
+    public interface ICrud:ICrudInvoice
     {
         static void Delete(int id) { }
         static void Update(int id){}
         static void List() { }
     }
-    public interface ICrudFactura {
+    public interface ICrudInvoice {
         static void Register() { }
-        static void Read() { }
+        static void Search() { }
 
     }
 }

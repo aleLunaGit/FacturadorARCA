@@ -9,10 +9,10 @@ namespace Parcial3.Interfaces
     public interface IItem
     {
         string GetDescription();
-        int GetCuantity();
-        int GetPrice();
+        float GetQuantity();
+        float GetPrice();
         void SetDescription(string description);
-        void SetCuantity(int cuantity);
-        void SetPrice(int Price);
+        void SetQuantity(float cuantity);
+        void SetPrice(float Price);
     }
 }

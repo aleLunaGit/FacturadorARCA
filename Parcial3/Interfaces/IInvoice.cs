@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace Parcial3.Interfaces
 {
-    public interface IFactura : ICrudFactura
+    public interface IInvoice : ICrudInvoice
     {
         string GetType();
-        int GetNumber();
+        string GetNumber();
         DateTime GetDate();
-        int GetAmountTotal();
+        float GetAmountTotal();
         void SetType(string type);
-        void SetNumber(int number);
+        void SetNumber();
         void SetDate(DateTime date);
-        void SetAmountTotal(int amountTotal);
+        void SetAmountTotal(float amountTotal);
         void ShowPreviewInvoice();
     }
 }
