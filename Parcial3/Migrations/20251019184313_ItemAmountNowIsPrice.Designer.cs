@@ -12,8 +12,8 @@ using Parcial3.Server;
 namespace Parcial3.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251019024855_AñadirListas")]
-    partial class AñadirListas
+    [Migration("20251019184313_ItemAmountNowIsPrice")]
+    partial class ItemAmountNowIsPrice
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

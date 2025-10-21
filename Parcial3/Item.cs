@@ -31,34 +31,16 @@ namespace Parcial3
             Invoice = invoice;
         }
 
-        public void GetDescription()
-        {
-            throw new NotImplementedException();
-        }
+        public string GetDescription()=> this.Description;
 
-        public void GetCuantity()
-        {
-            throw new NotImplementedException();
-        }
+        public int GetCuantity()=> this.Quantity;
 
-        public void GetAmount()
-        {
-            throw new NotImplementedException();
-        }
+        public int GetPrice() => this.Price;
 
-        public void SetDescription(string description)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetDescription(string description) => this.Description = description;
 
-        public void SetCuantity(string cuantity)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetCuantity(int cuantity) => this.Quantity = cuantity;
 
-        public void SetAmount(int amount)
-        {
-            throw new NotImplementedException();
-        }
+        public void SetPrice(int Price)=> this.Price = Price;
     }
 }

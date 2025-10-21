@@ -5,7 +5,7 @@
 namespace Parcial3.Migrations
 {
     /// <inheritdoc />
-    public partial class AñadirListas : Migration
+    public partial class ItemAmountNowIsPrice : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
