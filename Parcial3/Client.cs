@@ -23,12 +23,12 @@ namespace Parcial3
         [Required]
         public string Address { get; private set; }
         public List<Invoice> Invoices { get; private set; }
-        
+        [NotMapped]
+        public static ApplicationDbContext context { get; set; }
         public Client()
         {
             Invoices = new List<Invoice>();
         }
-        public static ApplicationDbContext context { get; set; }
        /* public Client() 
         {
             Invoices = new List<Invoice>();
@@ -77,7 +77,7 @@ namespace Parcial3
             context.SaveChanges();
         }
 
-        public static void Read()
+        public static void Search()
         {
             Console.WriteLine("Buscar al cliente por ID");
             Console.WriteLine("Ingrese la ID del cliente");

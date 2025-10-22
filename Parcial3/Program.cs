@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Parcial3.Server;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Parcial3
 {
@@ -10,7 +11,7 @@ namespace Parcial3
             ApplicationDbContext context = new ApplicationDbContext();
             context.Database.Migrate();
             Client.context = context;
-            Client.Register();
+            Invoice.Register();
         }
     }
 }
