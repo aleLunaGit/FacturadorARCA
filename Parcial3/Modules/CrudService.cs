@@ -1,8 +1,11 @@
 ﻿using Parcial3.Interfaces;
 using Parcial3.Server;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,11 +14,48 @@ namespace Parcial3.Modules
 {
     public class CrudService<T> where T : class, new()
     {
-        private readonly ApplicationDbContext _context;
         private readonly IRepository<T> _repository;
         public CrudService(IRepository<T> entity)
         {
             _repository = entity;
+        }
+
+        public void Search(int id, params Expression<Func<T, object>>[] includes)
+        {
+            var entity = _repository.GetByIdWithIncludes(id, includes);
+            Console.WriteLine($"\n--- Detalles de {typeof(T).Name} (ID: {id}) ---");
+            PropertyInfo[] properties = typeof(T).GetProperties();
+            foreach (PropertyInfo property in properties)
+            {
+                // Si no son tipo lista, mostrar los datos de las propiedades
+                if (property.PropertyType.IsGenericType &&
+                    property.PropertyType.GetGenericTypeDefinition() == typeof(List<>) )
+                {
+                    
+                    var itemList = property.GetValue(entity) as IEnumerable;
+                    foreach (var item in itemList)
+                    {
+                        var itemProperties = item.GetType().GetProperties();
+                        foreach(var itemProperty in itemProperties)
+                        {
+                            if (!itemProperty.PropertyType.IsClass || itemProperty.PropertyType == typeof(string))
+                            {
+                                Console.WriteLine($"    - {itemProperty.Name}: {itemProperty.GetValue(item)}");
+                            }
+                        }
+                    }
+                    
+                }
+                else
+                {
+                    if (!property.PropertyType.IsClass || property.PropertyType == typeof(string))
+                    {
+                        Console.WriteLine($"- {property.Name}: {property.GetValue(entity)}");
+                    }
+                }
+
+
+            }
         }
         public virtual void Register()
         {
