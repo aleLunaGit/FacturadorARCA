@@ -42,8 +42,6 @@ namespace Parcial3
             Invoices = new List<Invoice>();
         }
 
-       
-
         public static void Delete(int id)
         {
             throw new NotImplementedException();
@@ -56,7 +54,7 @@ namespace Parcial3
 
         public static void List()
         {
-            throw new NotImplementedException();
+            
         }
 
         public static void Register()
@@ -68,11 +66,12 @@ namespace Parcial3
             string cuitCuil = Console.ReadLine();
             Console.WriteLine("Ingrese la direccion del cliente");
             string address = Console.ReadLine();
-            Client registerClient = new Client{ 
+            Client registerClient = new Client
+            {
                 LegalName = legalName,
                 CuitCuil = cuitCuil,
                 Address = address
-            };   
+            };
             context.Clients.Add(registerClient);
             context.SaveChanges();
         }
@@ -103,5 +102,6 @@ namespace Parcial3
         public string GetAddress() => this.Address;
 
         public void SetAddress(string Address)=> this.Address = Address;
+
     }
 }

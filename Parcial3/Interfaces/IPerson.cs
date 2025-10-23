@@ -16,3 +16,4 @@ namespace Parcial3.Interfaces
         void SetAddress(string Address);
     }
 }
+
