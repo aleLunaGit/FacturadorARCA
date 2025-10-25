@@ -27,8 +27,6 @@ namespace Parcial3
         public Client Client { get; set; }
         public List<Item> Items { get; set; }
         public int  ClientId { get; internal set; }
-        [NotMapped]
-        public Enum TyposFactura {  get; set; }
 
         public Invoice() { 
             Items = new List<Item>();

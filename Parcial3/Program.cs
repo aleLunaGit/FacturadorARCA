@@ -11,14 +11,23 @@ namespace Parcial3
     {
         static void Main(string[] args)
         {
-            ApplicationDbContext context = new ApplicationDbContext();
-            context.Database.Migrate();
-            Client.context = context;
-            CrudService<Client> crudClient = new CrudService<Client>(new Repositories<Client>(context));
+            // --- 1. CONFIGURACIÓN ---
+            var context = new ApplicationDbContext();
+            var clientRepository = new Repositories<Client>(context);
+            var invoiceRepository = new Repositories<Invoice>(context);
 
-            InvoiceService InvServ = new InvoiceService(new Repositories<Invoice>(context));
-            InvServ.Search(2);
-            InvServ.test();
+            // --- 2. CREACIÓN DE LOS SERVICIOS ---
+            // Aquí creas la instancia del servicio para clientes
+            var clientService = new CrudService<Client>(clientRepository);
+            var invoiceService = new InvoiceService(invoiceRepository, clientRepository);
+
+            // --- 3. CREACIÓN DEL PRESENTADOR ---
+            // ¡Paso clave! Le pasas el objeto 'clientService' que acabas de crear
+            // al constructor del Presentator.
+            var presentator = new Presentator(clientService, invoiceService);
+
+            // --- 4. EJECUCIÓN ---
+            presentator.Run();
         }
     }
 }

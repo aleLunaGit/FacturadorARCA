@@ -8,13 +8,16 @@ using System.Threading.Tasks;
 
 namespace Parcial3.Modules.Repositorys
 {
-    internal class InvoiceService : CrudService<Invoice>
+    public class InvoiceService : CrudService<Invoice>
     {
         private readonly ApplicationDbContext _context = new ApplicationDbContext();
         private readonly IRepository<Invoice> repository;
+        private readonly IRepository<Client> repoClient;
         public Invoice Invoice { get; set; }
-        public InvoiceService (IRepository<Invoice> entity) : base(entity)
+        public InvoiceService (IRepository<Invoice> entity, IRepository<Client> repoClient) : base(entity)
         {
+            repository = entity;
+            this.repoClient = repoClient;
         }
 
         Repositories<Invoice> RepoInvoice = new Repositories<Invoice>(
