@@ -1,21 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Parcial3.Interfaces;
 using Parcial3.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parcial3.Modules
 {
-    public class Repositories<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext  _context;
         private readonly DbSet<T> _dbSet;
 
-        public Repositories(ApplicationDbContext context){
+        public Repository(ApplicationDbContext context){
             _context = context;
             _dbSet = context.Set<T>();
             }
@@ -54,9 +49,9 @@ namespace Parcial3.Modules
             _dbSet.Update(entity);
             _context.SaveChanges();
         }
-        public void Delete(T entity)
+        public void Delete(int id)
         {
-            _dbSet.Remove(entity);
+            _dbSet.Remove(_dbSet.Find(id));
             _context.SaveChanges();
         }
     }

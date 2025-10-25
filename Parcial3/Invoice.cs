@@ -1,19 +1,10 @@
-﻿using Microsoft.Identity.Client;
-using Parcial3.Interfaces;
-using Parcial3.Modules;
-using Parcial3.Server;
-using System;
-using System.Collections.Generic;
+﻿using Parcial3.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parcial3
 {
-    public class Invoice
+    public class Invoice : IInvoice
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,22 +19,16 @@ namespace Parcial3
         public List<Item> Items { get; set; }
         public int  ClientId { get; internal set; }
 
-        public Invoice() { 
+
+        public Invoice()
+        {
             Items = new List<Item>();
         }
 
-        public Invoice(int id, string type, Client client)
+       public void Validacion()
         {
-            Id = id;
-            Type = type.ToUpper(); ;
-            //Number = NumberGenerator();
-            Date = DateTime.Now;
-            //CalculateTotalAmount();
-            Client = client;
-            //Items = AddItems();
-        }
 
-       
+        }
 
 
         

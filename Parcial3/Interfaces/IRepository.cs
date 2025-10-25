@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace Parcial3.Interfaces
 {
@@ -13,7 +8,7 @@ namespace Parcial3.Interfaces
         T GetByIdWithIncludes(int id, params Expression<Func<T, object>>[] includes);
         IEnumerable<T> GetAll();
         void Update(T entity);
-        void Delete(T entity);
+        void Delete(int id);
         void Add(T entity);
     }
 }
