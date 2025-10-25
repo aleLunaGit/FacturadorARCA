@@ -1,12 +1,6 @@
 ﻿using Parcial3.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Parcial3
 {
     public class Item : IItem
@@ -19,20 +13,12 @@ namespace Parcial3
         public float Price { get; set; }
         public Invoice Invoice { get; set; }
         public int InvoiceId { get; internal set; }
-
-
-        public Item()
+        public Item() { }
+        public Item(string description, float quantity, float price) 
         {
-
-        }
-
-        public Item(int id, string description, float quantity, float price, Invoice invoice) 
-        {
-            Id = id;
             Description = description;
             Quantity = quantity;
             Price = price;
-            Invoice = invoice;
         }
 
         public string GetDescription()=> this.Description;

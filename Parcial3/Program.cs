@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Parcial3.Interfaces;
-using Parcial3.Modules;
+﻿using Parcial3.Modules;
 using Parcial3.Modules.Repositorys;
+using Parcial3.Modules.Services;
 using Parcial3.Server;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Parcial3
 {
@@ -13,17 +11,22 @@ namespace Parcial3
         {
             // --- 1. CONFIGURACIÓN ---
             var context = new ApplicationDbContext();
-            var clientRepository = new Repositories<Client>(context);
-            var invoiceRepository = new Repositories<Invoice>(context);
+
+            // Creamos un repositorio para CADA entidad.
+            var clientRepository = new Repository<Client>(context);
+            var invoiceRepository = new Repository<Invoice>(context);
+            var itemRepository = new Repository<Item>(context); // Es buena práctica tenerlo listo.
 
             // --- 2. CREACIÓN DE LOS SERVICIOS ---
-            // Aquí creas la instancia del servicio para clientes
             var clientService = new CrudService<Client>(clientRepository);
-            var invoiceService = new InvoiceService(invoiceRepository, clientRepository);
+
+            // Primero, crea la instancia de ItemService.
+            var itemService = new ItemService();
+
+            // ¡CORRECCIÓN! Ahora le pasamos las TRES dependencias que necesita.
+            var invoiceService = new InvoiceService(invoiceRepository, clientRepository, itemService);
 
             // --- 3. CREACIÓN DEL PRESENTADOR ---
-            // ¡Paso clave! Le pasas el objeto 'clientService' que acabas de crear
-            // al constructor del Presentator.
             var presentator = new Presentator(clientService, invoiceService);
 
             // --- 4. EJECUCIÓN ---
