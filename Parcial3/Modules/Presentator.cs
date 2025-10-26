@@ -1,9 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Parcial3.Modules.Repositorys;
 using Parcial3.Modules.Services;
+using Parcial3.Server;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading; // Necesario para tu contador
+using System.Threading.Tasks;
+using System.Xml;
 
 namespace Parcial3.Modules
 {
@@ -11,7 +20,7 @@ namespace Parcial3.Modules
     {
         private readonly CrudService<Client> _clientService;
         private readonly InvoiceService _invoiceService;
-        private readonly ItemService _itemService;
+        private readonly ItemService _itemService; 
 
         public Presentator(CrudService<Client> clientService, InvoiceService invoiceService, ItemService itemService)
         {
@@ -22,26 +31,22 @@ namespace Parcial3.Modules
 
         public void Run()
         {
-
             while (true)
             {
-                WriteLine("\n╔══════════════════════════════════╗");
-                WriteLine("║        SISTEMA DE GESTIÓN        ║");
-                WriteLine("╠══════════════════════════════════╣");
-                WriteLine("║        -- CLIENTES --            ║");
-                WriteLine("║ 1. Registrar Nuevo Cliente       ║");
-                WriteLine("║ 2. Modificar Cliente Existente   ║");
-                WriteLine("║ 3. Buscar Cliente por ID         ║");
-                WriteLine("║ 4. Listar Todos los Clientes     ║");
-                WriteLine("║ 5. Borrar Cliente por ID         ║");
-                WriteLine("║        -- FACTURAS --            ║");
-                WriteLine("║ 6. Registrar Nueva Factura       ║");
-                WriteLine("║                                  ║");
-                WriteLine("║ 7. Salir                         ║");
-                WriteLine("╚══════════════════════════════════╝");
-                Write("Seleccione una opción: ");
+                Console.WriteLine("\n╔══════════════════════════════════╗");
+                Console.WriteLine("║        SISTEMA DE GESTIÓN        ║");
+                Console.WriteLine("╠══════════════════════════════════╣");
+                Console.WriteLine("║ 1. Registrar Nuevo Cliente       ║");
+                Console.WriteLine("║ 2. Modificar Cliente Existente   ║");
+                Console.WriteLine("║ 3. Buscar Cliente por ID         ║");
+                Console.WriteLine("║ 4. Listar Clientes               ║"); 
+                Console.WriteLine("║ 5. Eliminar Cliente              ║"); 
+                Console.WriteLine("║ 6. Registrar Nueva Factura       ║"); 
+                Console.WriteLine("║ 7. Salir                         ║"); 
+                Console.WriteLine("╚══════════════════════════════════╝");
+                Console.Write("Seleccione una opción: ");
 
-                var option = Reader.ReadString("");
+                var option = Reader.ReadString(""); 
 
                 switch (option)
                 {
@@ -55,13 +60,13 @@ namespace Parcial3.Modules
                         HandleSearchClient();
                         break;
                     case "4":
-                        HandleListClients();
+                        HandleListClients(); 
                         break;
                     case "5":
-                        HandleDeleteClient();
+                        HandleDeleteClient(); 
                         break;
                     case "6":
-                        HandleRegisterInvoice();
+                        HandleRegisterInvoice(); 
                         break;
                     case "7":
                         WriteLine("Saliendo del sistema...");
@@ -73,19 +78,16 @@ namespace Parcial3.Modules
                 Reader.ReadChar("\nPresione cualquier tecla para volver al menú...");
             }
         }
-        public static void WriteLine(string msg) {
+
+        public static void WriteLine(string msg)
+        {
             Console.WriteLine($"{msg}");
         }
         public static void Write(string msg)
         {
             Console.Write(msg);
         }
-        // Handle Client Services:
-        private void HandleDeleteClient()
-        {
-            int clientId = Reader.ReadInt("Ingrese el ID del Cliente que desea eliminar");
-            _clientService.Delete(clientId);
-        }
+
         private void HandleRegisterClient()
         {
             if (_clientService == null) return;
@@ -121,7 +123,8 @@ namespace Parcial3.Modules
             if (_clientService == null) return;
             var updateProperty = _clientService.ListModifyableProperties(entity);
             int count = 1;
-            foreach (var property in updateProperty) {
+            foreach (var property in updateProperty)
+            {
                 WriteLine($"{count}) {property.Name}");
                 count++;
             }
@@ -131,11 +134,9 @@ namespace Parcial3.Modules
             var properties = _clientService.ListModifyableProperties(entity);
             foreach (PropertyInfo property in properties)
             {
-                // Si no son tipo lista, mostrar los datos de las propiedades
                 if (property.PropertyType.IsGenericType &&
                     property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-
                     var itemList = property.GetValue(entity) as IEnumerable;
                     foreach (var item in itemList)
                     {
@@ -149,7 +150,6 @@ namespace Parcial3.Modules
                             }
                         }
                     }
-
                 }
                 else
                 {
@@ -160,22 +160,60 @@ namespace Parcial3.Modules
                 }
             }
         }
+
+    
+        private void HandleDeleteClient()
+        {
+            try
+            {
+            
+                int id = Reader.ReadInt("Ingrese el ID del cliente que desea ELIMINAR: ");
+
+             
+                WriteLine($"Estas a punto de eliminar al cliente con ID {id}");
+                WriteLine("Esta accion eliminara todas las facturas asociadas a este cliente");
+                WriteLine("Esta accion no se puede deshacer");
+
+         
+                string confirmacion = ReadLineWithCountDown(10);
+                if (confirmacion != null && confirmacion.ToLower() == "si")
+                {
+                    _clientService.Delete(id); 
+                }
+                else if (confirmacion == null)
+                {
+                    WriteLine("Eliminacion cancelada por tiempo fuera de espera (10 segundos)");
+                }
+                else
+                {
+                    WriteLine("Eliminacion Cancelada");
+                }
+            }
+            catch (FormatException)
+            {
+                WriteLine("Error: El ID debe ser un número."); 
+            }
+            catch (Exception ex)
+            {
+                WriteLine($"Ocurrió un error inesperado: {ex.Message}"); 
+            }
+        }
+
         private void HandleSearchClient()
         {
             try
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
-                // Llama a Search y le dice que incluya la lista de facturas
                 Presentator.WriteLine($"\n--- Detalles de {typeof(Client).Name} (ID: {id}) ---");
                 Client entity = _clientService.Search(id);
                 ShowClient(entity, client => client.Invoices);
-                
             }
             catch (Exception ex)
             {
                 WriteLine($"Ocurrió un error: {ex.Message}");
             }
         }
+
         private void HandleListClients()
         {
             var clientes = _clientService.GetAll();
@@ -193,16 +231,13 @@ namespace Parcial3.Modules
             }
         }
 
-        // Handle Invoice Services:
-        private void HandleRegisterInvoice() {
-            // Creamos las instancias necesarias y le cargamos datos
-            // Borrador de Invoice
+        private void HandleRegisterInvoice()
+        {
             Invoice draftInvoice = new Invoice();
-            int clientId= Reader.ReadInt("Ingrese el ID del Cliente al que le crearemos la factura: ");
+            int clientId = Reader.ReadInt("Ingrese el ID del Cliente al que le crearemos la factura: ");
             string invoiceType = Reader.ReadChar("\"Enter the invoice type \\n This can be: A, B or C\"").ToString();
             List<Item> items = new List<Item>();
-            
-            // Usamos estos datos para preparar el registro
+
             draftInvoice = _invoiceService.DraftInvoice(clientId, invoiceType, items);
             while (true)
             {
@@ -214,15 +249,11 @@ namespace Parcial3.Modules
                 }
                 else break;
             }
-            
+
             try
             {
                 WriteLine("\nCerrando y guardando factura permanentemente...");
-
-                // El servicio toma el objeto borrador final, ejecuta su "receta maestra"
-                // (validar, enriquecer, calcular, guardar) y lo persiste.
                 _invoiceService.CreateNewInvoice(draftInvoice);
-
                 WriteLine("¡Factura registrada exitosamente!");
             }
             catch (Exception ex)
@@ -230,12 +261,13 @@ namespace Parcial3.Modules
                 throw new Exception($"Error al registrar la factura: {ex.Message}");
             }
         }
+
         private void HandleUpdateInvoice(Invoice draftInvoice)
         {
             if (draftInvoice == null)
             {
                 Console.WriteLine("Error: Se intentó modificar una factura nula.");
-                return; // Salimos para evitar errores.
+                return;
             }
             WriteLine("\n--- Editando Borrador de Factura ---");
             WriteLine($"1) Cliente: {draftInvoice.Client.LegalName}");
@@ -277,6 +309,7 @@ namespace Parcial3.Modules
                     return;
             }
         }
+
         private void ShowPreviewInvoice(Invoice invoice)
         {
             WriteLine("--------------------------Vista Previa de Factura--------------------------");
@@ -287,13 +320,49 @@ namespace Parcial3.Modules
             WriteLine($"Productos:");
             foreach (var item in invoice.Items)
             {
-            WriteLine("---------------------------------------------------------------------------");
+                WriteLine("---------------------------------------------------------------------------");
                 WriteLine($"Nombre: {item.Description}\nPrecio: ${item.Price} | Cantidad: {item.Quantity}");
-                WriteLine($"Total: ${item.Price*item.Quantity}");
+                WriteLine($"Total: ${item.Price * item.Quantity}");
             }
             WriteLine("---------------------------------------------------------------------------");
             WriteLine($"Monto Total: ${invoice.AmountTotal}");
         }
 
+        private string ReadLineWithCountDown(int seconds)
+        {
+            WriteLine($"Escriba si para confirmar (tiene {seconds} segundos para elegir)");
+            bool inputDetected = false;
+
+            for (int i = seconds; i > 0; i--)
+            {
+                Write($"\rTiempo restante: {i}s...");
+
+                for (int j = 0; j < 10; j++)
+                {
+                    if (Console.KeyAvailable)
+                    {
+                        inputDetected = true;
+                        break;
+                    }
+                    Thread.Sleep(100); //espera de 100 milisegundos
+                }
+                if (inputDetected)
+                {
+                    break;
+                }
+            }
+
+            Write("\r" + new string(' ', 40) + "\r");
+            if (inputDetected)
+            {
+                Write("Confirmacion : ");
+                return Console.ReadLine(); 
+            }
+            else
+            {
+                WriteLine("\n Tiempo Agotado.");
+                return null; //se retorna null para indicar tiempo
+            }
+        }
     }
 }
