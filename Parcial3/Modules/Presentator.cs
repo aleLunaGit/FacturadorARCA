@@ -301,7 +301,17 @@ namespace Parcial3.Modules
                     break;
                 case 3:
                     {
-                        _itemService.UpdateItem(draftInvoice.Items);
+                        WriteLine("1) Modificar Producto");
+                        WriteLine("2) Agregar Producto");
+                        int inputItems = Reader.ReadInt("Ingrese una opcion:");
+                        if (inputItems == 1)
+                        {
+                            _itemService.UpdateItem(draftInvoice.Items);
+                        }
+                        if (inputItems == 2)
+                        {
+                            _itemService.AddItems(draftInvoice.Items);
+                        }
                         draftInvoice.CalculateTotalAmount();
                     }
                     break;
