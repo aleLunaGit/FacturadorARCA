@@ -35,9 +35,10 @@ namespace Parcial3.Modules
             }
         }
         public T Search(int id) => _repository.GetByID(id);
+
         public virtual void Search(int id, params Expression<Func<T, object>>[] includes)
         {
-            //
+            // TODO: Arreglar el principio SRP del Search
             var entity = _repository.GetByIdWithIncludes(id, includes);
             Presentator.WriteLine($"\n--- Detalles de {typeof(T).Name} (ID: {id}) ---");
             PropertyInfo[] properties = typeof(T).GetProperties();
@@ -74,51 +75,55 @@ namespace Parcial3.Modules
 
             }
         }
-        public virtual void Register()
+        public virtual List<PropertyInfo> ModifyableProperties(T entity)
         {
-            var entity = new T();
-            Presentator.WriteLine($"Registro de nuevo {typeof(T).Name}");
-            var properties = typeof(T).GetProperties();
-            foreach (var property in properties) {
-                if (ShouldSkipPropertie(property)) continue;
-                Presentator.WriteLine($"Ingrese {property.Name}: ");
-                string input = Console.ReadLine();
-                try {
-                    var convertValue = Convert.ChangeType(input, property.PropertyType);
-                    property.SetValue(entity, convertValue);
-                }catch (Exception ex) { Presentator.WriteLine(ex.Message); }
+            if (entity == null) throw new Exception("La entidad no tiene una lista de propiedades");
+            List<PropertyInfo> listProperties = new List<PropertyInfo> ();
+                var propertys= typeof(T).GetProperties();
+            foreach (var item in propertys)
+            {
+                if (ShouldSkipPropertie(item)) continue;
+                listProperties.Add(item);
             }
-            _repository.Add(entity);
+            return listProperties;
         }
-        public void Update(int id)
+
+        public virtual void ConvertValues(T entity, List<string> convertThisValues)
         {
-            
-            var entity = _repository.GetByID(id);
-            Presentator.WriteLine($"Modificar un {typeof(T).Name}");
-            // Obtenemos las propiedades de la entidad a la que le haremos un update
-            var properties = typeof(T).GetProperties();
-            Presentator.WriteLine("Que desea modificar?");
-            // Comenzamos con un contador de 1 (Por temas visuales ) al momento de mostrar las propiedades cambiables
-            int count = 1;
-            // Lista de propiedades
-            List<PropertyInfo> modifiablePropertys= new List<PropertyInfo>();
-            // Recorremos y añadimos a la lista de propiedades, skipeando las inmodificables
-            foreach (var property in properties) {
-                if (ShouldSkipPropertie(property)) continue;
-                Presentator.WriteLine($"{count}) {property.Name}");
-                modifiablePropertys.Add(property);
+            var Properties = typeof(T).GetProperties();
+            var listProperties = ModifyableProperties(entity);
+            int count = 0;
+            foreach (var convertValue in convertThisValues)
+            {
+                var property = listProperties.ElementAt(count);
+                try
+                {
+                    var correctedTypeValue = Convert.ChangeType(convertValue, property.PropertyType);
+                    property.SetValue(entity, correctedTypeValue);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error: {ex.Message}");
+                }
                 count++;
             }
-            // Pedimos la opcion
-            int option = int.Parse(Console.ReadLine());
-            // Leemos el nuevo valor
-            Presentator.WriteLine("Ingrese el nuevo valor");
-            string input = Console.ReadLine();
-            // Buscamos la propiedad segun la opcion seleccionada (- 1) -> porque al mostrar la lista comenzamos con el 1
-            // Por tanto si no restamos devolvera el siguiente valor al que en realidad pide el usuario
-            var changeProperty =  modifiablePropertys.ElementAt(option - 1);
+        }
+        public virtual void Register(T entity)
+        {
+            _repository.Add(entity);
+        }
+        public virtual void Register(T entity, List<string> listOfInputs)
+        {
+            ConvertValues(entity, listOfInputs);
+            _repository.Add(entity);
+        }
+        public void Update(T entity, string changeToValue, int inputOption)
+        {
+            if(entity == null || changeToValue == null || inputOption == null) return;
+            var modifiablePropertys = ModifyableProperties(entity);
+            var changeProperty =  modifiablePropertys.ElementAt(inputOption - 1);
             // Cambiamos los tipos para que coincidan con los pedidos por la propiedad en cuestion
-            var convertedValue = Convert.ChangeType(input, changeProperty.PropertyType);
+            var convertedValue = Convert.ChangeType(changeToValue, changeProperty.PropertyType);
             // Setteamos el valor cambiado a la propiedad
             changeProperty.SetValue(entity, convertedValue);
             _repository.Update(entity);

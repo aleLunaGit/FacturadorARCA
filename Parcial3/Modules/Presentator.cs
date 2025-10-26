@@ -1,5 +1,7 @@
-﻿using Parcial3.Modules.Repositorys;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Parcial3.Modules.Repositorys;
 using Parcial3.Modules.Services;
+using System.Reflection;
 
 namespace Parcial3.Modules
 {
@@ -28,10 +30,11 @@ namespace Parcial3.Modules
                 WriteLine("║ 2. Modificar Cliente Existente   ║");
                 WriteLine("║ 3. Buscar Cliente por ID         ║");
                 WriteLine("║ 4. Listar Todos los Clientes     ║");
+                WriteLine("║ 5. Borrar Cliente por ID         ║");
                 WriteLine("║        -- FACTURAS --            ║");
-                WriteLine("║ 5. Registrar Nueva Factura       ║");
+                WriteLine("║ 6. Registrar Nueva Factura       ║");
                 WriteLine("║                                  ║");
-                WriteLine("║ 6. Salir                         ║");
+                WriteLine("║ 7. Salir                         ║");
                 WriteLine("╚══════════════════════════════════╝");
                 Write("Seleccione una opción: ");
 
@@ -40,7 +43,7 @@ namespace Parcial3.Modules
                 switch (option)
                 {
                     case "1":
-                        _clientService.Register();
+                        HandleRegisterClient();
                         break;
                     case "2":
                         HandleUpdateClient();
@@ -52,9 +55,12 @@ namespace Parcial3.Modules
                         HandleListClients();
                         break;
                     case "5":
-                        HandleRegisterInvoice();
+                        HandleDeleteClient();
                         break;
                     case "6":
+                        HandleRegisterInvoice();
+                        break;
+                    case "7":
                         WriteLine("Saliendo del sistema...");
                         return;
                     default:
@@ -72,16 +78,49 @@ namespace Parcial3.Modules
             Console.Write(msg);
         }
         // Handle Client Services:
+        private void HandleDeleteClient()
+        {
+            int clientId = Reader.ReadInt("Ingrese el ID del Cliente que desea eliminar");
+            _clientService.Delete(clientId);
+        }
+        private void HandleRegisterClient()
+        {
+            if (_clientService == null) return;
+            Client newClient = new Client();
+            List<string> listOfInputs = new List<string>();
+            string legalName = Reader.ReadString("Ingresa la Razon Social:");
+            string address = Reader.ReadString("Ingrese su Domicilio:");
+            string cuit = Reader.ReadString("Ingresa su Cuit/Cuil:");
+            listOfInputs.Add(cuit);
+            listOfInputs.Add(legalName);
+            listOfInputs.Add(address);
+            _clientService.Register(newClient, listOfInputs);
+        }
         private void HandleUpdateClient()
         {
             try
             {
-                int id = Reader.ReadInt("Ingrese el ID del cliente que desea modificar");
-                _clientService.Update(id);
+                int clientId = Reader.ReadInt("Ingrese el ID del cliente que desea modificar");
+                var updateClient = _clientService.Search(clientId);
+                ShowOptionsToUpdate(updateClient);
+                int input = Reader.ReadInt("Ingrese una opcion:");
+                var changeTo = Reader.ReadString("Ingrese el nuevo valor");
+
+                _clientService.Update(updateClient, changeTo, input);
             }
             catch (Exception ex)
             {
                 WriteLine($"Ocurrió un error: {ex.Message}");
+            }
+        }
+        private void ShowOptionsToUpdate(Client entity)
+        {
+            if (_clientService == null) return;
+            var updateProperty = _clientService.ModifyableProperties(entity);
+            int count = 1;
+            foreach (var property in updateProperty) {
+                WriteLine($"{count}) {property.Name}");
+                count++;
             }
         }
         private void HandleSearchClient()
@@ -153,7 +192,11 @@ namespace Parcial3.Modules
         }
         private void HandleUpdateInvoice(Invoice draftInvoice)
         {
-            Client comprador = draftInvoice.Client;
+            if (draftInvoice == null)
+            {
+                Console.WriteLine("Error: Se intentó modificar una factura nula.");
+                return; // Salimos para evitar errores.
+            }
             WriteLine("\n--- Editando Borrador de Factura ---");
             WriteLine($"1) Cliente: {draftInvoice.Client.LegalName}");
             WriteLine($"2) Tipo: {draftInvoice.Type}");
@@ -190,6 +233,8 @@ namespace Parcial3.Modules
                         draftInvoice.CalculateTotalAmount();
                     }
                     break;
+                case 0:
+                    return;
             }
         }
         private void ShowPreviewInvoice(Invoice invoice)

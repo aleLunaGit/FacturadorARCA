@@ -18,20 +18,7 @@ namespace Parcial3.Modules.Repositorys
             _clientRepository = clientRepository;
             _itemService = itemService;
         }
-        public void RegisterInvoice(Invoice newInvoice) 
-            => _repository.Add(newInvoice);
-        public void ChangeClient(Invoice modifyInvoice, int clientId)
-        {
-            var newClient = _clientRepository.GetByID(clientId);
-            if (newClient != null)
-            {
-                modifyInvoice.Client = newClient;
-                modifyInvoice.ClientId = newClient.Id;
-            }
-            else throw new ArgumentException($"Error: No se encontró ningún cliente con el ID: {clientId}.");
-        }
-        public void ChangeInvoiceType(Invoice modifyInvoice, string inputType) 
-            => modifyInvoice.RegisterTypeFactura(inputType);
+
         public Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items)
         {
             Invoice draftInvoice = new Invoice();
@@ -65,7 +52,6 @@ namespace Parcial3.Modules.Repositorys
             var clientExists = _clientRepository.GetByID(draftInvoice.Client.Id);
             if (clientExists == null)
                 throw new InvalidOperationException($"El cliente con ID {draftInvoice.Client.Id} no existe en la base de datos.");
-            draftInvoice.CalculateTotalAmount();
             _repository.Add(draftInvoice);
         }
 
