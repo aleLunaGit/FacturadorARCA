@@ -6,7 +6,7 @@ namespace Parcial3.Server
     public class ApplicationDbContext : DbContext
     {
         //CodeFirst :)
-        public DbSet<Client> Clients{ get; set; }
+        public DbSet<Client> Clients { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Item> Items { get; set; }
 
@@ -20,16 +20,16 @@ namespace Parcial3.Server
                     .AddJsonFile("appsettings.json")
                     .Build();
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
-              optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseSqlServer(connectionString);
             }
 
         }
 
-    
 
 
-    //Vamos a configurar las relaciones
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        //Vamos a configurar las relaciones
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
