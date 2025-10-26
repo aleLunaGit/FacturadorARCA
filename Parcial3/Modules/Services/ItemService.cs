@@ -15,18 +15,18 @@ namespace Parcial3.Modules.Services
             };
             return item;
         }
-        public List<Item> UpdateItem(List<Item> listaItems)
+        public List<Item> UpdateItem(List<Item> itemsList)
         {
             int input; 
             int count = 1;
             
-            foreach(Item item in listaItems)
+            foreach(Item item in itemsList)
             {
                 Presentator.WriteLine($"{count}) {item.Description}");
                 count++;
             }
             input = Reader.ReadInt("Que item desea modificar?");
-            Item gonnaUpdateThisItem=listaItems.ElementAt(input - 1);
+            Item gonnaUpdateThisItem=itemsList.ElementAt(input - 1);
             Presentator.WriteLine($"1) {gonnaUpdateThisItem.Description}\n2) {gonnaUpdateThisItem.Quantity}\n3) {gonnaUpdateThisItem.Price}");
             input = Reader.ReadInt("Que desea modificar de este item?");
             switch (input)
@@ -46,7 +46,23 @@ namespace Parcial3.Modules.Services
                 default: 
                     break;
             }
-            return listaItems;
+            return itemsList;
+        }
+        public List<Item> AddItems(List<Item> itemsList)
+        {
+            float totalAmount = 0;
+            while (true)
+            {
+                var item = ItemRegister();
+                itemsList.Add(item);
+
+                char choice = Reader.ReadChar("Presione X para agregar mas | Cualquier otra tecla para finalizar");
+                if (choice != 'X' && choice != 'x')
+                {
+                    break; // Salimos del bucle
+                }
+            }
+            return itemsList;
         }
 
     }

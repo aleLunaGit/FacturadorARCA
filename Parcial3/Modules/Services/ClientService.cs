@@ -1,4 +1,5 @@
 ﻿using Parcial3.Interfaces;
+using System.Reflection;
 
 
 namespace Parcial3.Modules.Services
@@ -11,7 +12,5 @@ namespace Parcial3.Modules.Services
         {
         }
         // Recibe el DbContext para poder construir consultas complejas.
-
-
     }
 }

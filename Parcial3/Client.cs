@@ -25,9 +25,8 @@ namespace Parcial3
         {
             Invoices = new List<Invoice>();
         } */
-        public Client (int id, string cuitCuil, string legalName, string address)
+        public Client (string cuitCuil, string legalName, string address)
         {
-            Id = id;
             CuitCuil = cuitCuil;
             LegalName = legalName;
             Address = address;
