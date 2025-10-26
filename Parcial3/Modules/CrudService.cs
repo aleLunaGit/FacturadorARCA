@@ -40,42 +40,9 @@ namespace Parcial3.Modules
         {
             // TODO: Arreglar el principio SRP del Search
             var entity = _repository.GetByIdWithIncludes(id, includes);
-            Presentator.WriteLine($"\n--- Detalles de {typeof(T).Name} (ID: {id}) ---");
-            PropertyInfo[] properties = typeof(T).GetProperties();
-            foreach (PropertyInfo property in properties)
-            {
-                // Si no son tipo lista, mostrar los datos de las propiedades
-                if (property.PropertyType.IsGenericType &&
-                    property.PropertyType.GetGenericTypeDefinition() == typeof(List<>) )
-                {
-                    
-                    var itemList = property.GetValue(entity) as IEnumerable;
-                    foreach (var item in itemList)
-                    {
-                        Presentator.WriteLine($"-------------------------------------");
-                        var itemProperties = item.GetType().GetProperties();
-                        foreach(var itemProperty in itemProperties)
-                        {
-                            if (!itemProperty.PropertyType.IsClass || itemProperty.PropertyType == typeof(string))
-                            {
-                                Presentator.WriteLine($"    - {itemProperty.Name}: {itemProperty.GetValue(item)}");
-                            }
-                        }
-                    }
-                    
-                }
-                else
-                {
-                    if (!property.PropertyType.IsClass || property.PropertyType == typeof(string))
-                    {
-                        Presentator.WriteLine($"- {property.Name}: {property.GetValue(entity)}");
-                    }
-                }
-
-
-            }
+   
         }
-        public virtual List<PropertyInfo> ModifyableProperties(T entity)
+        public virtual List<PropertyInfo> ListModifyableProperties(T entity)
         {
             if (entity == null) throw new Exception("La entidad no tiene una lista de propiedades");
             List<PropertyInfo> listProperties = new List<PropertyInfo> ();
@@ -91,7 +58,7 @@ namespace Parcial3.Modules
         public virtual void ConvertValues(T entity, List<string> convertThisValues)
         {
             var Properties = typeof(T).GetProperties();
-            var listProperties = ModifyableProperties(entity);
+            var listProperties = ListModifyableProperties(entity);
             int count = 0;
             foreach (var convertValue in convertThisValues)
             {
@@ -120,7 +87,7 @@ namespace Parcial3.Modules
         public void Update(T entity, string changeToValue, int inputOption)
         {
             if(entity == null || changeToValue == null || inputOption == null) return;
-            var modifiablePropertys = ModifyableProperties(entity);
+            var modifiablePropertys = ListModifyableProperties(entity);
             var changeProperty =  modifiablePropertys.ElementAt(inputOption - 1);
             // Cambiamos los tipos para que coincidan con los pedidos por la propiedad en cuestion
             var convertedValue = Convert.ChangeType(changeToValue, changeProperty.PropertyType);

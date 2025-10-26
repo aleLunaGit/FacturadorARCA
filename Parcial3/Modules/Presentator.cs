@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Parcial3.Modules.Repositorys;
 using Parcial3.Modules.Services;
+using System.Collections;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Parcial3.Modules
@@ -20,6 +22,7 @@ namespace Parcial3.Modules
 
         public void Run()
         {
+
             while (true)
             {
                 WriteLine("\n╔══════════════════════════════════╗");
@@ -116,11 +119,45 @@ namespace Parcial3.Modules
         private void ShowOptionsToUpdate(Client entity)
         {
             if (_clientService == null) return;
-            var updateProperty = _clientService.ModifyableProperties(entity);
+            var updateProperty = _clientService.ListModifyableProperties(entity);
             int count = 1;
             foreach (var property in updateProperty) {
                 WriteLine($"{count}) {property.Name}");
                 count++;
+            }
+        }
+        private void ShowClient(Client entity, params Expression<Func<Client, object>>[] includes)
+        {
+            var properties = _clientService.ListModifyableProperties(entity);
+            foreach (PropertyInfo property in properties)
+            {
+                // Si no son tipo lista, mostrar los datos de las propiedades
+                if (property.PropertyType.IsGenericType &&
+                    property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                {
+
+                    var itemList = property.GetValue(entity) as IEnumerable;
+                    foreach (var item in itemList)
+                    {
+                        Presentator.WriteLine($"-------------------------------------");
+                        var itemProperties = item.GetType().GetProperties();
+                        foreach (var itemProperty in itemProperties)
+                        {
+                            if (!itemProperty.PropertyType.IsClass || itemProperty.PropertyType == typeof(string))
+                            {
+                                Presentator.WriteLine($"    - {itemProperty.Name}: {itemProperty.GetValue(item)}");
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    if (!property.PropertyType.IsClass || property.PropertyType == typeof(string))
+                    {
+                        Presentator.WriteLine($"- {property.Name}: {property.GetValue(entity)}");
+                    }
+                }
             }
         }
         private void HandleSearchClient()
@@ -129,7 +166,10 @@ namespace Parcial3.Modules
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
                 // Llama a Search y le dice que incluya la lista de facturas
-                 _clientService.Search(id, c => c.Invoices);
+                Presentator.WriteLine($"\n--- Detalles de {typeof(Client).Name} (ID: {id}) ---");
+                Client entity = _clientService.Search(id);
+                ShowClient(entity, client => client.Invoices);
+                
             }
             catch (Exception ex)
             {
@@ -177,17 +217,17 @@ namespace Parcial3.Modules
             
             try
             {
-                Console.WriteLine("\nCerrando y guardando factura permanentemente...");
+                WriteLine("\nCerrando y guardando factura permanentemente...");
 
                 // El servicio toma el objeto borrador final, ejecuta su "receta maestra"
                 // (validar, enriquecer, calcular, guardar) y lo persiste.
                 _invoiceService.CreateNewInvoice(draftInvoice);
 
-                Console.WriteLine("¡Factura registrada exitosamente!");
+                WriteLine("¡Factura registrada exitosamente!");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al registrar la factura: {ex.Message}");
+                throw new Exception($"Error al registrar la factura: {ex.Message}");
             }
         }
         private void HandleUpdateInvoice(Invoice draftInvoice)
