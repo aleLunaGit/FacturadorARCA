@@ -34,7 +34,8 @@ namespace Parcial3.Modules
                 }
             }
         }
-        public void Search(int id, params Expression<Func<T, object>>[] includes)
+        public T Search(int id) => _repository.GetByID(id);
+        public virtual void Search(int id, params Expression<Func<T, object>>[] includes)
         {
             //
             var entity = _repository.GetByIdWithIncludes(id, includes);

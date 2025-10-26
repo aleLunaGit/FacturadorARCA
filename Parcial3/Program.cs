@@ -19,15 +19,11 @@ namespace Parcial3
 
             // --- 2. CREACIÓN DE LOS SERVICIOS ---
             var clientService = new CrudService<Client>(clientRepository);
-
-            // Primero, crea la instancia de ItemService.
             var itemService = new ItemService();
-
-            // ¡CORRECCIÓN! Ahora le pasamos las TRES dependencias que necesita.
             var invoiceService = new InvoiceService(invoiceRepository, clientRepository, itemService);
 
             // --- 3. CREACIÓN DEL PRESENTADOR ---
-            var presentator = new Presentator(clientService, invoiceService);
+            var presentator = new Presentator(clientService, invoiceService, itemService);
 
             // --- 4. EJECUCIÓN ---
             presentator.Run();

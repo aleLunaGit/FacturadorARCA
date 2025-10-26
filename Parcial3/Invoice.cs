@@ -1,4 +1,5 @@
 ﻿using Parcial3.Interfaces;
+using Parcial3.Modules;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,14 +25,91 @@ namespace Parcial3
         {
             Items = new List<Item>();
         }
-
-       public void Validacion()
+        public void RegisterTypeFactura(string inputType)
         {
+            string invoiceType = default;
+            bool isValidInput = false;
 
+            do
+            {
+                // Present the prompt to the user
+                
+                string validateInput = inputType;
+
+                try
+                {
+                    // Validation 1: Input Length Check
+                    if (string.IsNullOrWhiteSpace(inputType) || inputType.Length != 1)
+                    {
+                        // Throw an exception if it's not a single letter, or if it's empty.
+                        throw new ArgumentException("ERROR: You must enter exactly one single letter and it cannot be empty.");
+                    }
+
+                    // Convert to uppercase to simplify the comparison
+                    char letter = char.ToUpper(inputType[0]);
+
+                    // Validation 2: Letter Value Check
+                    if (letter != 'A' && letter != 'B' && letter != 'C')
+                    {
+                        // Throw an exception if the character is valid in length, but invalid in value.
+                        throw new FormatException("ERROR: The invoice type must be A, B or C.");
+                    }
+
+                    // If execution reaches here, the input is valid
+                    invoiceType = letter.ToString();
+                    isValidInput = true; // Set flag to exit the loop
+                }
+                catch (ArgumentException ex)
+                {
+                    // Catch errors related to length or empty input (Validation 1)
+                    Presentator.WriteLine(ex.Message);
+                    isValidInput = false;
+                }
+                catch (FormatException ex)
+                {
+                    // Catch errors related to invalid value (Validation 2)
+                    Presentator.WriteLine(ex.Message);
+                    isValidInput = false;
+                }
+                catch (Exception)
+                {
+                    // Catch any other unexpected error
+                    Presentator.WriteLine("An unexpected error occurred. Please try again.");
+                    isValidInput = false;
+                }
+
+            } while (!isValidInput);
+            Presentator.WriteLine($"Selected invoice type: {invoiceType}");
+             this.Type =  invoiceType;
+            // 'invoiceType' now holds the valid letter ('A', 'B', or 'C').
+        }
+        public void NumberGenerator(bool setDate = false)
+        {
+            string NumberGenerated = "";
+            Random rnd = new Random();
+            if (!setDate)
+            {
+                NumberGenerated = DateTime.Now.ToString("ddd") + DateTime.Now.Year + "-" + rnd.Next(100000, 999999);
+            }
+            else
+            {
+                DateTime date = Reader.ReadDate("Ingrese la fecha en la que creó la factura");
+                NumberGenerated = date.ToString("ddd") + date.Year + "-" + rnd.Next(100000, 999999);
+            }
+            this.Number = NumberGenerated;
+        }
+        public void CalculateTotalAmount()
+        {
+            float total = 0;
+            foreach (var item in Items)
+            {
+                float price = item.Price;
+                float quantity = item.Quantity;
+                total = total + (item.GetPrice() * item.GetQuantity());
+            }
+            AmountTotal = total;
         }
 
-
-        
 
         // Setters / Getters 
         public string GetType() => this.Type;

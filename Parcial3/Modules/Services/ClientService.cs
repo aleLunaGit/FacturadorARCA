@@ -12,6 +12,5 @@ namespace Parcial3.Modules.Services
         }
         // Recibe el DbContext para poder construir consultas complejas.
 
-
     }
 }
