@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Parcial3.Interfaces
+﻿namespace Parcial3.Interfaces
 {
-    public interface IPerson : ICrud
+    public interface IPerson
     {
         string GetCuilCuit();
         void SetCuilCuit(string CuitCuil);

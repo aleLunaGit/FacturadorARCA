@@ -1,114 +1,124 @@
 ﻿using Parcial3.Modules.Repositorys;
-using Parcial3.Modules.Services;
-using Parcial3.Server;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parcial3.Modules
 {
     public class Presentator
     {
-        // Declara las variables para guardar los servicios
-        private readonly CrudService<Client> _crudServiceClient;
+        private readonly CrudService<Client> _clientService;
         private readonly InvoiceService _invoiceService;
-        
 
-        // El constructor PIDE los servicios como parámetros
-        public Presentator(CrudService<Client> crudServiceClient, InvoiceService invoiceService)
+        public Presentator(CrudService<Client> clientService, InvoiceService invoiceService)
         {
-            // AQUÍ es donde la variable deja de ser NULL y recibe el objeto
-            _crudServiceClient = crudServiceClient;
+            _clientService = clientService;
             _invoiceService = invoiceService;
         }
+
         public void Run()
         {
-            // Bucle infinito para que el menú siempre vuelva a aparecer
             while (true)
             {
-                Console.WriteLine("\n╔══════════════════════════════════╗");
-                Console.WriteLine("║        SISTEMA DE GESTIÓN        ║");
-                Console.WriteLine("╠══════════════════════════════════╣");
-                Console.WriteLine("║ 1. Registrar Nuevo Cliente       ║");
-                Console.WriteLine("║ 2. Modificar Cliente Existente   ║");
-                Console.WriteLine("║ 3. Buscar Cliente por ID         ║");
-                Console.WriteLine("║ 4. Registrar Nueva Factura       ║");
-                Console.WriteLine("║ 5. Salir                         ║");
-                Console.WriteLine("╚══════════════════════════════════╝");
-                Console.Write("Seleccione una opción: ");
+                WriteLine("\n╔══════════════════════════════════╗");
+                WriteLine("║        SISTEMA DE GESTIÓN        ║");
+                WriteLine("╠══════════════════════════════════╣");
+                WriteLine("║        -- CLIENTES --            ║");
+                WriteLine("║ 1. Registrar Nuevo Cliente       ║");
+                WriteLine("║ 2. Modificar Cliente Existente   ║");
+                WriteLine("║ 3. Buscar Cliente por ID         ║");
+                WriteLine("║ 4. Listar Todos los Clientes     ║");
+                WriteLine("║        -- FACTURAS --            ║");
+                WriteLine("║ 5. Registrar Nueva Factura       ║");
+                WriteLine("║                                  ║");
+                WriteLine("║ 6. Salir                         ║");
+                WriteLine("╚══════════════════════════════════╝");
+                Write("Seleccione una opción: ");
 
-                var option = Console.ReadLine();
+                var option = Reader.ReadString("");
 
                 switch (option)
                 {
                     case "1":
-                        _crudServiceClient.Register();
+                        _clientService.Register();
                         break;
                     case "2":
-                        HandleUpdateClient(); // Llama al método auxiliar
+                        HandleUpdateClient();
                         break;
                     case "3":
-                        HandleSearchClient(); // Llama al método auxiliar
+                        HandleSearchClient();
                         break;
                     case "4":
-                        _invoiceService.Register();
+                        HandleListClients();
                         break;
                     case "5":
-                        Console.WriteLine("Saliendo del sistema...");
-                        return; // Termina el bucle y la aplicación
+                        _invoiceService.Register();
+                        break;
+                    case "6":
+                        WriteLine("Saliendo del sistema...");
+                        return;
                     default:
-                        Console.WriteLine("Opción no válida. Por favor, intente de nuevo.");
+                        WriteLine("Opción no válida. Por favor, intente de nuevo.");
                         break;
                 }
-                Console.WriteLine("\nPresione cualquier tecla para continuar...");
-                Console.ReadKey();
+                Reader.ReadChar("\nPresione cualquier tecla para volver al menú...");
             }
         }
-
-        // ... resto de tu clase ...
+        public static void WriteLine(string msg) {
+            Console.WriteLine($"{msg}");
+        }
+        public static void Write(string msg)
+        {
+            Console.Write(msg);
+        }
         private void HandleUpdateClient()
         {
             try
             {
-                Console.Write("Ingrese el ID del cliente que desea modificar: ");
-                int id = int.Parse(Console.ReadLine());
-                _crudServiceClient.Update(id);
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Error: El ID debe ser un número.");
+                int id = Reader.ReadInt("Ingrese el ID del cliente que desea modificar");
+                _clientService.Update(id);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocurrió un error inesperado: {ex.Message}");
+                WriteLine($"Ocurrió un error: {ex.Message}");
             }
         }
+
         private void HandleSearchClient()
         {
             try
             {
-                Console.Write("Ingrese el ID del cliente que desea buscar con sus facturas: ");
-                int id = int.Parse(Console.ReadLine());
+                int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
+                // Llama a Search y le dice que incluya la lista de facturas
+                 _clientService.Search(id, c => c.Invoices);
+                WriteLine(""); // Añade un espacio para legibilidad
+                char choice = Reader.ReadChar("¿Desea crear una nueva factura para este cliente? (S/N)");
+                WriteLine(""); // Salto de línea después de leer el carácter
 
-                // Llama al método Search y le dice que INCLUYA las facturas del cliente
-                _crudServiceClient.Search(id, cliente => cliente.Invoices);
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Error: El ID debe ser un número.");
+                if (choice == 'S' || choice == 's')
+                {
+                    // Llama al método Register sobrecargado, pasándole el cliente que ya encontramos.
+                    _invoiceService.Register(id);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ocurrió un error inesperado: {ex.Message}");
+                WriteLine($"Ocurrió un error: {ex.Message}");
             }
         }
-        /*public void ShowMainMenu()
+
+        private void HandleListClients()
         {
-            Console.WriteLine($"Bienvenido al Facturador Arca");
-            IEnumerable<Client>totalClients = repositoryClient.GetAll();
-            Console.WriteLine($"Trabajamos con {totalClients.Count()} clientes alrededor del pais");
-        }*/
+            var clientes = _clientService.GetAll();
+            WriteLine("\n--- LISTADO DE CLIENTES ---");
+            if (clientes != null && clientes.Any())
+            {
+                foreach (var cliente in clientes)
+                {
+                    WriteLine($"ID: {cliente.Id} | Nombre: {cliente.LegalName} | CUIT: {cliente.CuitCuil}");
+                }
+            }
+            else
+            {
+                WriteLine("No hay clientes registrados.");
+            }
+        }
     }
 }

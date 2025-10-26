@@ -1,29 +1,44 @@
 ﻿using Parcial3.Interfaces;
-using Parcial3.Server;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parcial3.Modules
 {
-    public class CrudService<T> where T : class, new()
+    public class CrudService<T> : ICrudService<T> where T : class, new()
     {
-        private readonly IRepository<T> _repository;
+        protected readonly IRepository<T> _repository;
         public CrudService(IRepository<T> entity)
         {
             _repository = entity;
         }
-
+        public void Delete(int id)
+        {
+            _repository.Delete(id);
+        }
+        public void List()
+        {
+            List<T> allTheObjects = _repository.GetAll().ToList();
+            var properties = typeof(T).GetProperties().ToList();
+            foreach (T item in allTheObjects)
+            {
+                    Presentator.WriteLine("---------------------------------------------");
+                foreach (var property in properties)
+                {
+                if(ShouldSkipPropertie(property, true)) continue;
+                if (property.PropertyType.IsGenericType &&
+                    property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) { 
+                        continue;
+                    }
+                Presentator.WriteLine($"{property.Name}: {property.GetValue(item)}.");
+                }
+            }
+        }
         public void Search(int id, params Expression<Func<T, object>>[] includes)
         {
+            //
             var entity = _repository.GetByIdWithIncludes(id, includes);
-            Console.WriteLine($"\n--- Detalles de {typeof(T).Name} (ID: {id}) ---");
+            Presentator.WriteLine($"\n--- Detalles de {typeof(T).Name} (ID: {id}) ---");
             PropertyInfo[] properties = typeof(T).GetProperties();
             foreach (PropertyInfo property in properties)
             {
@@ -35,12 +50,13 @@ namespace Parcial3.Modules
                     var itemList = property.GetValue(entity) as IEnumerable;
                     foreach (var item in itemList)
                     {
+                        Presentator.WriteLine($"-------------------------------------");
                         var itemProperties = item.GetType().GetProperties();
                         foreach(var itemProperty in itemProperties)
                         {
                             if (!itemProperty.PropertyType.IsClass || itemProperty.PropertyType == typeof(string))
                             {
-                                Console.WriteLine($"    - {itemProperty.Name}: {itemProperty.GetValue(item)}");
+                                Presentator.WriteLine($"    - {itemProperty.Name}: {itemProperty.GetValue(item)}");
                             }
                         }
                     }
@@ -50,7 +66,7 @@ namespace Parcial3.Modules
                 {
                     if (!property.PropertyType.IsClass || property.PropertyType == typeof(string))
                     {
-                        Console.WriteLine($"- {property.Name}: {property.GetValue(entity)}");
+                        Presentator.WriteLine($"- {property.Name}: {property.GetValue(entity)}");
                     }
                 }
 
@@ -60,16 +76,16 @@ namespace Parcial3.Modules
         public virtual void Register()
         {
             var entity = new T();
-            Console.WriteLine($"Registro de nuevo {typeof(T).Name}");
+            Presentator.WriteLine($"Registro de nuevo {typeof(T).Name}");
             var properties = typeof(T).GetProperties();
             foreach (var property in properties) {
                 if (ShouldSkipPropertie(property)) continue;
-                Console.WriteLine($"Ingrese {property.Name}: ");
+                Presentator.WriteLine($"Ingrese {property.Name}: ");
                 string input = Console.ReadLine();
                 try {
                     var convertValue = Convert.ChangeType(input, property.PropertyType);
                     property.SetValue(entity, convertValue);
-                }catch (Exception ex) { Console.WriteLine(ex.Message); }
+                }catch (Exception ex) { Presentator.WriteLine(ex.Message); }
             }
             _repository.Add(entity);
         }
@@ -77,10 +93,10 @@ namespace Parcial3.Modules
         {
             
             var entity = _repository.GetByID(id);
-            Console.WriteLine($"Modificar un {typeof(T).Name}");
+            Presentator.WriteLine($"Modificar un {typeof(T).Name}");
             // Obtenemos las propiedades de la entidad a la que le haremos un update
             var properties = typeof(T).GetProperties();
-            Console.WriteLine("Que desea modificar?");
+            Presentator.WriteLine("Que desea modificar?");
             // Comenzamos con un contador de 1 (Por temas visuales ) al momento de mostrar las propiedades cambiables
             int count = 1;
             // Lista de propiedades
@@ -88,14 +104,14 @@ namespace Parcial3.Modules
             // Recorremos y añadimos a la lista de propiedades, skipeando las inmodificables
             foreach (var property in properties) {
                 if (ShouldSkipPropertie(property)) continue;
-                Console.WriteLine($"{count}) {property.Name}");
+                Presentator.WriteLine($"{count}) {property.Name}");
                 modifiablePropertys.Add(property);
                 count++;
             }
             // Pedimos la opcion
             int option = int.Parse(Console.ReadLine());
             // Leemos el nuevo valor
-            Console.WriteLine("Ingrese el nuevo valor");
+            Presentator.WriteLine("Ingrese el nuevo valor");
             string input = Console.ReadLine();
             // Buscamos la propiedad segun la opcion seleccionada (- 1) -> porque al mostrar la lista comenzamos con el 1
             // Por tanto si no restamos devolvera el siguiente valor al que en realidad pide el usuario
@@ -106,13 +122,16 @@ namespace Parcial3.Modules
             changeProperty.SetValue(entity, convertedValue);
             _repository.Update(entity);
         }
-        public bool ShouldSkipPropertie(PropertyInfo property)
+        public bool ShouldSkipPropertie(PropertyInfo property, bool allowLists = false)
         {
             // Ignora la propiedad "Id" porque es generada por la base de datos
             if (property.Name == "Id") return true;
 
             // Ignora propiedades que son listas (relaciones de uno a muchos)
-            if (property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(System.Collections.Generic.List<>)) return true;
+            if (!allowLists && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                return true;
+            }
 
             // Ignora propiedades que son otras clases (relaciones de uno a uno)
             if (property.PropertyType.IsClass && property.PropertyType != typeof(string)) return true;
@@ -122,6 +141,10 @@ namespace Parcial3.Modules
 
 
             return false;
+        }
+        public IEnumerable<T> GetAll()
+        {
+            return _repository.GetAll();
         }
     }
 }
