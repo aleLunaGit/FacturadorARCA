@@ -3,7 +3,7 @@ using Parcial3.Interfaces;
 using Parcial3.Server;
 using System.Linq.Expressions;
 
-namespace Parcial3.Modules
+namespace Parcial3.Modules.Repositorys
 {
     public class Repository<T> : IRepository<T> where T : class
     {
