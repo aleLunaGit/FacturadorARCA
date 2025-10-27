@@ -87,7 +87,7 @@ namespace Parcial3.UI
         {
             if (_clientService == null) return;
 
-            try
+            try  
             {
                 Client newClient = new Client();
                 List<string> listOfInputs = new List<string>();
@@ -101,13 +101,15 @@ namespace Parcial3.UI
                 listOfInputs.Add(address);
 
                 _clientService.Register(newClient, listOfInputs);
+
                 WriteLine("✓ Cliente registrado exitosamente.");
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
-                WriteLine($"✗ Error al registrar cliente: {ex.Message}");
+                WriteLine($"Error al registrar cliente: {ex.Message}");
             }
         }
+        
 
         private void HandleUpdateClient()
         {
@@ -576,7 +578,6 @@ namespace Parcial3.UI
             }
         }
 
-        // ========== UTILIDADES ==========
         private string ReadLineWithCountDown(int seconds)
         {
             WriteLine($"Escriba 'si' para confirmar (tiene {seconds} segundos para elegir)");
@@ -615,5 +616,7 @@ namespace Parcial3.UI
                 return null;
             }
         }
+        
+        }
     }
-}
+
