@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Parcial3.Domain.Implementations;
 
-namespace Parcial3.Server
+namespace Parcial3.Repositories.Implementations
 {
     public class ApplicationDbContext : DbContext
     {

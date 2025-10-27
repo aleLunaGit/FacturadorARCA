@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Parcial3.Domain.Implementations;
 
-namespace Parcial3.Validators
+namespace Parcial3.Domain.Validators
 {
     public class ItemValidator
     {

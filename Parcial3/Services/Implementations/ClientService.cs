@@ -1,8 +1,9 @@
-﻿using Parcial3.Interfaces;
+﻿using Parcial3.Domain.Implementations;
+using Parcial3.Repositories.Interfaces;
 using System.Reflection;
 
 
-namespace Parcial3.Modules.Services
+namespace Parcial3.Services.Implementations
 {
     public class ClientService : CrudService<Client>
     {

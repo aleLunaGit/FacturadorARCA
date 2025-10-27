@@ -2,7 +2,7 @@
 using System.Reflection;
 
 
-namespace Parcial3.Interfaces
+namespace Parcial3.Services.Interfaces
 {
     public interface ICrudService<T>
     {

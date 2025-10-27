@@ -1,5 +1,4 @@
-﻿
-namespace Parcial3.Modules // O el namespace que prefieras
+﻿namespace Parcial3.UI // O el namespace que prefieras
 {
     public static class Reader
     {

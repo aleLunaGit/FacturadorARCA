@@ -1,7 +1,7 @@
-﻿using Parcial3.Interfaces;
+﻿using Parcial3.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace Parcial3
+namespace Parcial3.Domain.Implementations
 {
     public class Item : IItem
     {
@@ -147,16 +147,16 @@ namespace Parcial3
 
         //  MÉTODOS DE INTERFAZ 
 
-        public string GetDescription() => this.Description;
+        public string GetDescription() => Description;
 
-        public float GetQuantity() => this.Quantity;
+        public float GetQuantity() => Quantity;
 
-        public float GetPrice() => this.Price;
+        public float GetPrice() => Price;
 
-        public void SetDescription(string description) => this.Description = description;
+        public void SetDescription(string description) => Description = description;
 
-        public void SetQuantity(float quantity) => this.Quantity = quantity;
+        public void SetQuantity(float quantity) => Quantity = quantity;
 
-        public void SetPrice(float price) => this.Price = price;
+        public void SetPrice(float price) => Price = price;
     }
 }

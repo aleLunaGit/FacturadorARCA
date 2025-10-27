@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Parcial3.Interfaces
+namespace Parcial3.Repositories.Interfaces
 {
     public interface IRepository<T> where T : class
     {

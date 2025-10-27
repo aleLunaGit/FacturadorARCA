@@ -1,7 +1,8 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using Parcial3.Domain.Implementations;
 
-namespace Parcial3.Interfaces
+namespace Parcial3.Services.Implementations
 {
     public interface IItemService
     {

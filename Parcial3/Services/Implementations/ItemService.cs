@@ -1,5 +1,6 @@
-﻿using Parcial3.Interfaces;
-using Parcial3.Validators;
+﻿using Parcial3.Domain.Implementations;
+using Parcial3.Domain.Validators;
+using Parcial3.Services.Implementations;
 
 namespace Parcial3.Modules.Services
 {

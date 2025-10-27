@@ -1,9 +1,11 @@
-﻿using Parcial3.Interfaces;
+﻿using Parcial3.Repositories.Interfaces;
+using Parcial3.Services.Interfaces;
+using Parcial3.UI;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Parcial3.Modules
+namespace Parcial3.Services.Implementations
 {
     public class CrudService<T> : ICrudService<T> where T : class, new()
     {

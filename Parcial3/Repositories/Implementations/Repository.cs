@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Parcial3.Interfaces;
-using Parcial3.Server;
+using Parcial3.Repositories.Interfaces;
 using System.Linq.Expressions;
 
-namespace Parcial3.Modules.Repositorys
+namespace Parcial3.Repositories.Implementations
 {
     public class Repository<T> : IRepository<T> where T : class
     {

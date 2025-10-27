@@ -1,4 +1,4 @@
-﻿namespace Parcial3.Interfaces
+﻿namespace Parcial3.Domain.Interfaces
 {
     public interface IItem
     {

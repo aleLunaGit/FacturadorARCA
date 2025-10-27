@@ -1,10 +1,12 @@
-﻿using Parcial3.Interfaces;
+﻿using Parcial3.Domain.Implementations;
 using Parcial3.Modules.Services.Parcial3.Modules.Services;
+using Parcial3.Repositories.Interfaces;
+using Parcial3.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Parcial3.Modules.Repositorys
+namespace Parcial3.Services.Implementations
 {
     public class InvoiceService : CrudService<Invoice>, IInvoiceService<Invoice>
     {

@@ -1,11 +1,12 @@
-﻿using Parcial3.Modules.Repositorys;
+﻿using Parcial3.Domain.Implementations;
+using Parcial3.Domain.Validators;
 using Parcial3.Modules.Services.Parcial3.Modules.Services;
-using Parcial3.Validators;
+using Parcial3.Services.Implementations;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Parcial3.Modules
+namespace Parcial3.UI
 {
     public class Presentator
     {

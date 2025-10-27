@@ -1,9 +1,9 @@
-﻿using Parcial3.Interfaces;
-using Parcial3.Modules;
+﻿using Parcial3.Domain.Interfaces;
+using Parcial3.UI;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Parcial3
+namespace Parcial3.Domain.Implementations
 {
     public class Invoice : IInvoice
     {
@@ -80,7 +80,7 @@ namespace Parcial3
 
             } while (!isValidInput);
             Presentator.WriteLine($"Selected invoice type: {invoiceType}");
-             this.Type =  invoiceType;
+            Type =  invoiceType;
             // 'invoiceType' now holds the valid letter ('A', 'B', or 'C').
         }
         public void NumberGenerator(bool setDate = false)
@@ -96,7 +96,7 @@ namespace Parcial3
                 DateTime date = Reader.ReadDate("Ingrese la fecha en la que creó la factura");
                 NumberGenerated = date.ToString("ddd") + date.Year + "-" + rnd.Next(100000, 999999);
             }
-            this.Number = NumberGenerated;
+            Number = NumberGenerated;
         }
         public void CalculateTotalAmount()
         {
@@ -105,27 +105,27 @@ namespace Parcial3
             {
                 float price = item.Price;
                 float quantity = item.Quantity;
-                total = total + (item.GetPrice() * item.GetQuantity());
+                total = total + item.GetPrice() * item.GetQuantity();
             }
             AmountTotal = total;
         }
 
 
         // Setters / Getters 
-        public string GetType() => this.Type;
+        public string GetType() => Type;
 
-        public string GetNumber() => this.Number;
+        public string GetNumber() => Number;
 
-        public DateTime GetDate() => this.Date;
+        public DateTime GetDate() => Date;
 
-        public float GetAmountTotal() => this.AmountTotal;
+        public float GetAmountTotal() => AmountTotal;
 
-        public void SetType(string type)=> this.Type = type;
+        public void SetType(string type)=> Type = type;
 
         // public void SetNumber()=> this.Number = NumberGenerator();
 
-        public void SetDate(DateTime date)=> this.Date = date;
+        public void SetDate(DateTime date)=> Date = date;
 
-        public void SetAmountTotal(float amountTotal)=> this.AmountTotal = amountTotal;
+        public void SetAmountTotal(float amountTotal)=> AmountTotal = amountTotal;
     }
 }

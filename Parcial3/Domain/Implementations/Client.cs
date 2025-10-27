@@ -1,8 +1,8 @@
-﻿using Parcial3.Interfaces;
+﻿using Parcial3.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Parcial3
+namespace Parcial3.Domain.Implementations
 {
     public class Client : IPerson
     {
@@ -32,15 +32,15 @@ namespace Parcial3
             Address = address;
             Invoices = new List<Invoice>();
         }
-        public string GetCuilCuit() => this.CuitCuil;
+        public string GetCuilCuit() => CuitCuil;
 
-        public void SetCuilCuit(string cuilCuit)=> this.CuitCuil = cuilCuit;
+        public void SetCuilCuit(string cuilCuit)=> CuitCuil = cuilCuit;
 
-        public string GetLegalName() => this.LegalName;
+        public string GetLegalName() => LegalName;
 
-        public void SetLegalName(string legalName)=> this.LegalName = legalName;
+        public void SetLegalName(string legalName)=> LegalName = legalName;
 
-        public string GetAddress() => this.Address;
+        public string GetAddress() => Address;
 
         public void SetAddress(string Address)=> this.Address = Address;
 
