@@ -418,57 +418,91 @@ namespace Parcial3.UI
         // ========== MÉTODOS DE ITEMS ==========
 
         // ESTE MÉTODO AHORA ES EL ÚNICO RESPONSABLE DEL BUCLE
+        // ESTE MÉTODO AHORA ES EL ÚNICO RESPONSABLE DEL BUCLE
         private void HandleAddItems(List<Item> itemsList)
         {
             WriteLine("\n--- Agregar Productos ---");
 
             while (true)
             {
-                try
-                {
-                    // 1. Llama al especialista para crear UN solo item.
-                    var newItem = HandleItemRegistration();
+                // 1. Llama al especialista. Este método (modificado arriba)
+                //    NO lanzará un error aquí, ya que maneja sus propios
+                //    bucles de validación internos.
+                var newItem = HandleItemRegistration();
 
-                    // 2. Lo añade a la lista.
-                    itemsList.Add(newItem);
-                    WriteLine("✓ Producto agregado correctamente.");
+                // 2. Lo añade a la lista.
+                itemsList.Add(newItem);
+                WriteLine("✓ Producto agregado correctamente.");
 
-                    // 3. Pregunta al usuario si quiere continuar.
-                    char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
-                    if (choice != 'S' && choice != 's')
-                    {
-                        break; // Si no, salimos del bucle.
-                    }
-                }
-                catch (ArgumentException ex)
+                // 3. Pregunta al usuario si quiere continuar.
+                char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
+                if (choice != 'S' && choice != 's')
                 {
-                    // Atrapamos los errores de validación de la clase Item
-                    WriteLine($"✗ Error de validación: {ex.Message}");
-                    char retry = Reader.ReadChar("¿Desea intentar nuevamente? (S/N)");
-                    if (retry != 'S' && retry != 's')
-                    {
-                        break;
-                    }
+                    break; // Si no, salimos del bucle.
                 }
+
+                // ¡Ya no hay bloque try-catch!
             }
         }
 
         // ESTE MÉTODO AHORA SOLO CREA UN ITEM Y LO DEVUELVE
+        // ESTE MÉTODO AHORA SOLO CREA UN ITEM Y LO DEVUELVE
         private Item HandleItemRegistration()
         {
-            // Pide los datos para un solo item.
-            string description = Reader.ReadString("Ingrese el nombre del producto");
-            float quantity = Reader.ReadFloat("Ingrese la cantidad");
-            float price = Reader.ReadFloat("Ingrese el precio del producto");
+            var newItem = new Item(); // Creamos una instancia vacía
 
-            // Llama al servicio para crear la instancia.
-            // El try-catch en HandleAddItems se encargará de los errores.
-            return _itemService.CreateItem(description, quantity, price);
+            // 1. Pedir Descripción (bucle hasta que sea válida)
+            while (true)
+            {
+                try
+                {
+                    string description = Reader.ReadString("Ingrese el nombre del producto");
+                    newItem.Description = description; // Intenta asignar (esto dispara la validación de Item.cs)
+                    break; // Si tiene éxito, sal del bucle
+                }
+                catch (ArgumentException ex)
+                {
+                    WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
+                    // El bucle se repite, pidiendo solo la descripción
+                }
+            }
+
+            // 2. Pedir Cantidad (bucle hasta que sea válida)
+            while (true)
+            {
+                try
+                {
+                    float quantity = Reader.ReadFloat("Ingrese la cantidad");
+                    newItem.Quantity = quantity; // Intenta asignar (dispara validación)
+                    break; // Éxito
+                }
+                catch (ArgumentException ex)
+                {
+                    WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
+                    // El bucle se repite, pidiendo solo la cantidad
+                }
+            }
+
+            // 3. Pedir Precio (bucle hasta que sea válido)
+            while (true)
+            {
+                try
+                {
+                    float price = Reader.ReadFloat("Ingrese el precio del producto");
+                    newItem.Price = price; // Intenta asignar (dispara validación)
+                    break; // Éxito
+                }
+                catch (ArgumentException ex)
+                {
+                    WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
+                    // El bucle se repite, pidiendo solo el precio
+                }
+            }
+
+            // Ya no usamos _itemService.CreateItem, porque construimos el
+            // ítem validado aquí mismo.
+            return newItem;
         }
-
-        // También, asegúrate de que tu ItemService tenga el método CreateItem
-        // (Si no lo tienes, puedes añadirlo. He visto que tienes validaciones
-        // en tu clase Item, ¡lo cual es excelente!)
 
         private void HandleUpdateItemInList(List<Item> itemsList)
         {
@@ -486,13 +520,17 @@ namespace Parcial3.UI
             }
 
             int input = Reader.ReadInt("¿Qué item desea modificar?");
-            Item itemToUpdate = _itemService.Search(input - 1);
+            int index = input - 1; // Convertir el input (1-based) a índice (0-based)
 
-            if (itemToUpdate == null)
+            // Validar que el índice esté dentro de los límites de la lista
+            if (index < 0 || index >= itemsList.Count)
             {
                 WriteLine("✗ Índice inválido.");
                 return;
             }
+
+            // Obtener el ítem directamente de la lista
+            Item itemToUpdate = itemsList[index];
 
             WriteLine($"\n--- Modificar: {itemToUpdate.Description} ---");
             WriteLine($"1) Descripción: {itemToUpdate.Description}");
