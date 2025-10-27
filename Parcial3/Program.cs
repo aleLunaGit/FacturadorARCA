@@ -1,6 +1,7 @@
 ﻿using Parcial3.Modules;
 using Parcial3.Modules.Repositorys;
 using Parcial3.Modules.Services;
+using Parcial3.Modules.Services.Parcial3.Modules.Services;
 using Parcial3.Server;
 
 namespace Parcial3

@@ -1,4 +1,5 @@
 ﻿using Parcial3.Interfaces;
+using Parcial3.Validators;
 
 namespace Parcial3.Modules.Services
 {
@@ -6,209 +7,132 @@ namespace Parcial3.Modules.Services
     {
         public class ItemService : IItemService
         {
-            public Item Item { get; set; }
-            public ItemService() { }
+            private readonly ItemValidator _validator;
 
-            public Item ItemRegister()
+            public ItemService()
             {
-                Item item = null;
-                bool itemCreated = false;
-
-                while (!itemCreated)
-                {
-                    try
-                    {
-                        string description = Reader.ReadString("Ingrese el nombre del producto");
-                        float quantity = Reader.ReadFloat("Ingrese la cantidad que compró");
-                        float price = Reader.ReadFloat("Ingrese el precio del producto");
-
-                        // El constructor de Item valida automáticamente
-                        item = new Item(description, quantity, price);
-
-                        itemCreated = true;
-                        Presentator.WriteLine("✓ Item creado exitosamente.");
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        // Captura las validaciones lanzadas por Item
-                        Presentator.WriteLine(ex.Message);
-                        char retry = Reader.ReadChar("\n¿Desea intentar nuevamente? (S/N)");
-                        if (retry != 'S' && retry != 's')
-                        {
-                            throw new OperationCanceledException("Operación cancelada por el usuario.");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Presentator.WriteLine($"ERROR inesperado: {ex.Message}");
-                        char retry = Reader.ReadChar("\n¿Desea intentar nuevamente? (S/N)");
-                        if (retry != 'S' && retry != 's')
-                        {
-                            throw;
-                        }
-                    }
-                }
-
-                return item;
+                _validator = new ItemValidator();
             }
 
-            public List<Item> UpdateItem(List<Item> itemsList)
+            // Crea un item con los datos proporcionados y lo valida
+            public (Item item, ValidationResult result) CreateItem(string description, float quantity, float price)
             {
-                if (itemsList == null || !itemsList.Any())
+                var item = new Item
                 {
-                    Presentator.WriteLine("ERROR: No hay items para modificar.");
-                    return itemsList;
-                }
+                    Description = description,
+                    Quantity = quantity,
+                    Price = price
+                };
 
-                int count = 1;
-                Presentator.WriteLine("\n--- Items disponibles ---");
-                foreach (Item item in itemsList)
-                {
-                    Presentator.WriteLine($"{count}) {item.Description} | Cantidad: {item.Quantity} | Precio: ${item.Price}");
-                    count++;
-                }
-
-                bool validSelection = false;
-                Item itemToUpdate = null;
-
-                while (!validSelection)
-                {
-                    int itemIndex = Reader.ReadInt("¿Qué item desea modificar?");
-
-                    if (itemIndex < 1 || itemIndex > itemsList.Count)
-                    {
-                        Presentator.WriteLine($"ERROR: Debe seleccionar un número entre 1 y {itemsList.Count}.");
-                    }
-                    else
-                    {
-                        itemToUpdate = itemsList[itemIndex - 1];
-                        validSelection = true;
-                    }
-                }
-
-                Presentator.WriteLine($"\n--- Modificando: {itemToUpdate.Description} ---");
-                Presentator.WriteLine($"1) Descripción: {itemToUpdate.Description}");
-                Presentator.WriteLine($"2) Cantidad: {itemToUpdate.Quantity}");
-                Presentator.WriteLine($"3) Precio: ${itemToUpdate.Price}");
-
-                validSelection = false;
-                int optionToUpdate = 0;
-
-                while (!validSelection)
-                {
-                    optionToUpdate = Reader.ReadInt("¿Qué desea modificar?");
-
-                    if (optionToUpdate < 1 || optionToUpdate > 3)
-                    {
-                        Presentator.WriteLine("ERROR: Debe seleccionar una opción entre 1 y 3.");
-                    }
-                    else
-                    {
-                        validSelection = true;
-                    }
-                }
-
-                bool updateSuccess = false;
-                while (!updateSuccess)
-                {
-                    try
-                    {
-                        switch (optionToUpdate)
-                        {
-                            case 1:
-                                var description = Reader.ReadString("Ingrese la nueva descripción");
-                                itemToUpdate.SetDescription(description); // Valida automáticamente
-                                Presentator.WriteLine("✓ Descripción actualizada correctamente.");
-                                break;
-
-                            case 2:
-                                float quantity = Reader.ReadFloat("Ingrese la nueva cantidad");
-                                itemToUpdate.SetQuantity(quantity); // Valida automáticamente
-                                Presentator.WriteLine("✓ Cantidad actualizada correctamente.");
-                                break;
-
-                            case 3:
-                                float price = Reader.ReadFloat("Ingrese el nuevo precio");
-                                itemToUpdate.SetPrice(price); // Valida automáticamente
-                                Presentator.WriteLine("✓ Precio actualizado correctamente.");
-                                break;
-                        }
-                        updateSuccess = true;
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        // Captura las validaciones de Item
-                        Presentator.WriteLine(ex.Message);
-                        char retry = Reader.ReadChar("\n¿Desea intentar nuevamente? (S/N)");
-                        if (retry != 'S' && retry != 's')
-                        {
-                            Presentator.WriteLine("Actualización cancelada.");
-                            break;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Presentator.WriteLine($"ERROR inesperado: {ex.Message}");
-                        break;
-                    }
-                }
-
-                return itemsList;
+                var validationResult = _validator.ValidateItem(item);
+                return (item, validationResult);
             }
 
-            public List<Item> AddItems(List<Item> itemsList)
+            // Actualiza un item existente con validación
+            public ValidationResult UpdateItemDescription(Item item, string newDescription)
             {
-                if (itemsList == null)
+                var validationResult = _validator.ValidateDescription(newDescription);
+                if (validationResult.IsValid)
                 {
-                    itemsList = new List<Item>();
+                    item.SetDescription(newDescription);
                 }
+                return validationResult;
+            }
 
-                while (true)
+            public ValidationResult UpdateItemQuantity(Item item, float newQuantity)
+            {
+                var validationResult = _validator.ValidateQuantity(newQuantity);
+                if (validationResult.IsValid)
                 {
-                    try
-                    {
-                        Presentator.WriteLine("\n--- Agregar nuevo item ---");
-                        var item = ItemRegister();
-
-                        if (item != null)
-                        {
-                            itemsList.Add(item);
-                            Presentator.WriteLine($"✓ Item '{item.Description}' agregado exitosamente.");
-                        }
-
-                        char choice = Reader.ReadChar("\n¿Desea agregar otro item? (X = Sí / Cualquier otra tecla = No)");
-                        if (choice != 'X' && choice != 'x')
-                        {
-                            break;
-                        }
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        Presentator.WriteLine("Operación de agregar items cancelada.");
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        Presentator.WriteLine($"ERROR al agregar el item: {ex.Message}");
-                        char retry = Reader.ReadChar("¿Desea intentar nuevamente? (S/N)");
-                        if (retry != 'S' && retry != 's')
-                        {
-                            break;
-                        }
-                    }
+                    item.SetQuantity(newQuantity);
                 }
+                return validationResult;
+            }
 
-                if (itemsList.Any())
+            public ValidationResult UpdateItemPrice(Item item, float newPrice)
+            {
+                var validationResult = _validator.ValidatePrice(newPrice);
+                if (validationResult.IsValid)
                 {
-                    Presentator.WriteLine($"\n✓ Total de items: {itemsList.Count}");
+                    item.SetPrice(newPrice);
                 }
-                else
-                {
-                    Presentator.WriteLine("\nADVERTENCIA: No se agregaron items.");
-                }
+                return validationResult;
+            }
 
-                return itemsList;
+            // Agrega un item a una lista si es válido
+            public (bool success, ValidationResult result) AddItemToList(List<Item> itemsList, Item item)
+            {
+                var validationResult = _validator.ValidateItem(item);
+                if (validationResult.IsValid)
+                {
+                    itemsList.Add(item);
+                    return (true, validationResult);
+                }
+                return (false, validationResult);
+            }
+
+            // Calcula el total de un item
+            public float CalculateItemTotal(Item item)
+            {
+                return item.Price * item.Quantity;
+            }
+
+            // Calcula el total de todos los items
+            public float CalculateTotalAmount(List<Item> items)
+            {
+                float total = 0;
+                foreach (var item in items)
+                {
+                    total += CalculateItemTotal(item);
+                }
+                return total;
+            }
+
+            // Obtiene un item de la lista por índice
+            public Item GetItemByIndex(List<Item> itemsList, int index)
+            {
+                if (index < 0 || index >= itemsList.Count)
+                {
+                    return null;
+                }
+                return itemsList[index];
+            }
+
+            // Elimina un item de la lista
+            public bool RemoveItem(List<Item> itemsList, int index)
+            {
+                if (index < 0 || index >= itemsList.Count)
+                {
+                    return false;
+                }
+                itemsList.RemoveAt(index);
+                return true;
+            }
+
+            (Item item, System.ComponentModel.DataAnnotations.ValidationResult result) IItemService.CreateItem(string description, float quantity, float price)
+            {
+                throw new NotImplementedException();
+            }
+
+            System.ComponentModel.DataAnnotations.ValidationResult IItemService.UpdateItemDescription(Item item, string newDescription)
+            {
+                throw new NotImplementedException();
+            }
+
+            System.ComponentModel.DataAnnotations.ValidationResult IItemService.UpdateItemQuantity(Item item, float newQuantity)
+            {
+                throw new NotImplementedException();
+            }
+
+            System.ComponentModel.DataAnnotations.ValidationResult IItemService.UpdateItemPrice(Item item, float newPrice)
+            {
+                throw new NotImplementedException();
+            }
+
+            (bool success, System.ComponentModel.DataAnnotations.ValidationResult result) IItemService.AddItemToList(List<Item> itemsList, Item item)
+            {
+                throw new NotImplementedException();
             }
         }
+        }
     }
-}

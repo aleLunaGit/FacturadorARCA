@@ -1,40 +1,48 @@
 ﻿using Parcial3.Interfaces;
-using Parcial3.Modules.Services;
-using System.Net;
-
+using Parcial3.Modules.Services.Parcial3.Modules.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Parcial3.Modules.Repositorys
 {
     public class InvoiceService : CrudService<Invoice>, IInvoiceService<Invoice>
     {
-        
         private readonly IRepository<Client> _clientRepository;
-        private readonly ItemService _itemService;
+        private ItemService itemService;
 
-        
-        public InvoiceService( IRepository<Invoice> invoiceRepository, IRepository<Client> clientRepository,   ItemService itemService): base(invoiceRepository) 
+        public InvoiceService(IRepository<Invoice> invoiceRepository, IRepository<Client> clientRepository)
+            : base(invoiceRepository)
         {
-
             _clientRepository = clientRepository;
-            _itemService = itemService;
         }
 
+        public InvoiceService(IRepository<Invoice> invoiceRepository, IRepository<Client> clientRepository, ItemService itemService) : this(invoiceRepository, clientRepository)
+        {
+            this.itemService = itemService;
+        }
+
+        // Crea un borrador de factura (sin items, se agregan después desde el menú)
         public Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items)
         {
             Invoice draftInvoice = new Invoice();
             Client client = _clientRepository.GetByID(clientId);
+
             if (client == null)
                 throw new InvalidOperationException($"Cliente no encontrado con el ID: {clientId}");
-            _itemService.AddItems(items);
+
+            // NO llamamos a AddItems aquí, eso lo maneja el ItemMenu
             draftInvoice.Client = client;
             draftInvoice.ClientId = clientId;
             draftInvoice.Type = invoiceType;
-            draftInvoice.Items = items;
+            draftInvoice.Items = items; // Asignamos la lista vacía
             draftInvoice.Date = DateTime.Now;
             draftInvoice.NumberGenerator();
             draftInvoice.CalculateTotalAmount();
+
             return draftInvoice;
         }
+
         public void CreateNewInvoice(Invoice draftInvoice)
         {
             if (draftInvoice == null)
@@ -42,32 +50,19 @@ namespace Parcial3.Modules.Repositorys
 
             if (draftInvoice.Client == null || draftInvoice.Client.Id <= 0)
                 throw new InvalidOperationException("La factura debe estar asociada a un cliente válido.");
-            
+
             if (string.IsNullOrWhiteSpace(draftInvoice.Type))
                 throw new InvalidOperationException("El tipo de factura (A, B, C) es requerido.");
+
             if (draftInvoice.Items == null || !draftInvoice.Items.Any())
                 throw new InvalidOperationException("La factura debe contener al menos un ítem.");
 
-            // Verificamos que el cliente realmente exista en nuestra base de datos.
+            // Verificamos que el cliente realmente exista en nuestra base de datos
             var clientExists = _clientRepository.GetByID(draftInvoice.Client.Id);
             if (clientExists == null)
                 throw new InvalidOperationException($"El cliente con ID {draftInvoice.Client.Id} no existe en la base de datos.");
+
             _repository.Add(draftInvoice);
         }
-
-        // Calculates the total amount.
-
-        // Add Items until users press something diff than x and associates to an invoice
-
-
-        // Calculates the IVA and TotalAmount per separates
-        /* private void TotalTypeA()
-        {
-            float IVA = AmountTotal / (1 + 21);
-            float DiscriminatedTotal = AmountTotal - IVA;
-            Console.WriteLine($"Total:{DiscriminatedTotal} | IVA: {IVA}");
-        } */
-        // Generate an Invoices Number who follow a determinated format
-
     }
-}
+}   
