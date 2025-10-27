@@ -14,7 +14,7 @@ namespace Parcial3.Services.Interfaces
     }
     public interface IInvoiceService<T> {
         void Register(T entity);
-        void Search(int id, params Expression<Func<T, object>>[] includes);
+        T SearchWhitIncludes(int id, params Expression<Func<T, object>>[] includes);
     }
 
 }

@@ -155,11 +155,11 @@ namespace Parcial3.UI
             try
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
-                Client entity = _clientService.Search(id);
+                Client entity = _clientService.SearchWhitIncludes(id, x => x.Invoices);
 
                 if (entity == null)
                 {
-                    WriteLine($"✗ No se encontró un cliente con ID {id}");
+                    WriteLine($"No se encontró un cliente con ID {id}");
                     return;
                 }
 
@@ -168,13 +168,14 @@ namespace Parcial3.UI
             }
             catch (Exception ex)
             {
-                WriteLine($"✗ Ocurrió un error: {ex.Message}");
+                WriteLine($"Ocurrió un error: {ex.Message}");
             }
         }
 
         private void ShowClient(Client entity, params Expression<Func<Client, object>>[] includes)
         {
-            var properties = _clientService.ListModifyableProperties(entity);
+            Client clienteBuscado = entity;
+            var properties = typeof(Client).GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
