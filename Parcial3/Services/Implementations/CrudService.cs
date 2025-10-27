@@ -24,7 +24,6 @@ namespace Parcial3.Services.Implementations
             var properties = typeof(T).GetProperties().ToList();
             foreach (T item in allTheObjects)
             {
-                    Presentator.WriteLine("---------------------------------------------");
                 foreach (var property in properties)
                 {
                 if(ShouldSkipPropertie(property, true)) continue;

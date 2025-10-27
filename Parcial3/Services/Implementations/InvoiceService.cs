@@ -1,5 +1,6 @@
 ﻿using Parcial3.Domain.Implementations;
 using Parcial3.Modules.Services.Parcial3.Modules.Services;
+using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
 using System;
@@ -8,36 +9,38 @@ using System.Linq;
 
 namespace Parcial3.Services.Implementations
 {
-    public class InvoiceService : CrudService<Invoice>, IInvoiceService<Invoice>
+    public class InvoiceService : IInvoiceService
     {
+        private readonly IRepository<Invoice> _invoiceRepository;
         private readonly IRepository<Client> _clientRepository;
-        private ItemService itemService;
+        private readonly ApplicationDbContext _context; // Para controlar la transacción
 
-        public InvoiceService(IRepository<Invoice> invoiceRepository, IRepository<Client> clientRepository)
-            : base(invoiceRepository)
+        // --- CONSTRUCTOR (Inyección de Dependencias) ---
+        public InvoiceService(
+            IRepository<Invoice> invoiceRepository,
+            IRepository<Client> clientRepository,
+            ApplicationDbContext context)// Pedimos el DbContext
         {
+            _invoiceRepository = invoiceRepository;
             _clientRepository = clientRepository;
-        }
-
-        public InvoiceService(IRepository<Invoice> invoiceRepository, IRepository<Client> clientRepository, ItemService itemService) : this(invoiceRepository, clientRepository)
-        {
-            this.itemService = itemService;
+            _context = context; // Lo guardamos
         }
 
         // Crea un borrador de factura (sin items, se agregan después desde el menú)
         public Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items)
         {
-            Invoice draftInvoice = new Invoice();
+            
             Client client = _clientRepository.GetByID(clientId);
 
             if (client == null)
                 throw new InvalidOperationException($"Cliente no encontrado con el ID: {clientId}");
 
-            // NO llamamos a AddItems aquí, eso lo maneja el ItemMenu
-            draftInvoice.Client = client;
-            draftInvoice.ClientId = clientId;
-            draftInvoice.Type = invoiceType;
-            draftInvoice.Items = items; // Asignamos la lista vacía
+            Invoice draftInvoice = new Invoice {
+                Client = client,
+                Type = invoiceType,
+                Items = items
+            };
+            
             draftInvoice.Date = DateTime.Now;
             draftInvoice.NumberGenerator();
             draftInvoice.CalculateTotalAmount();
@@ -64,7 +67,8 @@ namespace Parcial3.Services.Implementations
             if (clientExists == null)
                 throw new InvalidOperationException($"El cliente con ID {draftInvoice.Client.Id} no existe en la base de datos.");
 
-            _repository.Add(draftInvoice);
+            _invoiceRepository.Add(draftInvoice);
+            _context.SaveChanges();
         }
     }
 }   

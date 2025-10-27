@@ -83,20 +83,12 @@ namespace Parcial3.Domain.Implementations
             Type =  invoiceType;
             // 'invoiceType' now holds the valid letter ('A', 'B', or 'C').
         }
-        public void NumberGenerator(bool setDate = false)
+        public void NumberGenerator()
         {
             string NumberGenerated = "";
             Random rnd = new Random();
-            if (!setDate)
-            {
                 NumberGenerated = DateTime.Now.ToString("ddd") + DateTime.Now.Year + "-" + rnd.Next(100000, 999999);
-            }
-            else
-            {
-                DateTime date = Reader.ReadDate("Ingrese la fecha en la que creó la factura");
-                NumberGenerated = date.ToString("ddd") + date.Year + "-" + rnd.Next(100000, 999999);
-            }
-            Number = NumberGenerated;
+            this.Number = NumberGenerated;
         }
         public void CalculateTotalAmount()
         {

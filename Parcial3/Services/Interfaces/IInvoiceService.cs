@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Parcial3.Interfaces
+namespace Parcial3.Services.Interfaces
 {
     internal interface IInvoiceService
     {

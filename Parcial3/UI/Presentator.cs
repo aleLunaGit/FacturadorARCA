@@ -1,5 +1,5 @@
 ﻿using Parcial3.Domain.Implementations;
-using Parcial3.Domain.Validators;
+using Parcial3.Modules;
 using Parcial3.Modules.Services.Parcial3.Modules.Services;
 using Parcial3.Services.Implementations;
 using System.Collections;
@@ -118,7 +118,7 @@ namespace Parcial3.UI
 
                 if (updateClient == null)
                 {
-                    WriteLine($"✗ No se encontró un cliente con ID {clientId}");
+                    WriteLine($"No se encontró un cliente con ID {clientId}");
                     return;
                 }
 
@@ -127,11 +127,11 @@ namespace Parcial3.UI
                 var changeTo = Reader.ReadString("Ingrese el nuevo valor");
 
                 _clientService.Update(updateClient, changeTo, input);
-                WriteLine("✓ Cliente actualizado exitosamente.");
+                WriteLine("Cliente actualizado exitosamente.");
             }
             catch (Exception ex)
             {
-                WriteLine($"✗ Ocurrió un error: {ex.Message}");
+                WriteLine($"Ocurrió un error: {ex.Message}");
             }
         }
 
@@ -174,7 +174,6 @@ namespace Parcial3.UI
 
         private void ShowClient(Client entity, params Expression<Func<Client, object>>[] includes)
         {
-            Client clienteBuscado = entity;
             var properties = typeof(Client).GetProperties();
 
             foreach (PropertyInfo property in properties)
@@ -243,24 +242,24 @@ namespace Parcial3.UI
                 if (confirmacion != null && confirmacion.ToLower() == "si")
                 {
                     _clientService.Delete(id);
-                    WriteLine("✓ Cliente eliminado exitosamente.");
+                    WriteLine("Cliente eliminado exitosamente.");
                 }
                 else if (confirmacion == null)
                 {
-                    WriteLine("✗ Eliminación cancelada por tiempo fuera de espera (10 segundos)");
+                    WriteLine("Eliminación cancelada por tiempo fuera de espera (10 segundos)");
                 }
                 else
                 {
-                    WriteLine("✗ Eliminación cancelada.");
+                    WriteLine("Eliminación cancelada.");
                 }
             }
             catch (FormatException)
             {
-                WriteLine("✗ Error: El ID debe ser un número.");
+                WriteLine("Error: El ID debe ser un número.");
             }
             catch (Exception ex)
             {
-                WriteLine($"✗ Ocurrió un error inesperado: {ex.Message}");
+                WriteLine($"Ocurrió un error inesperado: {ex.Message}");
             }
         }
 
@@ -416,32 +415,60 @@ namespace Parcial3.UI
         }
 
         // ========== MÉTODOS DE ITEMS ==========
-        private Item HandleItemRegistration()
+        // ========== MÉTODOS DE ITEMS ==========
+
+        // ESTE MÉTODO AHORA ES EL ÚNICO RESPONSABLE DEL BUCLE
+        private void HandleAddItems(List<Item> itemsList)
         {
+            WriteLine("\n--- Agregar Productos ---");
+
             while (true)
             {
-                string description = Reader.ReadString("Ingrese el nombre del producto");
-                float quantity = Reader.ReadFloat("Ingrese la cantidad");
-                float price = Reader.ReadFloat("Ingrese el precio del producto");
-
-                var (item, validationResult) = _itemService.CreateItem(description, quantity, price);
-
-                if (validationResult.IsValid)
+                try
                 {
-                    WriteLine("✓ Producto registrado correctamente.");
-                    return item;
+                    // 1. Llama al especialista para crear UN solo item.
+                    var newItem = HandleItemRegistration();
+
+                    // 2. Lo añade a la lista.
+                    itemsList.Add(newItem);
+                    WriteLine("✓ Producto agregado correctamente.");
+
+                    // 3. Pregunta al usuario si quiere continuar.
+                    char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
+                    if (choice != 'S' && choice != 's')
+                    {
+                        break; // Si no, salimos del bucle.
+                    }
                 }
-                else
+                catch (ArgumentException ex)
                 {
-                    WriteLine($"✗ Error de validación: {validationResult.ErrorMessage}");
+                    // Atrapamos los errores de validación de la clase Item
+                    WriteLine($"✗ Error de validación: {ex.Message}");
                     char retry = Reader.ReadChar("¿Desea intentar nuevamente? (S/N)");
                     if (retry != 'S' && retry != 's')
                     {
-                        return null;
+                        break;
                     }
                 }
             }
         }
+
+        // ESTE MÉTODO AHORA SOLO CREA UN ITEM Y LO DEVUELVE
+        private Item HandleItemRegistration()
+        {
+            // Pide los datos para un solo item.
+            string description = Reader.ReadString("Ingrese el nombre del producto");
+            float quantity = Reader.ReadFloat("Ingrese la cantidad");
+            float price = Reader.ReadFloat("Ingrese el precio del producto");
+
+            // Llama al servicio para crear la instancia.
+            // El try-catch en HandleAddItems se encargará de los errores.
+            return _itemService.CreateItem(description, quantity, price);
+        }
+
+        // También, asegúrate de que tu ItemService tenga el método CreateItem
+        // (Si no lo tienes, puedes añadirlo. He visto que tienes validaciones
+        // en tu clase Item, ¡lo cual es excelente!)
 
         private void HandleUpdateItemInList(List<Item> itemsList)
         {
@@ -459,7 +486,7 @@ namespace Parcial3.UI
             }
 
             int input = Reader.ReadInt("¿Qué item desea modificar?");
-            Item itemToUpdate = _itemService.GetItemByIndex(itemsList, input - 1);
+            Item itemToUpdate = _itemService.Search(input - 1);
 
             if (itemToUpdate == null)
             {
@@ -477,26 +504,25 @@ namespace Parcial3.UI
             bool success = false;
             while (!success)
             {
-                ValidationResult validationResult = null;
 
                 switch (option)
                 {
                     case 1:
                         string newDescription = Reader.ReadString("Ingrese el nuevo nombre del producto");
-                        validationResult = _itemService.UpdateItemDescription(itemToUpdate, newDescription);
-                        success = validationResult.IsValid;
+                        _itemService.UpdateItemDescription(itemToUpdate, newDescription);
+   
                         break;
 
                     case 2:
                         float newQuantity = Reader.ReadFloat("Ingrese la nueva cantidad");
-                        validationResult = _itemService.UpdateItemQuantity(itemToUpdate, newQuantity);
-                        success = validationResult.IsValid;
+                        _itemService.UpdateItemQuantity(itemToUpdate, newQuantity);
+
                         break;
 
                     case 3:
                         float newPrice = Reader.ReadFloat("Ingrese el nuevo precio");
-                        validationResult = _itemService.UpdateItemPrice(itemToUpdate, newPrice);
-                        success = validationResult.IsValid;
+                        _itemService.UpdateItemPrice(itemToUpdate, newPrice);
+                        
                         break;
 
                     default:
@@ -504,50 +530,12 @@ namespace Parcial3.UI
                         return;
                 }
 
-                if (!success && validationResult != null)
-                {
-                    WriteLine($"✗ Error de validación: {validationResult.ErrorMessage}");
                     char retry = Reader.ReadChar("¿Desea intentar nuevamente? (S/N)");
                     if (retry != 'S' && retry != 's')
                     {
                         return;
                     }
-                }
-                else if (success)
-                {
-                    WriteLine("✓ Item actualizado correctamente.");
-                }
             }
-        }
-
-        private void HandleAddItems(List<Item> itemsList)
-        {
-            WriteLine("\n--- Agregar Productos ---");
-
-            while (true)
-            {
-                var newItem = HandleItemRegistration();
-
-                if (newItem != null)
-                {
-                    var (success, validationResult) = _itemService.AddItemToList(itemsList, newItem);
-
-                    if (success)
-                    {
-                        float itemTotal = _itemService.CalculateItemTotal(newItem);
-                        WriteLine($"✓ Producto agregado. Subtotal: ${itemTotal:F2}");
-                    }
-                }
-
-                char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
-                if (choice != 'S' && choice != 's')
-                {
-                    break;
-                }
-            }
-
-            float total = _itemService.CalculateTotalAmount(itemsList);
-            WriteLine($"\n✓ Total de items: {itemsList.Count} | Total general: ${total:F2}");
         }
 
         private void HandleRemoveItem(List<Item> itemsList)

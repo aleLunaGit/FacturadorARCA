@@ -1,26 +1,18 @@
-﻿
+﻿using Parcial3.Domain.Implementations;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Parcial3.Domain.Implementations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Parcial3.Services.Implementations
+namespace Parcial3.Services.Interfaces
 {
-    public interface IItemService
+    public interface IItemService : ICrudService<Item>
     {
-        // Creación y validación
-        (Item item, ValidationResult result) CreateItem(string description, float quantity, float price);
-
-        // Actualización con validación
-        ValidationResult UpdateItemDescription(Item item, string newDescription);
-        ValidationResult UpdateItemQuantity(Item item, float newQuantity);
-        ValidationResult UpdateItemPrice(Item item, float newPrice);
-
-        // Gestión de listas
-        (bool success, ValidationResult result) AddItemToList(List<Item> itemsList, Item item);
-        Item GetItemByIndex(List<Item> itemsList, int index);
-        bool RemoveItem(List<Item> itemsList, int index);
-
-        // Cálculos
-        float CalculateItemTotal(Item item);
-        float CalculateTotalAmount(List<Item> items);
+        Item CreateItem(string description, float quantity, float price);
+        void UpdateItemDescription(Item item, string newDescription);
+        void UpdateItemPrice(Item item, float newPrice);
+        void UpdateItemQuantity(Item item, float newQuantity);
     }
 }
