@@ -1,9 +1,8 @@
-﻿using Parcial3.Modules;
-using Parcial3.Modules.Repositorys;
-using Parcial3.Modules.Services;
+﻿using Parcial3.Domain.Implementations;
+using Parcial3.Repositories.Implementations;
 using Parcial3.Modules.Services.Parcial3.Modules.Services;
-using Parcial3.Server;
-
+using Parcial3.Services.Implementations;
+using Parcial3.UI;
 namespace Parcial3
 {
     internal class Program
