@@ -38,11 +38,11 @@ namespace Parcial3.Services.Implementations
         }
         public T Search(int id) => _repository.GetByID(id);
 
-        public virtual void Search(int id, params Expression<Func<T, object>>[] includes)
+        public virtual T SearchWhitIncludes(int id, params Expression<Func<T, object>>[] includes)
         {
             // TODO: Arreglar el principio SRP del Search
-            var entity = _repository.GetByIdWithIncludes(id, includes);
-   
+            return _repository.GetByIdWithIncludes(id, includes);
+            
         }
         public virtual List<PropertyInfo> ListModifyableProperties(T entity)
         {
