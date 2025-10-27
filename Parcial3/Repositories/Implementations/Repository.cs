@@ -6,11 +6,9 @@ namespace Parcial3.Repositories.Implementations
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private readonly ApplicationDbContext  _context;
         private readonly DbSet<T> _dbSet;
 
         public Repository(ApplicationDbContext context){
-            _context = context;
             _dbSet = context.Set<T>();
             }
         public T GetByID(int Id) { 
@@ -41,17 +39,14 @@ namespace Parcial3.Repositories.Implementations
         public void Add(T entity)
         {
             _dbSet.Add(entity);
-            _context.SaveChanges();
         }
         public void Update(T entity)
         {
             _dbSet.Update(entity);
-            _context.SaveChanges();
         }
         public void Delete(int id)
         {
             _dbSet.Remove(_dbSet.Find(id));
-            _context.SaveChanges();
         }
     }
 }

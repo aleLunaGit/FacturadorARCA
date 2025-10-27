@@ -12,7 +12,7 @@ namespace Parcial3.Services.Interfaces
         bool ShouldSkipPropertie(PropertyInfo property, bool allowLists = false);
         public IEnumerable<T> GetAll();
     }
-    public interface IInvoiceService<T> {
+    public interface IInvoiceCrudService<T> {
         void Register(T entity);
         T SearchWhitIncludes(int id, params Expression<Func<T, object>>[] includes);
     }

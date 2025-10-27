@@ -8,15 +8,15 @@ namespace Parcial3.Domain.Implementations
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; private set; }
+        public int Id { get; set; }
         [Required]
 
-        public string CuitCuil { get; private set; }
+        public string CuitCuil { get; set; }
         [Required]
-        public string LegalName { get; private set; }
+        public string LegalName { get; set; }
         [Required]
-        public string Address { get; private set; }
-        public List<Invoice> Invoices { get; private set; }
+        public string Address { get; set; }
+        public List<Invoice> Invoices { get; set; }
         public Client()
         {
             Invoices = new List<Invoice>();
@@ -31,6 +31,13 @@ namespace Parcial3.Domain.Implementations
             LegalName = legalName;
             Address = address;
             Invoices = new List<Invoice>();
+        }
+        public void ReadCuitCuil(string cuit)
+        {
+            // Validaciones para CUIT o CUIL
+            string validado ="";
+            CuitCuil = validado;
+
         }
         public string GetCuilCuit() => CuitCuil;
 
