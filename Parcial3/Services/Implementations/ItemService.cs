@@ -1,4 +1,5 @@
 ﻿using Parcial3.Domain.Implementations;
+using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Implementations;
 using Parcial3.Services.Interfaces;
@@ -10,7 +11,7 @@ namespace Parcial3.Modules.Services
         public class ItemService : CrudService<Item>, IItemService
         {
 
-            public ItemService(IRepository<Item> entity) : base(entity)
+            public ItemService(IRepository<Item> entity, ApplicationDbContext context) : base(entity, context)
             {
 
             }

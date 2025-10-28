@@ -34,7 +34,8 @@ namespace Parcial3.UI
                 Console.WriteLine("║ 4. Listar Clientes               ║");
                 Console.WriteLine("║ 5. Eliminar Cliente              ║");
                 Console.WriteLine("║ 6. Registrar Nueva Factura       ║");
-                Console.WriteLine("║ 7. Salir                         ║");
+                Console.WriteLine("║ 7. Consultar Factura por ID      ║");
+                Console.WriteLine("║ 8. Salir                         ║");
                 Console.WriteLine("╚══════════════════════════════════╝");
                 Console.Write("Seleccione una opción: ");
 
@@ -61,6 +62,9 @@ namespace Parcial3.UI
                         HandleRegisterInvoice();
                         break;
                     case "7":
+                        HandleSearchInvoice();
+                        break;
+                    case "8":
                         WriteLine("Saliendo del sistema...");
                         return;
                     default:
@@ -71,7 +75,55 @@ namespace Parcial3.UI
             }
         }
 
-        // ========== MÉTODOS AUXILIARES ==========
+        private void HandleSearchInvoice()
+        {
+            try
+            {
+                int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
+                Client entity = _clientService.SearchWhitIncludes(id, x => x.Invoices);
+
+                if (entity == null)
+                {
+                    WriteLine($"No se encontró un cliente con ID {id}");
+                    return;
+                }
+
+                foreach (var invoiceInfo in entity.GetInvoices())
+                {
+                    WriteLine($"- Factura ID: {invoiceInfo.Id} | Número: {invoiceInfo.Number} | Tipo: {invoiceInfo.Type} | Monto Total: ${invoiceInfo.AmountTotal:F2}");
+                }
+
+                int invoiceId = Reader.ReadInt("Ingrese el ID de la factura a buscar");
+                Invoice invoice = _invoiceService.SearchWhitIncludes(invoiceId, x => x.Items);
+
+                if (invoice == null)
+                {
+                    WriteLine($"No se encontró una factura con ID {invoiceId} para el cliente con ID {id}");
+                    return;
+                }
+
+                WriteLine($"\n--- Detalles de la Factura (ID: {invoiceId}) ---");
+                ShowInvoice(invoice);
+            }
+            catch (Exception ex)
+            {
+                WriteLine($"Ocurrió un error: {ex.Message}");
+            }
+        }
+
+        private void ShowInvoice(Invoice invoice)
+        {
+            WriteLine($"Número: {invoice.Number}");
+            WriteLine($"Tipo: {invoice.Type}");
+            WriteLine($"Fecha: {invoice.Date:dd/MM/yyyy}");
+            WriteLine($"Monto Total: ${invoice.AmountTotal:F2}");
+            WriteLine("Productos:");
+            foreach (Item item in invoice.Items)
+            {
+                WriteLine($"  - {item.Description}: ${item.Price:F2} x {item.Quantity} = ${item.Price * item.Quantity:F2}");
+            }
+        }
+
         public static void WriteLine(string msg)
         {
             Console.WriteLine($"{msg}");
@@ -82,7 +134,7 @@ namespace Parcial3.UI
             Console.Write(msg);
         }
 
-        // ========== MÉTODOS DE CLIENTES ==========
+
         private void HandleRegisterClient()
         {
             if (_clientService == null) return;
@@ -263,7 +315,6 @@ namespace Parcial3.UI
             }
         }
 
-        // ========== MÉTODOS DE FACTURAS ==========
         private void HandleRegisterInvoice()
         {
             try
@@ -272,17 +323,13 @@ namespace Parcial3.UI
                 string invoiceType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C)").ToString();
                 List<Item> items = new List<Item>();
 
-                // Creamos el borrador sin items
                 Invoice draftInvoice = _invoiceService.DraftInvoice(clientId, invoiceType, items);
 
-                // Agregamos items desde el Presentator
                 WriteLine("\n--- Agregar Productos a la Factura ---");
                 HandleAddItems(draftInvoice.Items);
 
-                // Recalculamos el total
                 draftInvoice.CalculateTotalAmount();
 
-                // Bucle de revisión
                 while (true)
                 {
                     ShowPreviewInvoice(draftInvoice);
@@ -414,93 +461,69 @@ namespace Parcial3.UI
             WriteLine("══════════════════════════════════════════════════════════════════════════");
         }
 
-        // ========== MÉTODOS DE ITEMS ==========
-        // ========== MÉTODOS DE ITEMS ==========
-
-        // ESTE MÉTODO AHORA ES EL ÚNICO RESPONSABLE DEL BUCLE
-        // ESTE MÉTODO AHORA ES EL ÚNICO RESPONSABLE DEL BUCLE
         private void HandleAddItems(List<Item> itemsList)
         {
             WriteLine("\n--- Agregar Productos ---");
 
             while (true)
             {
-                // 1. Llama al especialista. Este método (modificado arriba)
-                //    NO lanzará un error aquí, ya que maneja sus propios
-                //    bucles de validación internos.
                 var newItem = HandleItemRegistration();
 
-                // 2. Lo añade a la lista.
                 itemsList.Add(newItem);
                 WriteLine("✓ Producto agregado correctamente.");
 
-                // 3. Pregunta al usuario si quiere continuar.
                 char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
                 if (choice != 'S' && choice != 's')
                 {
-                    break; // Si no, salimos del bucle.
+                    break;
                 }
-
-                // ¡Ya no hay bloque try-catch!
             }
         }
-
-        // ESTE MÉTODO AHORA SOLO CREA UN ITEM Y LO DEVUELVE
-        // ESTE MÉTODO AHORA SOLO CREA UN ITEM Y LO DEVUELVE
         private Item HandleItemRegistration()
         {
-            var newItem = new Item(); // Creamos una instancia vacía
+            var newItem = new Item();
 
-            // 1. Pedir Descripción (bucle hasta que sea válida)
             while (true)
             {
                 try
                 {
                     string description = Reader.ReadString("Ingrese el nombre del producto");
-                    newItem.Description = description; // Intenta asignar (esto dispara la validación de Item.cs)
-                    break; // Si tiene éxito, sal del bucle
+                    newItem.Description = description; 
+                    break;
                 }
                 catch (ArgumentException ex)
                 {
                     WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
-                    // El bucle se repite, pidiendo solo la descripción
                 }
             }
 
-            // 2. Pedir Cantidad (bucle hasta que sea válida)
             while (true)
             {
                 try
                 {
                     float quantity = Reader.ReadFloat("Ingrese la cantidad");
-                    newItem.Quantity = quantity; // Intenta asignar (dispara validación)
-                    break; // Éxito
+                    newItem.Quantity = quantity;
+                    break; 
                 }
                 catch (ArgumentException ex)
                 {
                     WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
-                    // El bucle se repite, pidiendo solo la cantidad
                 }
             }
 
-            // 3. Pedir Precio (bucle hasta que sea válido)
             while (true)
             {
                 try
                 {
                     float price = Reader.ReadFloat("Ingrese el precio del producto");
-                    newItem.Price = price; // Intenta asignar (dispara validación)
-                    break; // Éxito
+                    newItem.Price = price; 
+                    break; 
                 }
                 catch (ArgumentException ex)
                 {
                     WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
-                    // El bucle se repite, pidiendo solo el precio
                 }
             }
-
-            // Ya no usamos _itemService.CreateItem, porque construimos el
-            // ítem validado aquí mismo.
             return newItem;
         }
 
@@ -520,16 +543,14 @@ namespace Parcial3.UI
             }
 
             int input = Reader.ReadInt("¿Qué item desea modificar?");
-            int index = input - 1; // Convertir el input (1-based) a índice (0-based)
+            int index = input - 1; 
 
-            // Validar que el índice esté dentro de los límites de la lista
             if (index < 0 || index >= itemsList.Count)
             {
                 WriteLine("✗ Índice inválido.");
                 return;
             }
 
-            // Obtener el ítem directamente de la lista
             Item itemToUpdate = itemsList[index];
 
             WriteLine($"\n--- Modificar: {itemToUpdate.Description} ---");

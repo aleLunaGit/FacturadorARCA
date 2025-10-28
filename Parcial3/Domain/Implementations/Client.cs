@@ -11,12 +11,10 @@ namespace Parcial3.Domain.Implementations
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        // --- Campos Privados ---
         private string _cuitCuil;
         private string _legalName;
         private string _address;
 
-        // --- Propiedades Públicas con Validación ---
 
         [Required]
         public string CuitCuil
@@ -60,14 +58,11 @@ namespace Parcial3.Domain.Implementations
 
         public Client(string cuitCuil, string legalName, string address)
         {
-            // Usamos las propiedades (no los campos) para que se ejecute la validación
             CuitCuil = cuitCuil;
             LegalName = legalName;
             Address = address;
             Invoices = new List<Invoice>();
         }
-
-        // --- Métodos de Validación Privados ---
 
         private void ValidateCuitCuil(string value)
         {
@@ -130,5 +125,7 @@ namespace Parcial3.Domain.Implementations
         public string GetAddress() => Address;
 
         public void SetAddress(string address) => Address = address;
+
+        public List<Invoice> GetInvoices() => Invoices;
     }
 }

@@ -1,9 +1,5 @@
 ﻿using Parcial3.Domain.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Parcial3.Services.Interfaces
 {
@@ -11,5 +7,6 @@ namespace Parcial3.Services.Interfaces
     {
         Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items);
         void CreateNewInvoice(Invoice draftInvoice);
+        Invoice SearchWhitIncludes(int id, params Expression<Func<Invoice, object>>[] includes);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Parcial3.Repositories.Interfaces;
+﻿using Parcial3.Repositories.Implementations;
+using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
 using Parcial3.UI;
 using System.Collections;
@@ -10,13 +11,16 @@ namespace Parcial3.Services.Implementations
     public class CrudService<T> : ICrudService<T> where T : class, new()
     {
         protected readonly IRepository<T> _repository;
-        public CrudService(IRepository<T> entity)
+        protected readonly ApplicationDbContext _context;
+        public CrudService(IRepository<T> entity, ApplicationDbContext context)
         {
             _repository = entity;
+            _context = context;
         }
         public void Delete(int id)
         {
             _repository.Delete(id);
+            _context.SaveChanges();
         }
         public void List()
         {
@@ -39,7 +43,6 @@ namespace Parcial3.Services.Implementations
 
         public virtual T SearchWhitIncludes(int id, params Expression<Func<T, object>>[] includes)
         {
-            // TODO: Arreglar el principio SRP del Search
             return _repository.GetByIdWithIncludes(id, includes);
             
         }
@@ -79,38 +82,35 @@ namespace Parcial3.Services.Implementations
         public virtual void Register(T entity)
         {
             _repository.Add(entity);
+            _context.SaveChanges();
         }
         public virtual void Register(T entity, List<string> listOfInputs)
         {
             ConvertValues(entity, listOfInputs);
             _repository.Add(entity);
+            _context.SaveChanges();
         }
         public void Update(T entity, string changeToValue, int inputOption)
         {
             if(entity == null || changeToValue == null || inputOption == null) return;
             var modifiablePropertys = ListModifyableProperties(entity);
             var changeProperty =  modifiablePropertys.ElementAt(inputOption - 1);
-            // Cambiamos los tipos para que coincidan con los pedidos por la propiedad en cuestion
             var convertedValue = Convert.ChangeType(changeToValue, changeProperty.PropertyType);
-            // Setteamos el valor cambiado a la propiedad
             changeProperty.SetValue(entity, convertedValue);
             _repository.Update(entity);
+            _context.SaveChanges();
         }
         public bool ShouldSkipPropertie(PropertyInfo property, bool allowLists = false)
         {
-            // Ignora la propiedad "Id" porque es generada por la base de datos
             if (property.Name == "Id") return true;
 
-            // Ignora propiedades que son listas (relaciones de uno a muchos)
             if (!allowLists && property.PropertyType.IsGenericType && property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
             {
                 return true;
             }
 
-            // Ignora propiedades que son otras clases (relaciones de uno a uno)
             if (property.PropertyType.IsClass && property.PropertyType != typeof(string)) return true;
 
-            // Ignora propiedades que no queremos que el usuario ingrese manualmente
             if (property.Name == "ClientId" || property.Name == "InvoiceId") return true;
 
 
