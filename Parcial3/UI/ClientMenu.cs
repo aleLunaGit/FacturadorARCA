@@ -37,11 +37,11 @@ namespace Parcial3.Modules
                 listOfInputs.Add(address);
 
                 _clientService.Register(newClient, listOfInputs);
-                Presentator.WriteLine("✓ Cliente registrado exitosamente.");
+                Presentator.WriteLine("Cliente registrado exitosamente.");
             }
             catch (Exception ex)
             {
-                Presentator.WriteLine($"✗ Error al registrar cliente: {ex.Message}");
+                Presentator.WriteLine($"Error al registrar cliente: {ex.Message}");
             }
         }
 
@@ -92,12 +92,11 @@ namespace Parcial3.Modules
             {
                 string clientName = Reader.ReadString("Ingrese la Razón Social del Cliente");
 
-                // Asumo que FindClientByLegalName existe en ClientService y que es la sobrecarga con includes
                 Client client = _clientService.FindClientByLegalName(clientName, c => c.Invoices);
 
                 if (client == null)
                 {
-                    Presentator.WriteLine($"✗ Error: No se encontró ningún cliente con el nombre '{clientName}'.");
+                    Presentator.WriteLine($"Error: No se encontró ningún cliente con el nombre '{clientName}'.");
                     return;
                 }
 
@@ -114,7 +113,6 @@ namespace Parcial3.Modules
             try
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
-                // Uso la firma SearchWhitIncludes tal cual el código adjunto
                 Client entity = _clientService.SearchWhitIncludes(id, x => x.Invoices);
 
                 if (entity == null)
@@ -134,15 +132,11 @@ namespace Parcial3.Modules
 
         private void ShowClient(Client entity, params Expression<Func<Client, object>>[] includes)
         {
-            var properties = typeof(Client).GetProperties(); // Corregido para ver List<Invoice>
+            var properties = typeof(Client).GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
-                // Omitir Id
-                if (property.Name == "Id" || property.Name == "ClientId")
-                {
-                    continue;
-                }
+                _clientService.ShouldSkipPropertie(property);
 
                 if (property.PropertyType.IsGenericType &&
                     property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
@@ -216,24 +210,24 @@ namespace Parcial3.Modules
                 if (confirmacion != null && confirmacion.ToLower() == "si")
                 {
                     _clientService.Delete(id);
-                    Presentator.WriteLine("✓ Cliente eliminado exitosamente.");
+                    Presentator.WriteLine("Cliente eliminado exitosamente.");
                 }
                 else if (confirmacion == null)
                 {
-                    Presentator.WriteLine("✗ Eliminación cancelada por tiempo fuera de espera (10 segundos)");
+                    Presentator.WriteLine("Eliminación cancelada por tiempo fuera de espera (10 segundos)");
                 }
                 else
                 {
-                    Presentator.WriteLine("✗ Eliminación cancelada.");
+                    Presentator.WriteLine("Eliminación cancelada.");
                 }
             }
             catch (FormatException)
             {
-                Presentator.WriteLine("✗ Error: El ID debe ser un número.");
+                Presentator.WriteLine("Error: El ID debe ser un número.");
             }
             catch (Exception ex)
             {
-                Presentator.WriteLine($"✗ Ocurrió un error inesperado: {ex.Message}");
+                Presentator.WriteLine($"Ocurrió un error inesperado: {ex.Message}");
             }
         }
     }

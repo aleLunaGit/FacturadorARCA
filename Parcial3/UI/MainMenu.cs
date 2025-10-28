@@ -33,19 +33,19 @@ namespace Parcial3.Modules
                         _clientMenu.HandleSearchClient();
                         break;
                     case "4":
-                        _clientMenu.HandleListClients();
+                        _clientMenu.HandleSearchClientByLegalName();
                         break;
                     case "5":
-                        _clientMenu.HandleDeleteClient();
+                        _clientMenu.HandleListClients();
                         break;
                     case "6":
-                        _invoiceMenu.HandleRegisterInvoice();
+                        _clientMenu.HandleDeleteClient();
                         break;
                     case "7":
-                        _invoiceMenu.HandleSearchInvoice();
+                        _invoiceMenu.HandleRegisterInvoice();
                         break;
                     case "8":
-                        _clientMenu.HandleSearchClientByLegalName();
+                        _invoiceMenu.HandleSearchInvoice();
                         break;
                     case "9":
                         Presentator.WriteLine("Saliendo del sistema...");
@@ -60,18 +60,17 @@ namespace Parcial3.Modules
 
         private void DisplayMenu()
         {
-            // Replicamos el menú original exactamente
             Presentator.WriteLine("\n╔════════════════════════════════════╗");
             Presentator.WriteLine("║        SISTEMA DE GESTIÓN          ║");
             Presentator.WriteLine("╠════════════════════════════════════╣");
             Presentator.WriteLine("║ 1. Registrar Nuevo Cliente         ║");
             Presentator.WriteLine("║ 2. Modificar Cliente Existente     ║");
             Presentator.WriteLine("║ 3. Buscar Cliente por ID           ║");
-            Presentator.WriteLine("║ 4. Listar Clientes                 ║");
-            Presentator.WriteLine("║ 5. Eliminar Cliente                ║");
-            Presentator.WriteLine("║ 6. Registrar Nueva Factura         ║");
-            Presentator.WriteLine("║ 7. Consultar Factura por ID        ║");
-            Presentator.WriteLine("║ 8. Buscar Cliente por Razon Social ║");
+            Presentator.WriteLine("║ 4. Buscar Cliente por Razon Social ║");
+            Presentator.WriteLine("║ 5. Listar Clientes                 ║");
+            Presentator.WriteLine("║ 6. Eliminar Cliente                ║");
+            Presentator.WriteLine("║ 7. Registrar Nueva Factura         ║");
+            Presentator.WriteLine("║ 8. Consultar Factura por ID        ║");
             Presentator.WriteLine("║ 9. Salir                           ║");
             Presentator.WriteLine("╚════════════════════════════════════╝");
         }

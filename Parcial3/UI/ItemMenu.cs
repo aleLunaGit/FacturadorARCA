@@ -15,8 +15,6 @@ namespace Parcial3.Modules
         private Item HandleItemRegistration()
         {
             var newItem = new Item();
-
-            // Lógica de I/O y validación de Item extraída del original
             while (true)
             {
                 try
@@ -27,7 +25,7 @@ namespace Parcial3.Modules
                 }
                 catch (ArgumentException ex)
                 {
-                    Presentator.WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
+                    Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
                 }
             }
 
@@ -41,7 +39,7 @@ namespace Parcial3.Modules
                 }
                 catch (ArgumentException ex)
                 {
-                    Presentator.WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
+                    Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
                 }
             }
 
@@ -55,7 +53,7 @@ namespace Parcial3.Modules
                 }
                 catch (ArgumentException ex)
                 {
-                    Presentator.WriteLine($"✗ Error: {ex.Message} Intente de nuevo.");
+                    Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
                 }
             }
             return newItem;
@@ -65,7 +63,7 @@ namespace Parcial3.Modules
         {
             if (itemsList == null || itemsList.Count == 0)
             {
-                Presentator.WriteLine("✗ No hay items para modificar.");
+                Presentator.WriteLine("No hay items para modificar.");
                 return;
             }
 
@@ -81,7 +79,7 @@ namespace Parcial3.Modules
 
             if (index < 0 || index >= itemsList.Count)
             {
-                Presentator.WriteLine("✗ Índice inválido.");
+                Presentator.WriteLine("Índice inválido.");
                 return;
             }
             Item itemToUpdate = itemsList[index];
@@ -116,15 +114,15 @@ namespace Parcial3.Modules
                             break;
 
                         default:
-                            Presentator.WriteLine("✗ Opción inválida.");
+                            Presentator.WriteLine("Opción inválida.");
                             return;
                     }
-                    success = true; // Si llega aquí sin excepción, es éxito.
-                    Presentator.WriteLine("✓ Item actualizado correctamente.");
+                    success = true;
+                    Presentator.WriteLine("Item actualizado correctamente.");
                 }
                 catch (ArgumentException ex)
                 {
-                    Presentator.WriteLine($"✗ Error: {ex.Message}");
+                    Presentator.WriteLine($"Error: {ex.Message}");
                 }
 
                 if (!success)
@@ -149,7 +147,7 @@ namespace Parcial3.Modules
                 if (newItem != null)
                 {
                     itemsList.Add(newItem);
-                    Presentator.WriteLine("✓ Producto agregado correctamente.");
+                    Presentator.WriteLine("Producto agregado correctamente.");
                 }
 
                 char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
@@ -164,7 +162,7 @@ namespace Parcial3.Modules
         {
             if (itemsList == null || itemsList.Count == 0)
             {
-                Presentator.WriteLine("✗ No hay items para eliminar.");
+                Presentator.WriteLine("No hay items para eliminar.");
                 return;
             }
 
@@ -179,11 +177,11 @@ namespace Parcial3.Modules
 
             if (_itemService.RemoveItem(itemsList, input - 1))
             {
-                Presentator.WriteLine("✓ Producto eliminado correctamente.");
+                Presentator.WriteLine("Producto eliminado correctamente.");
             }
             else
             {
-                Presentator.WriteLine("✗ Índice inválido.");
+                Presentator.WriteLine("Índice inválido.");
             }
         }
     }

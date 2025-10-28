@@ -1,5 +1,5 @@
 ﻿using Parcial3.Modules.Services.Parcial3.Modules.Services;
-using Parcial3.Services.Implementations; // Asumo la ubicación de InvoiceService
+using Parcial3.Services.Implementations;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -25,7 +25,6 @@ namespace Parcial3.Modules
             try
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
-                // Uso SearchWhitIncludes tal cual el código adjunto
                 Client entity = _clientMenu.GetClientService().SearchWhitIncludes(id, x => x.Invoices);
 
                 if (entity == null)
@@ -34,14 +33,12 @@ namespace Parcial3.Modules
                     return;
                 }
 
-                // Uso la propiedad pública Invoices
                 foreach (var invoiceInfo in entity.Invoices)
                 {
                     Presentator.WriteLine($"- Factura ID: {invoiceInfo.Id} | Número: {invoiceInfo.Number} | Tipo: {invoiceInfo.Type} | Monto Total: ${invoiceInfo.AmountTotal:F2}");
                 }
 
                 int invoiceId = Reader.ReadInt("Ingrese el ID de la factura a buscar");
-                // Uso SearchWhitIncludes tal cual el código adjunto
                 Invoice invoice = _invoiceService.SearchWhitIncludes(invoiceId, x => x.Items);
 
                 if (invoice == null)
@@ -83,7 +80,7 @@ namespace Parcial3.Modules
                 Invoice draftInvoice = _invoiceService.DraftInvoice(clientId, invoiceType, items);
 
                 Presentator.WriteLine("\n--- Agregar Productos a la Factura ---");
-                _itemMenu.HandleAddItems(draftInvoice.Items); // Delegación
+                _itemMenu.HandleAddItems(draftInvoice.Items);
 
                 draftInvoice.CalculateTotalAmount();
 
@@ -104,11 +101,11 @@ namespace Parcial3.Modules
 
                 Presentator.WriteLine("\nCerrando y guardando factura permanentemente...");
                 _invoiceService.CreateNewInvoice(draftInvoice);
-                Presentator.WriteLine("✓ ¡Factura registrada exitosamente!");
+                Presentator.WriteLine("¡Factura registrada exitosamente!");
             }
             catch (Exception ex)
             {
-                Presentator.WriteLine($"✗ Error al registrar la factura: {ex.Message}");
+                Presentator.WriteLine($"Error al registrar la factura: {ex.Message}");
             }
         }
 
@@ -116,7 +113,7 @@ namespace Parcial3.Modules
         {
             if (draftInvoice == null)
             {
-                Presentator.WriteLine("✗ Error: Se intentó modificar una factura nula.");
+                Presentator.WriteLine("Error: Se intentó modificar una factura nula.");
                 return;
             }
 
@@ -137,11 +134,11 @@ namespace Parcial3.Modules
                     {
                         draftInvoice.Client = newClient;
                         draftInvoice.ClientId = newClient.Id;
-                        Presentator.WriteLine("✓ Cliente actualizado.");
+                        Presentator.WriteLine("Cliente actualizado.");
                     }
                     else
                     {
-                        Presentator.WriteLine($"✗ No se encontró ningún cliente con el ID: {clientId}.");
+                        Presentator.WriteLine($"No se encontró ningún cliente con el ID: {clientId}.");
                     }
                     break;
 
@@ -170,19 +167,19 @@ namespace Parcial3.Modules
                             _itemMenu.HandleRemoveItem(draftInvoice.Items);
                             break;
                         default:
-                            Presentator.WriteLine("✗ Opción inválida.");
+                            Presentator.WriteLine("Opción inválida.");
                             break;
                     }
 
                     draftInvoice.CalculateTotalAmount();
-                    Presentator.WriteLine($"✓ Total actualizado: ${draftInvoice.AmountTotal:F2}");
+                    Presentator.WriteLine($"Total actualizado: ${draftInvoice.AmountTotal:F2}");
                     break;
 
                 case 0:
                     return;
 
                 default:
-                    Presentator.WriteLine("✗ Opción inválida.");
+                    Presentator.WriteLine("Opción inválida.");
                     break;
             }
         }
