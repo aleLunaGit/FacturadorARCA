@@ -68,7 +68,6 @@ namespace Parcial3.Domain.Implementations
                 }
 
             } while (!isValidInput);
-            Presentator.WriteLine($"Seleccione el tipo de factura: {invoiceType}");
             Type =  invoiceType;
         }
 

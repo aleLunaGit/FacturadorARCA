@@ -58,26 +58,6 @@ namespace Parcial3.Services.Implementations
             return listProperties;
         }
 
-        public virtual void ConvertValues(T entity, List<string> convertThisValues)
-        {
-            var Properties = typeof(T).GetProperties();
-            var listProperties = ListModifyableProperties(entity);
-            int count = 0;
-            foreach (var convertValue in convertThisValues)
-            {
-                var property = listProperties.ElementAt(count);
-                try
-                {
-                    var correctedTypeValue = Convert.ChangeType(convertValue, property.PropertyType);
-                    property.SetValue(entity, correctedTypeValue);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"Error: {ex.Message}");
-                }
-                count++;
-            }
-        }
         public void Update(T entity, string changeToValue, int inputOption)
         {
             if(entity == null || changeToValue == null || inputOption == null) return;
