@@ -144,7 +144,7 @@ namespace Parcial3.Modules
                     break;
 
                 case 2:
-                    string inputType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C/D)").ToString();
+                    string inputType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C)").ToString();
                     draftInvoice.RegisterTypeFactura(inputType);
                     break;
 
@@ -242,11 +242,5 @@ namespace Parcial3.Modules
             => Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
         private void ShowTotalOfTypeC(Invoice invoice)
             => Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
-        }
-        private void ShowTotalOfTypeC(Invoice invoice)
-        {
-            float total = invoice.AmountTotal;
-            Presentator.WriteLine($"Total: ${total:F2}");
-        }
     }
 }
