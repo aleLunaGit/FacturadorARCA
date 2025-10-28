@@ -34,24 +34,15 @@ namespace Parcial3.Modules.Services
 
             // Actualiza un item existente con validación
             public void UpdateItemDescription(Item item, string newDescription)
-            {
-
-                    item.SetDescription(newDescription);
-
-            }
+                => item.Description = newDescription;
 
             public void UpdateItemQuantity(Item item, float newQuantity)
-            {
+                => item.Quantity = newQuantity;
 
-                    item.SetQuantity(newQuantity);
-
-            }
 
             public void UpdateItemPrice(Item item, float newPrice)
-            {
-                    item.SetPrice(newPrice);
+                => item.Price = newPrice;
 
-            }
 
             // Elimina un item de la lista
             public bool RemoveItem(List<Item> itemsList, int index)

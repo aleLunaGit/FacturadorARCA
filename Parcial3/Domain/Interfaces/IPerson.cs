@@ -2,12 +2,9 @@
 {
     public interface IPerson
     {
-        string GetCuilCuit();
-        void SetCuilCuit(string CuitCuil);
-        string GetLegalName();
-        void SetLegalName(string LegalName);
-        string GetAddress();
-        void SetAddress(string Address);
+        string ValidateCuitCuil(string value);
+        string ValidateLegalName(string value);
+        string ValidateAddress(string value);
     }
 }
 

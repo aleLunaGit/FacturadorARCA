@@ -1,4 +1,5 @@
-﻿using Parcial3.Domain.Interfaces;
+﻿using Azure.Core;
+using Parcial3.Domain.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Parcial3.Domain.Implementations
@@ -9,43 +10,15 @@ namespace Parcial3.Domain.Implementations
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        private string _description;
-        private float _quantity;
-        private float _price;
 
         [Required]
-        public string Description
-        {
-            get => _description;
-            set
-            {
-                ValidateDescription(value);
-                _description = value;
-            }
-        }
+        public string Description {  get; internal set; }
 
         [Required]
-        public float Quantity
-        {
-            get => _quantity;
-            set
-            {
-                ValidateQuantity(value);
-                _quantity = value;
-            }
-        }
+        public float Quantity {  get; internal set; }
 
         [Required]
-        public float Price
-        {
-            get => _price;
-            set
-            {
-                ValidatePrice(value);
-                _price = value;
-            }
-        }
-
+        public float Price {  get; internal set; }
         public Invoice Invoice { get; set; }
         public int InvoiceId { get; internal set; }
 
@@ -53,47 +26,43 @@ namespace Parcial3.Domain.Implementations
 
         public Item(string description, float quantity, float price)
         {
-            Description = description;  // Usa el setter que valida
-            Quantity = quantity;        // Usa el setter que valida
-            Price = price;              // Usa el setter que valida
+            Description = description;  
+            Quantity = quantity;        
+            Price = price;              
         }
 
-        //  VALIDACIONES 
 
-        private void ValidateDescription(string value)
+        public string ValidateDescription(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
                 throw new ArgumentException("ERROR: La descripción no puede estar vacía.");
             }
 
-            // Validación 1 Longitud mínima
             if (value.Trim().Length < 3)
             {
                 throw new ArgumentException("ERROR: La descripción debe tener al menos 3 caracteres.");
             }
 
-            // Validación 2 Longitud máxima
             if (value.Length > 200)
             {
                 throw new ArgumentException("ERROR: La descripción no puede exceder los 200 caracteres.");
             }
 
-            // Validación 3 No solo números
             if (value.All(char.IsDigit))
             {
                 throw new ArgumentException("ERROR: La descripción no puede contener solo números.");
             }
 
-            // Validación 4 Caracteres especiales no permitidos
             char[] caracteresNoPermitidos = { '<', '>', '|', '\\', '/', '"' };
             if (value.Any(c => caracteresNoPermitidos.Contains(c)))
             {
                 throw new ArgumentException("ERROR: La descripción contiene caracteres no permitidos (< > | \\ / \").");
             }
+            return value;
         }
 
-        private void ValidateQuantity(float value)
+        public float ValidateQuantity(float value)
         {
             // Validación 1 No puede ser cero o negativo
             if (value <= 0)
@@ -114,9 +83,10 @@ namespace Parcial3.Domain.Implementations
             {
                 throw new ArgumentException("ERROR: La cantidad no puede tener más de 2 decimales.");
             }
+            return value;
         }
 
-        private void ValidatePrice(float value)
+        public float ValidatePrice(float value)
         {
             // Validación 1 No puede ser cero o negativo
             if (value <= 0)
@@ -143,20 +113,7 @@ namespace Parcial3.Domain.Implementations
             {
                 throw new ArgumentException("ERROR: El precio no puede tener más de 2 decimales.");
             }
+            return value;
         }
-
-        //  MÉTODOS DE INTERFAZ 
-
-        public string GetDescription() => Description;
-
-        public float GetQuantity() => Quantity;
-
-        public float GetPrice() => Price;
-
-        public void SetDescription(string description) => Description = description;
-
-        public void SetQuantity(float quantity) => Quantity = quantity;
-
-        public void SetPrice(float price) => Price = price;
     }
 }

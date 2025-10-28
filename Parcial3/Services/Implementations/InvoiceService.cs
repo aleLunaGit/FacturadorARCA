@@ -82,9 +82,24 @@ namespace Parcial3.Services.Implementations
             {
                 float price = item.Price;
                 float quantity = item.Quantity;
-                total = total + item.GetPrice() * item.GetQuantity();
+                total = total + item.Price * item.Quantity;
             }
             invoice.AmountTotal = total;
+        }
+
+        public double GetDiscriminatedIva(Invoice invoice)
+        {
+            float total = invoice.AmountTotal;
+            double iva = 0.21;
+            double discriminatedIva = total * iva;
+            return discriminatedIva;
+        }
+        public double GetDiscriminatedTotal(Invoice invoice)
+        {
+            float total = invoice.AmountTotal;
+            double iva = 0.21;
+            double discrimantedTotal = total * (1 + iva);
+            return discrimantedTotal;
         }
     }
 }   
