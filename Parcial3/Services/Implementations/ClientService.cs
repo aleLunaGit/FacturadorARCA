@@ -1,15 +1,14 @@
 ﻿using Parcial3.Domain.Implementations;
+using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using System.Linq.Expressions;
-using System.Reflection;
-
 
 namespace Parcial3.Services.Implementations
 {
     public class ClientService : CrudService<Client>
     {
 
-        public ClientService(IRepository<Client> entity) : base(entity)
+        public ClientService(IRepository<Client> entity, ApplicationDbContext context) : base(entity, context)
         {
         }
         // Recibe el DbContext para poder construir consultas complejas.
@@ -27,6 +26,6 @@ namespace Parcial3.Services.Implementations
         {
             return _repository.GetByProperty(nameof(Client.Address), address, includes);
         }
-
+        
     }
 }

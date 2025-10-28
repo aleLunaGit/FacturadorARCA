@@ -1,11 +1,8 @@
 ﻿using Parcial3.Domain.Implementations;
-using Parcial3.Modules.Services.Parcial3.Modules.Services;
 using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Linq.Expressions;
 
 namespace Parcial3.Services.Implementations
 {
@@ -13,20 +10,18 @@ namespace Parcial3.Services.Implementations
     {
         private readonly IRepository<Invoice> _invoiceRepository;
         private readonly IRepository<Client> _clientRepository;
-        private readonly ApplicationDbContext _context; // Para controlar la transacción
+        private readonly ApplicationDbContext _context;
 
-        // --- CONSTRUCTOR (Inyección de Dependencias) ---
         public InvoiceService(
             IRepository<Invoice> invoiceRepository,
             IRepository<Client> clientRepository,
-            ApplicationDbContext context)// Pedimos el DbContext
+            ApplicationDbContext context)
         {
             _invoiceRepository = invoiceRepository;
             _clientRepository = clientRepository;
-            _context = context; // Lo guardamos
+            _context = context;
         }
 
-        // Crea un borrador de factura (sin items, se agregan después desde el menú)
         public Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items)
         {
             
@@ -62,13 +57,16 @@ namespace Parcial3.Services.Implementations
             if (draftInvoice.Items == null || !draftInvoice.Items.Any())
                 throw new InvalidOperationException("La factura debe contener al menos un ítem.");
 
-            // Verificamos que el cliente realmente exista en nuestra base de datos
             var clientExists = _clientRepository.GetByID(draftInvoice.Client.Id);
             if (clientExists == null)
                 throw new InvalidOperationException($"El cliente con ID {draftInvoice.Client.Id} no existe en la base de datos.");
 
             _invoiceRepository.Add(draftInvoice);
             _context.SaveChanges();
+        }
+        public Invoice SearchWhitIncludes(int id, params Expression<Func<Invoice, object>>[] includes)
+        {
+            return _invoiceRepository.GetByIdWithIncludes(id, includes);
         }
     }
 }   
