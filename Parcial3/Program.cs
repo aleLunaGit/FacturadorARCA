@@ -19,8 +19,8 @@ namespace Parcial3
             var itemRepository = new Repository<Item>(context);
 
             // --- 2. CREACIÓN DE LOS SERVICIOS ---
-            var clientService = new CrudService<Client>(clientRepository);
-            var itemService = new ItemService(itemRepository);
+            var clientService = new CrudService<Client>(clientRepository, context);
+            var itemService = new ItemService(itemRepository, context);
             var invoiceService = new InvoiceService(invoiceRepository, clientRepository, context);
 
             // --- 3. CREACIÓN DEL PRESENTADOR ---
