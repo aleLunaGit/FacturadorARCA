@@ -33,10 +33,9 @@ namespace Parcial3.Services.Implementations
 
             Invoice draftInvoice = new Invoice {
                 Client = client,
-                Type = invoiceType,
                 Items = items
             };
-            
+            draftInvoice.RegisterTypeFactura(invoiceType);
             draftInvoice.Date = DateTime.Now;
             draftInvoice.Number = NumberGenerator();
             CalculateTotalAmount(draftInvoice);

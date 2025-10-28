@@ -43,9 +43,9 @@ namespace Parcial3.Domain.Implementations
 
                     char letter = char.ToUpper(inputType[0]);
 
-                    if (letter != 'A' && letter != 'B' && letter != 'C')
+                    if (letter != 'A' && letter != 'B' && letter != 'C' && letter != 'E')
                     {
-                        throw new FormatException("Error: El tipo de factura debe ser A, B o C.");
+                        throw new FormatException("Error: El tipo de factura debe ser A, B, C o E.");
                     }
 
                     invoiceType = letter.ToString();
