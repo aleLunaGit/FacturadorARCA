@@ -75,7 +75,8 @@ namespace Parcial3.Modules
             try
             {
                 int clientId = Reader.ReadInt("Ingrese el ID del Cliente al que le crearemos la factura");
-                string invoiceType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C)").ToString();
+                string invoiceType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C/E)").ToString().ToUpper();
+                
                 List<Item> items = new List<Item>();
 
                 Invoice draftInvoice = _invoiceService.DraftInvoice(clientId, invoiceType, items);
@@ -144,7 +145,7 @@ namespace Parcial3.Modules
                     break;
 
                 case 2:
-                    string inputType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C)").ToString();
+                    string inputType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C/E)").ToString();
                     draftInvoice.RegisterTypeFactura(inputType);
                     break;
 
@@ -223,27 +224,24 @@ namespace Parcial3.Modules
                 case "C": 
                     ShowTotalOfTypeC(invoice);
                     break;
+                case "E":
+                    ShowTotalOfTypeE(invoice);
+                    break;
                 default: 
-                    Presentator.WriteLine($"MONTO TOTAL: ${invoice.AmountTotal:F2}");
+                    Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
                     break;
             }
             Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
         }
         private void ShowTotalOfTypeA(Invoice invoice)
-        {
-            Presentator.WriteLine($"Subtotal: ${_invoiceService.GetDiscriminatedTotal(invoice):F2}" +
+            => Presentator.WriteLine($"Subtotal: ${_invoiceService.GetDiscriminatedTotal(invoice):F2}" +
                                   $"\nIVA %21: ${_invoiceService.GetDiscriminatedIva(invoice):F2}" +
                                   $"\nTotal: ${invoice.AmountTotal:F2}");
-        }
+        private void ShowTotalOfTypeE(Invoice invoice)
+            => Presentator.WriteLine($"Total sin IVA: ${_invoiceService.GetDiscriminatedTotal(invoice):F2}");
         private void ShowTotalOfTypeB(Invoice invoice)
-        {
-            float total = invoice.AmountTotal;
-            Presentator.WriteLine($"Total: ${total:F2}");
-        }
+            => Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
         private void ShowTotalOfTypeC(Invoice invoice)
-        {
-            float total = invoice.AmountTotal;
-            Presentator.WriteLine($"Total: ${total:F2}");
-        }
+            => Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
     }
 }
