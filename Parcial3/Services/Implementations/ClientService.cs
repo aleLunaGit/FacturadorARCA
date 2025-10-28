@@ -16,8 +16,16 @@ namespace Parcial3.Services.Implementations
 
         public virtual Client FindClientByLegalName(string legalName, params Expression<Func<Client, object>>[] includes)
         {
-            // TODO: Arreglar el principio SRP del Search   
             return _repository.GetByProperty(nameof(Client.LegalName), legalName, includes);
         }
+        public Client CheckIfCuitOrCuilExists(string cuitCuil, params Expression<Func<Client, object>>[] includes)
+        {
+            return _repository.GetByProperty(nameof(Client.CuitCuil), cuitCuil, includes);
+        }
+        public Client CheckIfAddressExists(string address, params Expression<Func<Client, object>>[] includes)
+        {
+            return _repository.GetByProperty(nameof(Client.Address), address, includes);
+        }
+        
     }
 }
