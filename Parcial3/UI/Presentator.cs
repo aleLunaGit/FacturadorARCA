@@ -10,11 +10,11 @@ namespace Parcial3.UI
 {
     public class Presentator
     {
-        private readonly CrudService<Client> _clientService;
+        private readonly ClientService _clientService;
         private readonly InvoiceService _invoiceService;
         private readonly ItemService _itemService;
 
-        public Presentator(CrudService<Client> clientService, InvoiceService invoiceService, ItemService itemService)
+        public Presentator(ClientService clientService, InvoiceService invoiceService, ItemService itemService)
         {
             _clientService = clientService;
             _invoiceService = invoiceService;
@@ -25,18 +25,19 @@ namespace Parcial3.UI
         {
             while (true)
             {
-                Console.WriteLine("\n╔══════════════════════════════════╗");
-                Console.WriteLine("║        SISTEMA DE GESTIÓN        ║");
-                Console.WriteLine("╠══════════════════════════════════╣");
-                Console.WriteLine("║ 1. Registrar Nuevo Cliente       ║");
-                Console.WriteLine("║ 2. Modificar Cliente Existente   ║");
-                Console.WriteLine("║ 3. Buscar Cliente por ID         ║");
-                Console.WriteLine("║ 4. Listar Clientes               ║");
-                Console.WriteLine("║ 5. Eliminar Cliente              ║");
-                Console.WriteLine("║ 6. Registrar Nueva Factura       ║");
-                Console.WriteLine("║ 7. Consultar Factura por ID      ║");
-                Console.WriteLine("║ 8. Salir                         ║");
-                Console.WriteLine("╚══════════════════════════════════╝");
+                Console.WriteLine("\n╔════════════════════════════════════╗");
+                Console.WriteLine("║        SISTEMA DE GESTIÓN          ║");
+                Console.WriteLine("╠════════════════════════════════════╣");
+                Console.WriteLine("║ 1. Registrar Nuevo Cliente         ║");
+                Console.WriteLine("║ 2. Modificar Cliente Existente     ║");
+                Console.WriteLine("║ 3. Buscar Cliente por ID           ║");
+                Console.WriteLine("║ 4. Listar Clientes                 ║");
+                Console.WriteLine("║ 5. Eliminar Cliente                ║");
+                Console.WriteLine("║ 6. Registrar Nueva Factura         ║");
+                Console.WriteLine("║ 7. Consultar Factura por ID        ║");
+                Console.WriteLine("║ 8. Buscar Cliente por Razon Social ║");
+                Console.WriteLine("║ 9. Salir                           ║");
+                Console.WriteLine("╚════════════════════════════════════╝");
                 Console.Write("Seleccione una opción: ");
 
                 var option = Reader.ReadString("");
@@ -65,6 +66,9 @@ namespace Parcial3.UI
                         HandleSearchInvoice();
                         break;
                     case "8":
+                        HandleSearchClientByLegalName();
+                        return;
+                    case "9":
                         WriteLine("Saliendo del sistema...");
                         return;
                     default:
@@ -199,6 +203,27 @@ namespace Parcial3.UI
             {
                 WriteLine($"{count}) {property.Name}");
                 count++;
+            }
+        }
+        private void HandleSearchClientByLegalName()
+        {
+            try
+            {
+                string clientName = Reader.ReadString("Ingrese la Razón Social del Cliente");
+
+                Client client = _clientService.FindClientByLegalName(clientName, c => c.Invoices);
+
+                if (client == null)
+                {
+                    WriteLine($"✗ Error: No se encontró ningún cliente con el nombre '{clientName}'.");
+                    return;
+                }
+
+                ShowClient(client);
+            }
+            catch (Exception ex)
+            {
+                WriteLine($"Ocurrió un error: {ex.Message}");
             }
         }
 
