@@ -71,24 +71,6 @@ namespace Parcial3.Domain.Implementations
             Presentator.WriteLine($"Seleccione el tipo de factura: {invoiceType}");
             Type =  invoiceType;
         }
-        public void NumberGenerator()
-        {
-            string NumberGenerated = "";
-            Random rnd = new Random();
-                NumberGenerated = DateTime.Now.ToString("ddd") + DateTime.Now.Year + "-" + rnd.Next(100000, 999999);
-            this.Number = NumberGenerated;
-        }
-        public void CalculateTotalAmount()
-        {
-            float total = 0;
-            foreach (var item in Items)
-            {
-                float price = item.Price;
-                float quantity = item.Quantity;
-                total = total + item.GetPrice() * item.GetQuantity();
-            }
-            AmountTotal = total;
-        }
 
         public string GetType() => Type;
         public string GetNumber() => Number;

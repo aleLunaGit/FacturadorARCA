@@ -1,4 +1,5 @@
 ﻿using Parcial3.Domain.Implementations;
+using Parcial3.Domain.Interfaces;
 using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
@@ -37,8 +38,8 @@ namespace Parcial3.Services.Implementations
             };
             
             draftInvoice.Date = DateTime.Now;
-            draftInvoice.NumberGenerator();
-            draftInvoice.CalculateTotalAmount();
+            draftInvoice.Number = NumberGenerator();
+            CalculateTotalAmount(draftInvoice);
 
             return draftInvoice;
         }
@@ -67,6 +68,24 @@ namespace Parcial3.Services.Implementations
         public Invoice SearchWhitIncludes(int id, params Expression<Func<Invoice, object>>[] includes)
         {
             return _invoiceRepository.GetByIdWithIncludes(id, includes);
+        }
+        public string NumberGenerator()
+        {
+            string NumberGenerated = "";
+            Random rnd = new Random();
+            NumberGenerated = DateTime.Now.ToString("ddd") + DateTime.Now.Year + "-" + rnd.Next(100000, 999999);
+            return NumberGenerated;
+        }
+        public void CalculateTotalAmount(Invoice invoice)
+        {
+            float total = 0;
+            foreach (var item in invoice.Items)
+            {
+                float price = item.Price;
+                float quantity = item.Quantity;
+                total = total + item.GetPrice() * item.GetQuantity();
+            }
+            invoice.AmountTotal = total;
         }
     }
 }   

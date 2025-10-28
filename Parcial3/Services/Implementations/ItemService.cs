@@ -31,10 +31,6 @@ namespace Parcial3.Modules.Services
                 };
                 return item;
             }
-            public void AddItem(Item item)
-            {
-
-            }
 
             // Actualiza un item existente con validación
             public void UpdateItemDescription(Item item, string newDescription)

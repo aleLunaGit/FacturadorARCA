@@ -31,12 +31,12 @@ namespace Parcial3.Modules
                 string cuit = Reader.ReadString("Ingresa su Cuit/Cuil");
                 string legalName = Reader.ReadString("Ingresa la Razón Social");
                 string address = Reader.ReadString("Ingrese su Domicilio");
+                
+                listOfInputs.Add(newClient.ValidateCuitCuil(cuit));
+                listOfInputs.Add(newClient.ValidateLegalName(legalName));
+                listOfInputs.Add(newClient.ValidateAddress(address));
 
-                listOfInputs.Add(cuit);
-                listOfInputs.Add(legalName);
-                listOfInputs.Add(address);
-
-                _clientService.Register(newClient, listOfInputs);
+                _clientService.RegisterNewClient(newClient, listOfInputs);
                 Presentator.WriteLine("Cliente registrado exitosamente.");
             }
             catch (Exception ex)

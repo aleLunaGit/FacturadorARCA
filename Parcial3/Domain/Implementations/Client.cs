@@ -11,43 +11,14 @@ namespace Parcial3.Domain.Implementations
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        private string _cuitCuil;
-        private string _legalName;
-        private string _address;
-
+        [Required]
+        public string CuitCuil {  get; internal set; }
 
         [Required]
-        public string CuitCuil
-        {
-            get => _cuitCuil;
-            set
-            {
-                ValidateCuitCuil(value);
-                _cuitCuil = value;
-            }
-        }
+        public string LegalName { get; internal set; }
 
         [Required]
-        public string LegalName
-        {
-            get => _legalName;
-            set
-            {
-                ValidateLegalName(value);
-                _legalName = value;
-            }
-        }
-
-        [Required]
-        public string Address
-        {
-            get => _address;
-            set
-            {
-                ValidateAddress(value);
-                _address = value;
-            }
-        }
+        public string Address { get; internal set; }
 
         public List<Invoice> Invoices { get; set; }
 
@@ -64,7 +35,7 @@ namespace Parcial3.Domain.Implementations
             Invoices = new List<Invoice>();
         }
 
-        private void ValidateCuitCuil(string value)
+        public string ValidateCuitCuil(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -82,9 +53,10 @@ namespace Parcial3.Domain.Implementations
             {
                 throw new ArgumentException("ERROR: El CUIT/CUIL debe tener exactamente 11 dígitos.");
             }
+            return value;
         }
 
-        private void ValidateLegalName(string value)
+        public string ValidateLegalName(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -98,9 +70,10 @@ namespace Parcial3.Domain.Implementations
             {
                 throw new ArgumentException("ERROR: La Razón Social no puede exceder los 200 caracteres.");
             }
+            return value;
         }
 
-        private void ValidateAddress(string value)
+        public string ValidateAddress(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
@@ -110,21 +83,20 @@ namespace Parcial3.Domain.Implementations
             {
                 throw new ArgumentException("ERROR: El Domicilio debe tener al menos 5 caracteres.");
             }
+            return value;
         }
-
-      
 
         public string GetCuilCuit() => CuitCuil;
 
-        public void SetCuilCuit(string cuilCuit) => CuitCuil = cuilCuit;
+        public void SetCuilCuit(string cuilCuit) => CuitCuil = ValidateCuitCuil(cuilCuit);
 
         public string GetLegalName() => LegalName;
 
-        public void SetLegalName(string legalName) => LegalName = legalName;
+        public void SetLegalName(string legalName) => LegalName = ValidateLegalName(legalName);
 
         public string GetAddress() => Address;
 
-        public void SetAddress(string address) => Address = address;
+        public void SetAddress(string address) => Address = ValidateAddress(address);
 
         public List<Invoice> GetInvoices() => Invoices;
     }

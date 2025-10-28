@@ -2,6 +2,7 @@
 {
     public interface IInvoice
     {
+        void RegisterTypeFactura(string inputType);
         string GetType();
         string GetNumber();
         DateTime GetDate();
