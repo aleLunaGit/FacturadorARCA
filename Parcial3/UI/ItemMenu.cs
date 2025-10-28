@@ -20,7 +20,7 @@ namespace Parcial3.Modules
                 try
                 {
                     string description = Reader.ReadString("Ingrese el nombre del producto");
-                    newItem.Description = description;
+                    newItem.Description = newItem.ValidateDescription(description);
                     break;
                 }
                 catch (ArgumentException ex)
@@ -34,7 +34,7 @@ namespace Parcial3.Modules
                 try
                 {
                     float quantity = Reader.ReadFloat("Ingrese la cantidad");
-                    newItem.Quantity = quantity;
+                    newItem.Quantity = newItem.ValidateQuantity(quantity);
                     break;
                 }
                 catch (ArgumentException ex)
@@ -48,7 +48,7 @@ namespace Parcial3.Modules
                 try
                 {
                     float price = Reader.ReadFloat("Ingrese el precio del producto");
-                    newItem.Price = price;
+                    newItem.Price = newItem.ValidatePrice(price);
                     break;
                 }
                 catch (ArgumentException ex)
@@ -100,17 +100,17 @@ namespace Parcial3.Modules
                     {
                         case 1:
                             string newDescription = Reader.ReadString("Ingrese el nuevo nombre del producto");
-                            itemToUpdate.Description = newDescription;
+                            _itemService.UpdateItemDescription(itemToUpdate , itemToUpdate.ValidateDescription(newDescription));
                             break;
 
                         case 2:
                             float newQuantity = Reader.ReadFloat("Ingrese la nueva cantidad");
-                            itemToUpdate.Quantity = newQuantity;
+                            _itemService.UpdateItemQuantity(itemToUpdate, itemToUpdate.ValidateQuantity(newQuantity));
                             break;
 
                         case 3:
                             float newPrice = Reader.ReadFloat("Ingrese el nuevo precio");
-                            itemToUpdate.Price = newPrice;
+                            _itemService.UpdateItemPrice(itemToUpdate, itemToUpdate.ValidatePrice(newPrice));
                             break;
 
                         default:

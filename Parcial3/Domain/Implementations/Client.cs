@@ -85,19 +85,5 @@ namespace Parcial3.Domain.Implementations
             }
             return value;
         }
-
-        public string GetCuilCuit() => CuitCuil;
-
-        public void SetCuilCuit(string cuilCuit) => CuitCuil = ValidateCuitCuil(cuilCuit);
-
-        public string GetLegalName() => LegalName;
-
-        public void SetLegalName(string legalName) => LegalName = ValidateLegalName(legalName);
-
-        public string GetAddress() => Address;
-
-        public void SetAddress(string address) => Address = ValidateAddress(address);
-
-        public List<Invoice> GetInvoices() => Invoices;
     }
 }

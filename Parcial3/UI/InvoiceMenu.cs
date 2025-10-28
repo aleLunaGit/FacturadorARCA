@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Parcial3.Domain.Implementations;
+using System.Security.Principal;
 
 namespace Parcial3.Modules
 {
@@ -211,8 +212,38 @@ namespace Parcial3.Modules
             }
 
             Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
-            Presentator.WriteLine($"MONTO TOTAL: ${invoice.AmountTotal:F2}");
+            switch (invoice.Type)
+            {
+                case "A": 
+                    ShowTotalOfTypeA(invoice);
+                    break;
+                case "B":
+                    ShowTotalOfTypeB(invoice);
+                    break;
+                case "C": 
+                    ShowTotalOfTypeC(invoice);
+                    break;
+                default: 
+                    Presentator.WriteLine($"MONTO TOTAL: ${invoice.AmountTotal:F2}");
+                    break;
+            }
             Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
+        }
+        private void ShowTotalOfTypeA(Invoice invoice)
+        {
+            Presentator.WriteLine($"Subtotal: ${_invoiceService.GetDiscriminatedTotal(invoice):F2}" +
+                                  $"\nIVA %21: ${_invoiceService.GetDiscriminatedIva(invoice):F2}" +
+                                  $"\nTotal: ${invoice.AmountTotal:F2}");
+        }
+        private void ShowTotalOfTypeB(Invoice invoice)
+        {
+            float total = invoice.AmountTotal;
+            Presentator.WriteLine($"Total: ${total:F2}");
+        }
+        private void ShowTotalOfTypeC(Invoice invoice)
+        {
+            float total = invoice.AmountTotal;
+            Presentator.WriteLine($"Total: ${total:F2}");
         }
     }
 }

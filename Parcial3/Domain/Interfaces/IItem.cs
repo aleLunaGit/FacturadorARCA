@@ -2,11 +2,8 @@
 {
     public interface IItem
     {
-        string GetDescription();
-        float GetQuantity();
-        float GetPrice();
-        void SetDescription(string description);
-        void SetQuantity(float cuantity);
-        void SetPrice(float Price);
+        string ValidateDescription(string value);
+        float ValidateQuantity(float value);
+        float ValidatePrice(float value);
     }
 }

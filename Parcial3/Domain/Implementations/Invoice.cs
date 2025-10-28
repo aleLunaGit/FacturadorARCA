@@ -70,13 +70,5 @@ namespace Parcial3.Domain.Implementations
             } while (!isValidInput);
             Type =  invoiceType;
         }
-
-        public string GetType() => Type;
-        public string GetNumber() => Number;
-        public DateTime GetDate() => Date;
-        public float GetAmountTotal() => AmountTotal;
-        public void SetType(string type)=> Type = type;
-        public void SetDate(DateTime date)=> Date = date;
-        public void SetAmountTotal(float amountTotal)=> AmountTotal = amountTotal;
     }
 }
