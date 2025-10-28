@@ -1,5 +1,3 @@
-using Parcial3.UI;
-
 namespace Parcial3.Modules
 {
     public static class Reader
@@ -40,27 +38,20 @@ namespace Parcial3.Modules
             int result;
             while (true)
             {
-                // Es una buena práctica mostrarle el rango al usuario en el prompt.
                 Presentator.Write($"{prompt} (entre {min} y {max}): ");
 
-                // --- Validación 1: ¿Es un número válido? ---
                 if (!int.TryParse(Console.ReadLine(), out result))
                 {
-                    // Si no es un número, damos un error de FORMATO.
                     Presentator.WriteLine("Error: Formato inválido. Por favor, ingrese solo dígitos numéricos.");
-                    continue; // Volvemos al inicio del bucle.
+                    continue; 
                 }
 
-                // --- Validación 2: ¿Está en el rango correcto? ---
-                // Si llegamos aquí, sabemos que 'result' es un número.
                 if (result >= min && result <= max)
                 {
-                    // Si está en el rango, ¡éxito!
                     return result;
                 }
                 else
                 {
-                    // Si no está en el rango, damos un error de RANGO.
                     Presentator.WriteLine($"Error: La opción debe ser un número entre {min} y {max}.");
                 }
             }
