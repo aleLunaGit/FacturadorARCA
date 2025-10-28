@@ -1,5 +1,3 @@
-using Parcial3.UI;
-
 namespace Parcial3.Modules
 {
     public static class Reader

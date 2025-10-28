@@ -1,5 +1,5 @@
 ﻿using Parcial3.Domain.Interfaces;
-using Parcial3.UI;
+using Parcial3.Modules;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

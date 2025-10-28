@@ -2,8 +2,8 @@
 using Parcial3.Repositories.Implementations;
 using Parcial3.Modules.Services.Parcial3.Modules.Services;
 using Parcial3.Services.Implementations;
-using Parcial3.UI;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Parcial3.Modules;
 namespace Parcial3
 {
     internal class Program
@@ -24,10 +24,14 @@ namespace Parcial3
             var invoiceService = new InvoiceService(invoiceRepository, clientRepository, context);
 
             // --- 3. CREACIÓN DEL PRESENTADOR ---
-            var presentator = new Presentator(clientService, invoiceService, itemService);
+            //var presentator = new Presentator(clientService, invoiceService, itemService);
+            var clientMenu = new ClientMenu(clientService);
+            var itemMenu = new ItemMenu(itemService);
+            var invoiceMenu = new InvoiceMenu(invoiceService, clientMenu, itemMenu);
+            var mainMenu = new MainMenu(clientMenu, invoiceMenu);
 
-            // --- 4. EJECUCIÓN ---
-            presentator.Run();
+            mainMenu.Run();
+
         }
     }
 }
