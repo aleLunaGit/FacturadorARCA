@@ -40,7 +40,6 @@ namespace Parcial3.Services.Implementations
             }
         }
         public T Search(int id) => _repository.GetByID(id);
-
         public virtual T SearchWhitIncludes(int id, params Expression<Func<T, object>>[] includes)
         {
             return _repository.GetByIdWithIncludes(id, includes);
@@ -78,17 +77,6 @@ namespace Parcial3.Services.Implementations
                 }
                 count++;
             }
-        }
-        public virtual void Register(T entity)
-        {
-            _repository.Add(entity);
-            _context.SaveChanges();
-        }
-        public virtual void Register(T entity, List<string> listOfInputs)
-        {
-            ConvertValues(entity, listOfInputs);
-            _repository.Add(entity);
-            _context.SaveChanges();
         }
         public void Update(T entity, string changeToValue, int inputOption)
         {

@@ -82,7 +82,7 @@ namespace Parcial3.Modules
                 Presentator.WriteLine("\n--- Agregar Productos a la Factura ---");
                 _itemMenu.HandleAddItems(draftInvoice.Items);
 
-                draftInvoice.CalculateTotalAmount();
+            _invoiceService.CalculateTotalAmount(draftInvoice);
 
                 while (true)
                 {
@@ -171,7 +171,7 @@ namespace Parcial3.Modules
                             break;
                     }
 
-                    draftInvoice.CalculateTotalAmount();
+                    _invoiceService.CalculateTotalAmount(draftInvoice);
                     Presentator.WriteLine($"Total actualizado: ${draftInvoice.AmountTotal:F2}");
                     break;
 
