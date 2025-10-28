@@ -13,6 +13,6 @@ namespace Parcial3.Services.Interfaces
         Client FindClientByLegalName(string legalName, params Expression<Func<Client, object>>[] includes);
         Client FindByCuitCuil(string cuitCuil, params Expression<Func<Client, object>>[] includes);
         Client FindByAddress(string address, params Expression<Func<Client, object>>[] includes);
-        void RegisterNewClient(Client newClient, List<string> listOfInputs);
+        void RegisterNewClient(string legalName, string address, string cuitCuil);
     }
 }

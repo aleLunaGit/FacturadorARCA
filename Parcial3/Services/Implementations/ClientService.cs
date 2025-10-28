@@ -3,6 +3,7 @@ using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 
 namespace Parcial3.Services.Implementations
 {
@@ -18,22 +19,26 @@ namespace Parcial3.Services.Implementations
             => _repository.GetByProperty(nameof(Client.CuitCuil), cuitCuil, includes);
         public Client FindByAddress(string address, params Expression<Func<Client, object>>[] includes)
             => _repository.GetByProperty(nameof(Client.Address), address, includes);
-        public void RegisterNewClient(Client newClient, List<string> listOfInputs)
+        public void RegisterNewClient(string legalName, string address, string cuitCuil)
         {
-            ConvertValues(newClient, listOfInputs);
-            if (newClient == null) throw new ArgumentNullException(nameof(newClient));
+           
 
-            var existingClient = FindByCuitCuil(newClient.CuitCuil);
+            var existingClient = FindByCuitCuil(cuitCuil);
             if (existingClient != null) 
-                throw new InvalidOperationException($"Ya existe un cliente registrado con el CUIT/CUIL: {newClient.CuitCuil}");
-            existingClient = FindByAddress(newClient.Address);
+                throw new InvalidOperationException($"Ya existe un cliente registrado con el CUIT/CUIL: {cuitCuil}");
+            existingClient = FindByAddress(address);
 
             if (existingClient != null)
-                throw new InvalidOperationException($"Ya existe un cliente registrado con el Domicilio: {newClient.Address}");
+                throw new InvalidOperationException($"Ya existe un cliente registrado con el Domicilio: {address}");
 
-            existingClient = FindClientByLegalName(newClient.LegalName);
+            existingClient = FindClientByLegalName(legalName);
             if (existingClient != null)
-                throw new InvalidOperationException($"Ya existe un cliente registrado con esta Razon Social: {newClient.LegalName}");
+                throw new InvalidOperationException($"Ya existe un cliente registrado con esta Razon Social: {legalName}");
+            Client newClient = new Client { 
+                CuitCuil = cuitCuil,
+                Address = address,
+                LegalName = legalName,
+            };
 
             _repository.Add(newClient);
             _context.SaveChanges();
