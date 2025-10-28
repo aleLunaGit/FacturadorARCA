@@ -6,6 +6,7 @@ namespace Parcial3.Repositories.Interfaces
     {
         T GetByID(int Id);
         T GetByIdWithIncludes(int id, params Expression<Func<T, object>>[] includes);
+        T GetByProperty(string propertyName, string value, params Expression<Func<T, object>>[] includes);
         IEnumerable<T> GetAll();
         void Update(T entity);
         void Delete(int id);
