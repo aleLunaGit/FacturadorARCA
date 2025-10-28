@@ -144,7 +144,7 @@ namespace Parcial3.Modules
                     break;
 
                 case 2:
-                    string inputType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C)").ToString();
+                    string inputType = Reader.ReadChar("Ingrese el tipo de factura (A/B/C/E)").ToString();
                     draftInvoice.RegisterTypeFactura(inputType);
                     break;
 
