@@ -2,6 +2,7 @@
 using Parcial3.Modules;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
 
 namespace Parcial3.Domain.Implementations
 {
@@ -18,57 +19,55 @@ namespace Parcial3.Domain.Implementations
         public float AmountTotal { get; set; }
         public Client Client { get; set; }
         public List<Item> Items { get; set; }
-        public int  ClientId { get; internal set; }
+        public int ClientId { get; internal set; }
 
 
         public Invoice()
         {
             Items = new List<Item>();
         }
+
         public void RegisterTypeFactura(string inputType)
         {
-            string invoiceType = default;
+            string currentInput = inputType;
             bool isValidInput = false;
 
             do
-            {                
-                string validateInput = inputType;
-
+            {
                 try
                 {
-                    if (string.IsNullOrWhiteSpace(inputType) || inputType.Length != 1)
+                    if (string.IsNullOrWhiteSpace(currentInput) || currentInput.Length != 1)
                     {
-                        throw new ArgumentException("Error: Debes ingresar el tipo de factura, no puede estar vacío");
+                        throw new ArgumentException("Error: Debes ingresar el tipo de factura (A, B, C o E).");
                     }
 
-                    char letter = char.ToUpper(inputType[0]);
+                    char letter = char.ToUpper(currentInput[0]);
 
                     if (letter != 'A' && letter != 'B' && letter != 'C' && letter != 'E')
                     {
                         throw new FormatException("Error: El tipo de factura debe ser A, B, C o E.");
                     }
 
-                    invoiceType = letter.ToString();
+                    Type = letter.ToString();
                     isValidInput = true;
                 }
                 catch (ArgumentException ex)
                 {
                     Presentator.WriteLine(ex.Message);
-                    isValidInput = false;
+                    currentInput = Reader.ReadChar("Por favor, ingrese un tipo válido (A/B/C/E)").ToString();
                 }
                 catch (FormatException ex)
                 {
                     Presentator.WriteLine(ex.Message);
-                    isValidInput = false;
+                    currentInput = Reader.ReadChar("Por favor, ingrese un tipo válido (A/B/C/E)").ToString();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Presentator.WriteLine("Un error inesperado ha ocurrido, intente nuevamente.");
-                    isValidInput = false;
+                    Presentator.WriteLine($"Un error inesperado ha ocurrido: {ex.Message}");
+                    currentInput = Reader.ReadChar("Por favor, ingrese un tipo válido (A/B/C/E)").ToString();
                 }
 
             } while (!isValidInput);
-            Type =  invoiceType;
         }
     }
 }

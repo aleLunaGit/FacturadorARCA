@@ -1,16 +1,46 @@
+using System;
+using System.Text;
+
 namespace Parcial3.Modules
 {
     public static class Reader
     {
+        private static string ReadLineWithEscape(string prompt)
+        {
+            Presentator.Write($"{prompt}: ");
+            StringBuilder input = new StringBuilder();
+            while (true)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+
+                if (key.Key == ConsoleKey.Escape)
+                {
+                    throw new OperationCanceledException("Operación cancelada por el usuario.");
+                }
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    Presentator.WriteLine("");
+                    return input.ToString();
+                }
+                if (key.Key == ConsoleKey.Backspace && input.Length > 0)
+                {
+                    input.Remove(input.Length - 1, 1);
+                    Presentator.Write("\b \b");
+                }
+                else if (!char.IsControl(key.KeyChar))
+                {
+                    input.Append(key.KeyChar);
+                    Presentator.Write(key.KeyChar.ToString());
+                }
+            }
+        }
 
         public static string ReadString(string prompt)
         {
             string result;
             do
             {
-                Presentator.Write($"{prompt}: ");
-                result = Console.ReadLine();
-                Presentator.WriteLine("");
+                result = ReadLineWithEscape(prompt);
                 if (string.IsNullOrWhiteSpace(result))
                 {
                     Presentator.WriteLine("Error: El valor no puede estar vacío. Intente de nuevo.");
@@ -24,28 +54,27 @@ namespace Parcial3.Modules
             int result;
             while (true)
             {
-                Presentator.Write($"{prompt}: ");
-                if (int.TryParse(Console.ReadLine(), out result))
+                string input = ReadLineWithEscape(prompt);
+                if (int.TryParse(input, out result))
                 {
-                Presentator.WriteLine("");
                     return result;
                 }
                 Presentator.WriteLine("Error: Formato de número inválido. Por favor, ingrese solo dígitos.");
             }
         }
+
         public static int ReadInt(string prompt, int min, int max)
         {
             int result;
             while (true)
             {
-                Presentator.Write($"{prompt} (entre {min} y {max}): ");
+                string input = ReadLineWithEscape($"{prompt} (entre {min} y {max})");
 
-                if (!int.TryParse(Console.ReadLine(), out result))
+                if (!int.TryParse(input, out result))
                 {
                     Presentator.WriteLine("Error: Formato inválido. Por favor, ingrese solo dígitos numéricos.");
-                    continue; 
+                    continue;
                 }
-
                 if (result >= min && result <= max)
                 {
                     return result;
@@ -56,42 +85,39 @@ namespace Parcial3.Modules
                 }
             }
         }
+
         public static float ReadFloat(string prompt)
         {
             float result;
             while (true)
             {
-                Presentator.WriteLine($"{prompt}: ");
-                if (float.TryParse(Console.ReadLine(), out result))
+                string input = ReadLineWithEscape(prompt);
+                if (float.TryParse(input.Replace('.', ','), out result))
                 {
-                Presentator.WriteLine("");
                     return result;
                 }
                 Presentator.WriteLine("Error: Formato de número inválido. Use ',' como separador decimal si es necesario.");
             }
         }
 
-        public static DateTime ReadDate(string prompt)
-        {
-            DateTime result;
-            while (true)
-            {
-                Presentator.WriteLine($"{prompt}: "); 
-                if (DateTime.TryParse(Console.ReadLine(), out result))
-                {
-                Presentator.WriteLine("");
-                    return result;
-                }
-                Presentator.WriteLine("Error: Formato de fecha inválido. Use un formato reconocido como dd/mm/aaaa.");
-            }
-        }
-
         public static char ReadChar(string prompt)
         {
-            Presentator.WriteLine($"{prompt}: ");
-            var character = Console.ReadKey().KeyChar;
-            Presentator.WriteLine("");
-            return character;
+            Presentator.Write($"{prompt}: ");
+            ConsoleKeyInfo key = Console.ReadKey(true);
+
+            if (key.Key == ConsoleKey.Escape)
+            {
+                throw new OperationCanceledException("Operación cancelada por el usuario.");
+            }
+
+            Presentator.WriteLine(key.KeyChar.ToString());
+            return key.KeyChar;
+        }
+
+        public static void WaitForKey(string prompt)
+        {
+            Presentator.Write(prompt);
+            Console.ReadKey(true);
         }
     }
 }

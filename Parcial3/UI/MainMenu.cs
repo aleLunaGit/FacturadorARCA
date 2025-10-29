@@ -1,5 +1,4 @@
-﻿
-namespace Parcial3.Modules
+﻿namespace Parcial3.Modules
 {
     public class MainMenu
     {
@@ -16,45 +15,35 @@ namespace Parcial3.Modules
         {
             while (true)
             {
+                Presentator.Clear();
                 DisplayMenu();
+                string option;
 
-                Presentator.Write("Seleccione una opción: ");
-                var option = Reader.ReadString("");
+                try
+                {
+                    option = Reader.ReadString("Seleccione una opción");
+                }
+                catch (OperationCanceledException)
+                {
+                    option = "3";
+                }
 
                 switch (option)
                 {
                     case "1":
-                        _clientMenu.HandleRegisterClient();
+                        _clientMenu.Run();
                         break;
                     case "2":
-                        _clientMenu.HandleUpdateClient();
+                        _invoiceMenu.Run();
                         break;
                     case "3":
-                        _clientMenu.HandleSearchClient();
-                        break;
-                    case "4":
-                        _clientMenu.HandleSearchClientByLegalName();
-                        break;
-                    case "5":
-                        _clientMenu.HandleListClients();
-                        break;
-                    case "6":
-                        _clientMenu.HandleDeleteClient();
-                        break;
-                    case "7":
-                        _invoiceMenu.HandleRegisterInvoice();
-                        break;
-                    case "8":
-                        _invoiceMenu.HandleSearchInvoice();
-                        break;
-                    case "9":
                         Presentator.WriteLine("Saliendo del sistema...");
                         return;
                     default:
                         Presentator.WriteLine("Opción no válida. Por favor, intente de nuevo.");
+                        Reader.WaitForKey("\nPresione cualquier tecla para continuar...");
                         break;
                 }
-                Reader.ReadChar("\nPresione cualquier tecla para volver al menú...");
             }
         }
 
@@ -63,15 +52,9 @@ namespace Parcial3.Modules
             Presentator.WriteLine("\n╔════════════════════════════════════╗");
             Presentator.WriteLine("║        SISTEMA DE GESTIÓN          ║");
             Presentator.WriteLine("╠════════════════════════════════════╣");
-            Presentator.WriteLine("║ 1. Registrar Nuevo Cliente         ║");
-            Presentator.WriteLine("║ 2. Modificar Cliente Existente     ║");
-            Presentator.WriteLine("║ 3. Buscar Cliente por ID           ║");
-            Presentator.WriteLine("║ 4. Buscar Cliente por Razon Social ║");
-            Presentator.WriteLine("║ 5. Listar Clientes                 ║");
-            Presentator.WriteLine("║ 6. Eliminar Cliente                ║");
-            Presentator.WriteLine("║ 7. Registrar Nueva Factura         ║");
-            Presentator.WriteLine("║ 8. Consultar Factura por ID        ║");
-            Presentator.WriteLine("║ 9. Salir                           ║");
+            Presentator.WriteLine("║ 1. Gestionar Clientes              ║");
+            Presentator.WriteLine("║ 2. Gestionar Facturas              ║");
+            Presentator.WriteLine("║ 3. Salir                           ║");
             Presentator.WriteLine("╚════════════════════════════════════╝");
         }
     }
