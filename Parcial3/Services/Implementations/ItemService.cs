@@ -11,7 +11,7 @@ namespace Parcial3.Modules.Services
         public class ItemService : CrudService<Item>, IItemService
         {
 
-            public ItemService(IRepository<Item> entity, ApplicationDbContext context) : base(entity, context)
+            public ItemService(IRepository<Item> entity, IUnitOfWork unitOfWork) : base(entity, unitOfWork)
             {
 
             }

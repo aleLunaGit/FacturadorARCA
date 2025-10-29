@@ -4,14 +4,17 @@ using Parcial3.Modules.Services.Parcial3.Modules.Services;
 using Parcial3.Services.Implementations;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Parcial3.Modules;
+using Parcial3.Services.Interfaces;
 namespace Parcial3
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            // --- 1. CONFIGURACIÓN ---
+            // CONFIGURACIÓN 
             var context = new ApplicationDbContext();
+            // UnitOfWork gestiona DbContext para el manejo de recursos
+            var unitOfWork = new UnitOfWork(context);
 
             // Creamos un repositorio para CADA entidad.
             var clientRepository = new Repository<Client>(context);
@@ -19,9 +22,9 @@ namespace Parcial3
             var itemRepository = new Repository<Item>(context);
 
             // --- 2. CREACIÓN DE LOS SERVICIOS ---
-            var clientService = new ClientService(clientRepository, context);
-            var itemService = new ItemService(itemRepository, context);
-            var invoiceService = new InvoiceService(invoiceRepository, clientRepository, context);
+            var clientService = new ClientService(clientRepository, unitOfWork);
+            var itemService = new ItemService(itemRepository, unitOfWork);
+            var invoiceService = new InvoiceService(invoiceRepository, clientRepository, unitOfWork);
 
             // --- 3. CREACIÓN DEL PRESENTADOR ---
             var clientMenu = new ClientMenu(clientService);
