@@ -108,11 +108,12 @@ namespace Parcial3.Modules
             {
                 Client newClient = new Client();
 
-                string cuit = ReadAndValidateField(newClient.ValidateCuitCuil, "Ingresa su Cuit/Cuil");
+                string cuit = Reader.ReadString("Ingrese su Cuit - Cuil");
+                string cleanCuit = newClient.ValidateCuitCuil(cuit);
                 string legalName = ReadAndValidateField(newClient.ValidateLegalName, "Ingresa la Razón Social");
                 string address = ReadAndValidateField(newClient.ValidateAddress, "Ingrese su Domicilio");
 
-                _clientService.RegisterNewClient(cuit, legalName, address);
+                _clientService.RegisterNewClient(cleanCuit, legalName, address);
                 Presentator.WriteLine("\n¡Cliente registrado exitosamente!");
             }
             catch (OperationCanceledException)

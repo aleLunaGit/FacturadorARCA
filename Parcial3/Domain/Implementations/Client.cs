@@ -42,7 +42,7 @@ namespace Parcial3.Domain.Implementations
                 throw new ArgumentException("ERROR: El CUIT/CUIL no puede estar vacío.");
             }
 
-            string cleanCuit = Regex.Replace(value, @"[-\s]", "");
+            string cleanCuit = value.Replace("-", "");
 
             if (!cleanCuit.All(char.IsDigit))
             {
@@ -53,7 +53,7 @@ namespace Parcial3.Domain.Implementations
             {
                 throw new ArgumentException("ERROR: El CUIT/CUIL debe tener exactamente 11 dígitos.");
             }
-            return value;
+            return cleanCuit;
         }
 
         public string ValidateLegalName(string value)
