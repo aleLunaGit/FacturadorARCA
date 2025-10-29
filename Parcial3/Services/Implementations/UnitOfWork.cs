@@ -23,6 +23,7 @@ namespace Parcial3.Services.Implementations
         public void Dispose()
         {
             _context.Dispose();
+            //GC.SuppressFinalize(this); aún no entendí bien para qué sirve esto, mañana veré
         }
     }
 }

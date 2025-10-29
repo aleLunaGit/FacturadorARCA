@@ -19,18 +19,18 @@ namespace Parcial3.Services.Implementations
         }
         public void Delete(int id)
         {
-  
-
-            try
-            {
-                _repository.Delete(id);
-                _unitOfWork.Save();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al eliminar {typeof(T).Name}.");
-            
-            }
+            //using (var unitOfWork = _unitOfWork) Si se borra un cliente y en la misma sesión quiero consultar la lista de clientes da error por cuestiones del Dispose() que veré mañana
+            //{
+                try
+                {
+                    _repository.Delete(id);
+                    _unitOfWork.Save();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error al eliminar {typeof(T).Name}.");
+                }
+            //}
         }
         public void List()
         {
