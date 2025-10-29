@@ -59,15 +59,48 @@ namespace Parcial3.Modules
 
         private void ShowInvoice(Invoice invoice)
         {
-            Presentator.WriteLine($"Número: {invoice.Number}");
-            Presentator.WriteLine($"Tipo: {invoice.Type}");
-            Presentator.WriteLine($"Fecha: {invoice.Date:dd/MM/yyyy}");
-            Presentator.WriteLine($"Monto Total: ${invoice.AmountTotal:F2}");
-            Presentator.WriteLine("Productos:");
-            foreach (Item item in invoice.Items)
+            Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
+            Presentator.WriteLine($"Fecha: {invoice.Date:dd/MM/yyyy HH:mm} | Número: {invoice.Number} | Tipo: {invoice.Type}");
+            Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
+            Presentator.WriteLine($"Razón Social: {invoice.Client.LegalName}");
+            Presentator.WriteLine($"CUIT/CUIL:    {invoice.Client.CuitCuil}");
+            Presentator.WriteLine($"Domicilio:    {invoice.Client.Address}");
+            Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
+            Presentator.WriteLine("PRODUCTOS:");
+
+            if (invoice.Items.Count == 0)
             {
-                Presentator.WriteLine($"  - {item.Description}: ${item.Price:F2} x {item.Quantity} = ${item.Price * item.Quantity:F2}");
+                Presentator.WriteLine("  (Sin productos agregados)");
             }
+            else
+            {
+                foreach (var item in invoice.Items)
+                {
+                    Presentator.WriteLine($"  • {item.Description}");
+                    Presentator.WriteLine($"    Precio: ${item.Price:F2} | Cantidad: {item.Quantity} | Subtotal: ${item.Price * item.Quantity:F2}");
+                }
+            }
+
+            Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
+            switch (invoice.Type)
+            {
+                case "A":
+                    ShowTotalOfTypeA(invoice);
+                    break;
+                case "B":
+                    ShowTotalOfTypeB(invoice);
+                    break;
+                case "C":
+                    ShowTotalOfTypeC(invoice);
+                    break;
+                case "E":
+                    ShowTotalOfTypeE(invoice);
+                    break;
+                default:
+                    Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
+                    break;
+            }
+            Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
         }
 
         public void HandleRegisterInvoice()
@@ -190,48 +223,7 @@ namespace Parcial3.Modules
         {
             Presentator.WriteLine("\n══════════════════════════════════════════════════════════════════════════");
             Presentator.WriteLine("                         VISTA PREVIA DE FACTURA");
-            Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
-            Presentator.WriteLine($"Fecha: {invoice.Date:dd/MM/yyyy HH:mm} | Número: {invoice.Number} | Tipo: {invoice.Type}");
-            Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
-            Presentator.WriteLine($"Razón Social: {invoice.Client.LegalName}");
-            Presentator.WriteLine($"CUIT/CUIL:    {invoice.Client.CuitCuil}");
-            Presentator.WriteLine($"Domicilio:    {invoice.Client.Address}");
-            Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
-            Presentator.WriteLine("PRODUCTOS:");
-
-            if (invoice.Items.Count == 0)
-            {
-                Presentator.WriteLine("  (Sin productos agregados)");
-            }
-            else
-            {
-                foreach (var item in invoice.Items)
-                {
-                    Presentator.WriteLine($"  • {item.Description}");
-                    Presentator.WriteLine($"    Precio: ${item.Price:F2} | Cantidad: {item.Quantity} | Subtotal: ${item.Price * item.Quantity:F2}");
-                }
-            }
-
-            Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
-            switch (invoice.Type)
-            {
-                case "A": 
-                    ShowTotalOfTypeA(invoice);
-                    break;
-                case "B":
-                    ShowTotalOfTypeB(invoice);
-                    break;
-                case "C": 
-                    ShowTotalOfTypeC(invoice);
-                    break;
-                case "E":
-                    ShowTotalOfTypeE(invoice);
-                    break;
-                default: 
-                    Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
-                    break;
-            }
-            Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
+            ShowInvoice(invoice);
         }
         private void ShowTotalOfTypeA(Invoice invoice)
             => Presentator.WriteLine($"Subtotal: ${_invoiceService.GetDiscriminatedTotal(invoice):F2}" +
