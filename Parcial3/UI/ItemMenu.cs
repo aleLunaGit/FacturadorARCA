@@ -1,5 +1,7 @@
 ﻿using Parcial3.Modules.Services.Parcial3.Modules.Services;
 using Parcial3.Domain.Implementations;
+using System;
+using System.Collections.Generic;
 
 namespace Parcial3.Modules
 {
@@ -15,48 +17,56 @@ namespace Parcial3.Modules
         private Item HandleItemRegistration()
         {
             var newItem = new Item();
-            while (true)
+            try
             {
-                try
+                while (true)
                 {
-                    string description = Reader.ReadString("Ingrese el nombre del producto");
-                    newItem.Description = newItem.ValidateDescription(description);
-                    break;
+                    try
+                    {
+                        string description = Reader.ReadString("Ingrese el nombre del producto");
+                        newItem.Description = newItem.ValidateDescription(description);
+                        break;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
+                    }
                 }
-                catch (ArgumentException ex)
-                {
-                    Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
-                }
-            }
 
-            while (true)
-            {
-                try
+                while (true)
                 {
-                    float quantity = Reader.ReadFloat("Ingrese la cantidad");
-                    newItem.Quantity = newItem.ValidateQuantity(quantity);
-                    break;
+                    try
+                    {
+                        float quantity = Reader.ReadFloat("Ingrese la cantidad");
+                        newItem.Quantity = newItem.ValidateQuantity(quantity);
+                        break;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
+                    }
                 }
-                catch (ArgumentException ex)
-                {
-                    Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
-                }
-            }
 
-            while (true)
-            {
-                try
+                while (true)
                 {
-                    float price = Reader.ReadFloat("Ingrese el precio del producto");
-                    newItem.Price = newItem.ValidatePrice(price);
-                    break;
+                    try
+                    {
+                        float price = Reader.ReadFloat("Ingrese el precio del producto");
+                        newItem.Price = newItem.ValidatePrice(price);
+                        break;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
+                    }
                 }
-                catch (ArgumentException ex)
-                {
-                    Presentator.WriteLine($"Error: {ex.Message} Intente de nuevo.");
-                }
+                return newItem;
             }
-            return newItem;
+            catch (OperationCanceledException)
+            {
+                Presentator.WriteLine("\nRegistro de ítem cancelado.");
+                return null;
+            }
         }
 
         public void HandleUpdateItemInList(List<Item> itemsList)
@@ -67,78 +77,83 @@ namespace Parcial3.Modules
                 return;
             }
 
-            Presentator.WriteLine("\n--- Items Disponibles ---");
-            for (int i = 0; i < itemsList.Count; i++)
+            try
             {
-                var item = itemsList[i];
-                Presentator.WriteLine($"{i + 1}) {item.Description} - Cantidad: {item.Quantity} - Precio: ${item.Price:F2}");
-            }
-
-            int input = Reader.ReadInt("¿Qué item desea modificar?");
-            int index = input - 1;
-
-            if (index < 0 || index >= itemsList.Count)
-            {
-                Presentator.WriteLine("Índice inválido.");
-                return;
-            }
-            Item itemToUpdate = itemsList[index];
-
-            Presentator.WriteLine($"\n--- Modificar: {itemToUpdate.Description} ---");
-            Presentator.WriteLine($"1) Descripción: {itemToUpdate.Description}");
-            Presentator.WriteLine($"2) Cantidad: {itemToUpdate.Quantity}");
-            Presentator.WriteLine($"3) Precio: ${itemToUpdate.Price:F2}");
-
-            int option = Reader.ReadInt("¿Qué desea modificar?");
-
-            bool success = false;
-            while (!success)
-            {
-                try
+                Presentator.WriteLine("\n--- Items Disponibles ---");
+                for (int i = 0; i < itemsList.Count; i++)
                 {
-                    switch (option)
+                    var item = itemsList[i];
+                    Presentator.WriteLine($"{i + 1}) {item.Description} - Cantidad: {item.Quantity} - Precio: ${item.Price:F2}");
+                }
+
+                int input = Reader.ReadInt("¿Qué item desea modificar?");
+                int index = input - 1;
+
+                if (index < 0 || index >= itemsList.Count)
+                {
+                    Presentator.WriteLine("Índice inválido.");
+                    return;
+                }
+                Item itemToUpdate = itemsList[index];
+
+                Presentator.WriteLine($"\n--- Modificar: {itemToUpdate.Description} ---");
+                Presentator.WriteLine($"1) Descripción: {itemToUpdate.Description}");
+                Presentator.WriteLine($"2) Cantidad: {itemToUpdate.Quantity}");
+                Presentator.WriteLine($"3) Precio: ${itemToUpdate.Price:F2}");
+
+                int option = Reader.ReadInt("¿Qué desea modificar?");
+
+                bool success = false;
+                while (!success)
+                {
+                    try
                     {
-                        case 1:
-                            string newDescription = Reader.ReadString("Ingrese el nuevo nombre del producto");
-                            _itemService.UpdateItemDescription(itemToUpdate , itemToUpdate.ValidateDescription(newDescription));
-                            break;
+                        switch (option)
+                        {
+                            case 1:
+                                string newDescription = Reader.ReadString("Ingrese el nuevo nombre del producto");
+                                _itemService.UpdateItemDescription(itemToUpdate, itemToUpdate.ValidateDescription(newDescription));
+                                break;
+                            case 2:
+                                float newQuantity = Reader.ReadFloat("Ingrese la nueva cantidad");
+                                _itemService.UpdateItemQuantity(itemToUpdate, itemToUpdate.ValidateQuantity(newQuantity));
+                                break;
+                            case 3:
+                                float newPrice = Reader.ReadFloat("Ingrese el nuevo precio");
+                                _itemService.UpdateItemPrice(itemToUpdate, itemToUpdate.ValidatePrice(newPrice));
+                                break;
+                            default:
+                                Presentator.WriteLine("Opción inválida.");
+                                return;
+                        }
+                        success = true;
+                        Presentator.WriteLine("Item actualizado correctamente.");
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Presentator.WriteLine($"Error: {ex.Message}");
+                    }
 
-                        case 2:
-                            float newQuantity = Reader.ReadFloat("Ingrese la nueva cantidad");
-                            _itemService.UpdateItemQuantity(itemToUpdate, itemToUpdate.ValidateQuantity(newQuantity));
-                            break;
-
-                        case 3:
-                            float newPrice = Reader.ReadFloat("Ingrese el nuevo precio");
-                            _itemService.UpdateItemPrice(itemToUpdate, itemToUpdate.ValidatePrice(newPrice));
-                            break;
-
-                        default:
-                            Presentator.WriteLine("Opción inválida.");
+                    if (!success)
+                    {
+                        char retry = Reader.ReadChar("¿Desea intentar nuevamente? (S/N)");
+                        if (retry != 'S' && retry != 's')
+                        {
                             return;
-                    }
-                    success = true;
-                    Presentator.WriteLine("Item actualizado correctamente.");
-                }
-                catch (ArgumentException ex)
-                {
-                    Presentator.WriteLine($"Error: {ex.Message}");
-                }
-
-                if (!success)
-                {
-                    char retry = Reader.ReadChar("¿Desea intentar nuevamente? (S/N)");
-                    if (retry != 'S' && retry != 's')
-                    {
-                        return;
+                        }
                     }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                Presentator.WriteLine("\nModificación de ítem cancelada.");
             }
         }
 
         public void HandleAddItems(List<Item> itemsList)
         {
             Presentator.WriteLine("\n--- Agregar Productos ---");
+            Presentator.WriteLine("(Presione 'Escape' en cualquier momento para cancelar el ítem actual)");
 
             while (true)
             {
@@ -150,8 +165,15 @@ namespace Parcial3.Modules
                     Presentator.WriteLine("Producto agregado correctamente.");
                 }
 
-                char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
-                if (choice != 'S' && choice != 's')
+                try
+                {
+                    char choice = Reader.ReadChar("\n¿Agregar otro producto? (S/N)");
+                    if (choice != 'S' && choice != 's')
+                    {
+                        break;
+                    }
+                }
+                catch (OperationCanceledException)
                 {
                     break;
                 }
@@ -166,22 +188,29 @@ namespace Parcial3.Modules
                 return;
             }
 
-            Presentator.WriteLine("\n--- Eliminar Producto ---");
-            for (int i = 0; i < itemsList.Count; i++)
+            try
             {
-                var item = itemsList[i];
-                Presentator.WriteLine($"{i + 1}) {item.Description} - ${item.Price:F2} x {item.Quantity}");
-            }
+                Presentator.WriteLine("\n--- Eliminar Producto ---");
+                for (int i = 0; i < itemsList.Count; i++)
+                {
+                    var item = itemsList[i];
+                    Presentator.WriteLine($"{i + 1}) {item.Description} - ${item.Price:F2} x {item.Quantity}");
+                }
 
-            int input = Reader.ReadInt("¿Qué item desea eliminar?");
+                int input = Reader.ReadInt("¿Qué item desea eliminar?");
 
-            if (_itemService.RemoveItem(itemsList, input - 1))
-            {
-                Presentator.WriteLine("Producto eliminado correctamente.");
+                if (_itemService.RemoveItem(itemsList, input - 1))
+                {
+                    Presentator.WriteLine("Producto eliminado correctamente.");
+                }
+                else
+                {
+                    Presentator.WriteLine("Índice inválido.");
+                }
             }
-            else
+            catch (OperationCanceledException)
             {
-                Presentator.WriteLine("Índice inválido.");
+                Presentator.WriteLine("\nEliminación de ítem cancelada.");
             }
         }
     }

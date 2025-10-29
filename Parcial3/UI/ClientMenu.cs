@@ -1,5 +1,4 @@
-﻿using Parcial3.Modules.Services.Parcial3.Modules.Services;
-using Parcial3.Services.Implementations;
+﻿using Parcial3.Services.Implementations;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,34 +18,119 @@ namespace Parcial3.Modules
         }
         public ClientService GetClientService() => _clientService;
 
+        public void Run()
+        {
+            while (true)
+            {
+                Presentator.Clear();
+                DisplayClientMenu();
+                string option;
+
+                try
+                {
+                    option = Reader.ReadString("Seleccione una opción del menú de clientes");
+                }
+                catch (OperationCanceledException)
+                {
+                    option = "7";
+                }
+
+                switch (option)
+                {
+                    case "1":
+                        HandleRegisterClient();
+                        break;
+                    case "2":
+                        HandleUpdateClient();
+                        break;
+                    case "3":
+                        HandleSearchClient();
+                        break;
+                    case "4":
+                        HandleSearchClientByLegalName();
+                        break;
+                    case "5":
+                        HandleListClients();
+                        break;
+                    case "6":
+                        HandleDeleteClient();
+                        break;
+                    case "7":
+                        return;
+                    default:
+                        Presentator.WriteLine("Opción no válida. Por favor, intente de nuevo.");
+                        break;
+                }
+
+                Reader.WaitForKey("\nPresione cualquier tecla para volver al menú de clientes...");
+            }
+        }
+
+        private void DisplayClientMenu()
+        {
+            Presentator.WriteLine("\n╔════════════════════════════════════╗");
+            Presentator.WriteLine("║         GESTIÓN DE CLIENTES        ║");
+            Presentator.WriteLine("╠════════════════════════════════════╣");
+            Presentator.WriteLine("║ 1. Registrar Nuevo Cliente         ║");
+            Presentator.WriteLine("║ 2. Modificar Cliente Existente     ║");
+            Presentator.WriteLine("║ 3. Buscar Cliente por ID           ║");
+            Presentator.WriteLine("║ 4. Buscar Cliente por Razón Social ║");
+            Presentator.WriteLine("║ 5. Listar Clientes                 ║");
+            Presentator.WriteLine("║ 6. Eliminar Cliente                ║");
+            Presentator.WriteLine("║ 7. Volver al Menú Principal        ║");
+            Presentator.WriteLine("╚════════════════════════════════════╝");
+        }
+
+        private string ReadAndValidateField(Func<string, string> validator, string prompt)
+        {
+            while (true)
+            {
+                try
+                {
+                    string input = Reader.ReadString(prompt);
+                    validator(input);
+                    return input;
+                }
+                catch (ArgumentException ex)
+                {
+                    Presentator.WriteLine(ex.Message);
+                }
+            }
+        }
+
         public void HandleRegisterClient()
         {
-            if (_clientService == null) return;
+            Presentator.Clear();
+            Presentator.WriteLine("--- Registrar Nuevo Cliente ---");
+            Presentator.WriteLine("(Presione 'Escape' en cualquier momento para cancelar)");
 
             try
             {
                 Client newClient = new Client();
-                List<string> listOfInputs = new List<string>();
 
-                string cuit = Reader.ReadString("Ingresa su Cuit/Cuil");
-                string legalName = Reader.ReadString("Ingresa la Razón Social");
-                string address = Reader.ReadString("Ingrese su Domicilio");
-                
-                cuit = newClient.ValidateCuitCuil(cuit);
-                legalName =newClient.ValidateLegalName(legalName);
-                address = newClient.ValidateAddress(address);
+                string cuit = ReadAndValidateField(newClient.ValidateCuitCuil, "Ingresa su Cuit/Cuil");
+                string legalName = ReadAndValidateField(newClient.ValidateLegalName, "Ingresa la Razón Social");
+                string address = ReadAndValidateField(newClient.ValidateAddress, "Ingrese su Domicilio");
 
                 _clientService.RegisterNewClient(cuit, legalName, address);
-                Presentator.WriteLine("Cliente registrado exitosamente.");
+                Presentator.WriteLine("\n¡Cliente registrado exitosamente!");
+            }
+            catch (OperationCanceledException)
+            {
+                Presentator.WriteLine("\nRegistro cancelado.");
             }
             catch (Exception ex)
             {
-                Presentator.WriteLine($"Error al registrar cliente: {ex.Message}");
+                Presentator.WriteLine($"\nError al registrar cliente: {ex.Message}");
             }
         }
 
         public void HandleUpdateClient()
         {
+            Presentator.Clear();
+            Presentator.WriteLine("--- Modificar Cliente ---");
+            Presentator.WriteLine("(Presione 'Escape' en cualquier momento para cancelar)");
+
             try
             {
                 int clientId = Reader.ReadInt("Ingrese el ID del cliente que desea modificar");
@@ -63,11 +147,15 @@ namespace Parcial3.Modules
                 var changeTo = Reader.ReadString("Ingrese el nuevo valor");
 
                 _clientService.Update(updateClient, changeTo, input);
-                Presentator.WriteLine("Cliente actualizado exitosamente.");
+                Presentator.WriteLine("\n¡Cliente actualizado exitosamente!");
+            }
+            catch (OperationCanceledException)
+            {
+                Presentator.WriteLine("\nModificación cancelada.");
             }
             catch (Exception ex)
             {
-                Presentator.WriteLine($"Ocurrió un error: {ex.Message}");
+                Presentator.WriteLine($"\nOcurrió un error: {ex.Message}");
             }
         }
 
@@ -88,10 +176,13 @@ namespace Parcial3.Modules
 
         public void HandleSearchClientByLegalName()
         {
+            Presentator.Clear();
+            Presentator.WriteLine("--- Buscar Cliente por Razón Social ---");
+            Presentator.WriteLine("(Presione 'Escape' en cualquier momento para cancelar)");
+
             try
             {
                 string clientName = Reader.ReadString("Ingrese la Razón Social del Cliente");
-
                 Client client = _clientService.FindClientByLegalName(clientName, c => c.Invoices);
 
                 if (client == null)
@@ -102,14 +193,22 @@ namespace Parcial3.Modules
 
                 ShowClient(client);
             }
+            catch (OperationCanceledException)
+            {
+                Presentator.WriteLine("\nBúsqueda cancelada.");
+            }
             catch (Exception ex)
             {
-                Presentator.WriteLine($"Ocurrió un error: {ex.Message}");
+                Presentator.WriteLine($"\nOcurrió un error: {ex.Message}");
             }
         }
 
         public void HandleSearchClient()
         {
+            Presentator.Clear();
+            Presentator.WriteLine("--- Buscar Cliente por ID ---");
+            Presentator.WriteLine("(Presione 'Escape' en cualquier momento para cancelar)");
+
             try
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente a buscar");
@@ -124,9 +223,13 @@ namespace Parcial3.Modules
                 Presentator.WriteLine($"\n--- Detalles de {typeof(Client).Name} (ID: {id}) ---");
                 ShowClient(entity, client => client.Invoices);
             }
+            catch (OperationCanceledException)
+            {
+                Presentator.WriteLine("\nBúsqueda cancelada.");
+            }
             catch (Exception ex)
             {
-                Presentator.WriteLine($"Ocurrió un error: {ex.Message}");
+                Presentator.WriteLine($"\nOcurrió un error: {ex.Message}");
             }
         }
 
@@ -179,6 +282,7 @@ namespace Parcial3.Modules
 
         public void HandleListClients()
         {
+            Presentator.Clear();
             var clientes = _clientService.GetAll();
             Presentator.WriteLine("\n--- LISTADO DE CLIENTES ---");
 
@@ -197,6 +301,9 @@ namespace Parcial3.Modules
 
         public void HandleDeleteClient()
         {
+            Presentator.Clear();
+            Presentator.WriteLine("--- Eliminar Cliente ---");
+
             try
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente que desea ELIMINAR");
@@ -220,6 +327,10 @@ namespace Parcial3.Modules
                 {
                     Presentator.WriteLine("Eliminación cancelada.");
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                Presentator.WriteLine("\nEliminación cancelada.");
             }
             catch (FormatException)
             {

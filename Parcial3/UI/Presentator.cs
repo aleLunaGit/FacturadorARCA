@@ -5,6 +5,11 @@ namespace Parcial3.Modules
 {
     public static class Presentator
     {
+        public static void Clear()
+        {
+            Console.Clear();
+        }
+
         public static void WriteLine(string msg)
         {
             Console.WriteLine($"{msg}");
