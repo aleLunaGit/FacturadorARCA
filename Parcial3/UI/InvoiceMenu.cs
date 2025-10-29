@@ -49,24 +49,11 @@ namespace Parcial3.Modules
                 }
 
                 Presentator.WriteLine($"\n--- Detalles de la Factura (ID: {invoiceId}) ---");
-                ShowInvoice(invoice);
+                ShowPreviewInvoice(invoice, false);
             }
             catch (Exception ex)
             {
                 Presentator.WriteLine($"Ocurrió un error: {ex.Message}");
-            }
-        }
-
-        private void ShowInvoice(Invoice invoice)
-        {
-            Presentator.WriteLine($"Número: {invoice.Number}");
-            Presentator.WriteLine($"Tipo: {invoice.Type}");
-            Presentator.WriteLine($"Fecha: {invoice.Date:dd/MM/yyyy}");
-            Presentator.WriteLine($"Monto Total: ${invoice.AmountTotal:F2}");
-            Presentator.WriteLine("Productos:");
-            foreach (Item item in invoice.Items)
-            {
-                Presentator.WriteLine($"  - {item.Description}: ${item.Price:F2} x {item.Quantity} = ${item.Price * item.Quantity:F2}");
             }
         }
 
@@ -186,11 +173,12 @@ namespace Parcial3.Modules
             }
         }
 
-        private void ShowPreviewInvoice(Invoice invoice)
+        private void ShowPreviewInvoice(Invoice invoice, bool isPreview = true)
         {
             Presentator.WriteLine("\n══════════════════════════════════════════════════════════════════════════");
-            Presentator.WriteLine("                         VISTA PREVIA DE FACTURA");
-            Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
+            if (isPreview == true) Presentator.WriteLine("                         VISTA PREVIA DE FACTURA");
+            else Presentator.WriteLine("                                FACTURA");
+                Presentator.WriteLine("══════════════════════════════════════════════════════════════════════════");
             Presentator.WriteLine($"Fecha: {invoice.Date:dd/MM/yyyy HH:mm} | Número: {invoice.Number} | Tipo: {invoice.Type}");
             Presentator.WriteLine("──────────────────────────────────────────────────────────────────────────");
             Presentator.WriteLine($"Razón Social: {invoice.Client.LegalName}");
