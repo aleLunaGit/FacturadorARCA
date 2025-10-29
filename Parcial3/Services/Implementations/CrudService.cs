@@ -11,16 +11,26 @@ namespace Parcial3.Services.Implementations
     public class CrudService<T> : ICrudService<T> where T : class, new()
     {
         protected readonly IRepository<T> _repository;
-        protected readonly ApplicationDbContext _context;
-        public CrudService(IRepository<T> entity, ApplicationDbContext context)
+        protected readonly IUnitOfWork _unitOfWork;
+        public CrudService(IRepository<T> entity, IUnitOfWork unitOfWork)
         {
             _repository = entity;
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
         public void Delete(int id)
         {
-            _repository.Delete(id);
-            _context.SaveChanges();
+            //using (var unitOfWork = _unitOfWork) Si se borra un cliente y en la misma sesión quiero consultar la lista de clientes da error por cuestiones del Dispose() que veré mañana
+            //{
+                try
+                {
+                    _repository.Delete(id);
+                    _unitOfWork.Save();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Error al eliminar {typeof(T).Name}.");
+                }
+            //}
         }
         public void List()
         {
@@ -30,12 +40,13 @@ namespace Parcial3.Services.Implementations
             {
                 foreach (var property in properties)
                 {
-                if(ShouldSkipPropertie(property, true)) continue;
-                if (property.PropertyType.IsGenericType &&
-                    property.PropertyType.GetGenericTypeDefinition() == typeof(List<>)) { 
+                    if (ShouldSkipPropertie(property, true)) continue;
+                    if (property.PropertyType.IsGenericType &&
+                        property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
+                    {
                         continue;
                     }
-                Presentator.WriteLine($"{property.Name}: {property.GetValue(item)}.");
+                    Presentator.WriteLine($"{property.Name}: {property.GetValue(item)}.");
                 }
             }
         }
@@ -43,13 +54,13 @@ namespace Parcial3.Services.Implementations
         public virtual T SearchWhitIncludes(int id, params Expression<Func<T, object>>[] includes)
         {
             return _repository.GetByIdWithIncludes(id, includes);
-            
+
         }
         public virtual List<PropertyInfo> ListModifyableProperties(T entity)
         {
             if (entity == null) throw new Exception("La entidad no tiene una lista de propiedades");
-            List<PropertyInfo> listProperties = new List<PropertyInfo> ();
-                var propertys= typeof(T).GetProperties();
+            List<PropertyInfo> listProperties = new List<PropertyInfo>();
+            var propertys = typeof(T).GetProperties();
             foreach (var item in propertys)
             {
                 if (ShouldSkipPropertie(item)) continue;
@@ -60,13 +71,20 @@ namespace Parcial3.Services.Implementations
 
         public void Update(T entity, string changeToValue, int inputOption)
         {
-            if(entity == null || changeToValue == null || inputOption == null) return;
+            if (entity == null || changeToValue == null || inputOption == null) return;
             var modifiablePropertys = ListModifyableProperties(entity);
-            var changeProperty =  modifiablePropertys.ElementAt(inputOption - 1);
+            var changeProperty = modifiablePropertys.ElementAt(inputOption - 1);
             var convertedValue = Convert.ChangeType(changeToValue, changeProperty.PropertyType);
             changeProperty.SetValue(entity, convertedValue);
-            _repository.Update(entity);
-            _context.SaveChanges();
+            try
+            {
+                _repository.Update(entity);
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al actualizar {typeof(T).Name}.");
+            }
         }
         public bool ShouldSkipPropertie(PropertyInfo property, bool allowLists = false)
         {

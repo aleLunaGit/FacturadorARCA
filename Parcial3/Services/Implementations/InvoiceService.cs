@@ -11,16 +11,16 @@ namespace Parcial3.Services.Implementations
     {
         private readonly IRepository<Invoice> _invoiceRepository;
         private readonly IRepository<Client> _clientRepository;
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
         public InvoiceService(
             IRepository<Invoice> invoiceRepository,
             IRepository<Client> clientRepository,
-            ApplicationDbContext context)
+            IUnitOfWork unitOfWork)
         {
             _invoiceRepository = invoiceRepository;
             _clientRepository = clientRepository;
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items)
@@ -62,7 +62,7 @@ namespace Parcial3.Services.Implementations
                 throw new InvalidOperationException($"El cliente con ID {draftInvoice.Client.Id} no existe en la base de datos.");
 
             _invoiceRepository.Add(draftInvoice);
-            _context.SaveChanges();
+            _unitOfWork.Save();
         }
         public Invoice SearchWhitIncludes(int id, params Expression<Func<Invoice, object>>[] includes)
         {
