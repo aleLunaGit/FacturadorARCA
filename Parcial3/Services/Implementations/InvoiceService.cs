@@ -97,8 +97,8 @@ namespace Parcial3.Services.Implementations
         public double GetDiscriminatedTotal(Invoice invoice)
         {
             float total = invoice.AmountTotal;
-            double iva = 0.21;
-            double discrimantedTotal = total * (1 + iva);
+            double iva = GetDiscriminatedIva(invoice);
+            double discrimantedTotal = total - iva;
             return discrimantedTotal;
         }
     }

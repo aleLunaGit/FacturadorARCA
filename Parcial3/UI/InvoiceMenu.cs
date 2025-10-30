@@ -339,16 +339,16 @@ namespace Parcial3.Modules
         private void ShowTotalOfTypeA(Invoice invoice)
         {
             double iva = _invoiceService.GetDiscriminatedIva(invoice);
-            double totalFinal = _invoiceService.GetDiscriminatedTotal(invoice);
+            double discriminatedTotal = _invoiceService.GetDiscriminatedTotal(invoice);
 
-            Presentator.WriteLine($"Subtotal: ${invoice.AmountTotal:F2}");
+            Presentator.WriteLine($"Subtotal: ${discriminatedTotal:F2}");
             Presentator.WriteLine($"IVA 21%: ${iva:F2}");
-            Presentator.WriteLine($"Total: ${totalFinal:F2}");
+            Presentator.WriteLine($"Total: ${invoice.AmountTotal:F2}");
         }
 
         private void ShowTotalOfTypeE(Invoice invoice)
         {
-            Presentator.WriteLine($"Total (Exportación): ${invoice.AmountTotal:F2}");
+            Presentator.WriteLine($"Total (Exportación): ${invoice.AmountTotal :F2}");
         }
 
         private void ShowTotalOfTypeB(Invoice invoice)

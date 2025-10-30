@@ -308,7 +308,12 @@ namespace Parcial3.Modules
             try
             {
                 int id = Reader.ReadInt("Ingrese el ID del cliente que desea ELIMINAR");
-
+                Client entity = _clientService.SearchWhitIncludes(id, c => c.Invoices);
+                if (entity.Invoices != null && entity.Invoices.Any())
+                {
+                    Presentator.WriteLine("No se puede eliminar un cliente con facturas asociadas.");
+                    return;
+                }
                 Presentator.WriteLine($"\nEstás a punto de eliminar al cliente con ID {id}");
                 Presentator.WriteLine("Esta acción eliminará todas las facturas asociadas a este cliente");
                 Presentator.WriteLine("Esta acción no se puede deshacer");
