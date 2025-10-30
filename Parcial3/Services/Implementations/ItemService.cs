@@ -15,8 +15,6 @@ namespace Parcial3.Modules.Services
             {
 
             }
-
-            // Crea un item con los datos proporcionados y lo valida
             public Item CreateItem()
             {
                 return new Item();
@@ -32,7 +30,6 @@ namespace Parcial3.Modules.Services
                 return item;
             }
 
-            // Actualiza un item existente con validación
             public void UpdateItemDescription(Item item, string newDescription)
                 => item.Description = newDescription;
 
@@ -43,8 +40,6 @@ namespace Parcial3.Modules.Services
             public void UpdateItemPrice(Item item, float newPrice)
                 => item.Price = newPrice;
 
-
-            // Elimina un item de la lista
             public bool RemoveItem(List<Item> itemsList, int index)
             {
                 if (index < 0 || index >= itemsList.Count)

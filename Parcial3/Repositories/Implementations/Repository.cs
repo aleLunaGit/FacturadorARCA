@@ -19,14 +19,11 @@ namespace Parcial3.Repositories.Implementations
         {
             IQueryable<T> query = _dbSet;
 
-            // Agrega todos los includes a la consulta
             foreach (var include in includes)
             {
                 query = query.Include(include);
             }
 
-            // Busca la entidad por su clave primaria. Usamos una expresión lambda genérica.
-            // Esto es un poco más complejo pero necesario para que funcione con cualquier entidad.
             var parameter = Expression.Parameter(typeof(T), "e");
             var property = Expression.Property(parameter, "Id");
             var equal = Expression.Equal(property, Expression.Constant(id));
@@ -38,14 +35,11 @@ namespace Parcial3.Repositories.Implementations
         {
             IQueryable<T> query = _dbSet;
 
-            // Agrega todos los includes a la consulta
             foreach (var include in includes)
             {
                 query = query.Include(include);
             }
 
-            // Busca la entidad por su clave primaria. Usamos una expresión lambda genérica.
-            // Esto es un poco más complejo pero necesario para que funcione con cualquier entidad.
             var parameter = Expression.Parameter(typeof(T), "e");
             var property = Expression.Property(parameter, propertyName);
             var equal = Expression.Equal(property, Expression.Constant(value));
