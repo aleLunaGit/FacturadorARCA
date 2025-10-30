@@ -19,8 +19,6 @@ namespace Parcial3.Services.Implementations
         }
         public void Delete(int id)
         {
-            using (var unitOfWork = _unitOfWork) // Si se borra un cliente y en la misma sesión quiero consultar la lista de clientes da error por cuestiones del Dispose() que veré mañana
-            {
                 try
                 {
                     _repository.Delete(id);
@@ -30,7 +28,6 @@ namespace Parcial3.Services.Implementations
                 {
                     throw new Exception($"Error al eliminar {typeof(T).Name}.");
                 }
-            }
         }
         public void List()
         {
