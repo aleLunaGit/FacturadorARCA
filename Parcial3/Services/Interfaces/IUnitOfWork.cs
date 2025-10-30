@@ -9,5 +9,6 @@ namespace Parcial3.Services.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         void Save();
+        void Dispose();
     }
 }
