@@ -29,24 +29,6 @@ namespace Parcial3.Services.Implementations
                     throw new Exception($"Error al eliminar {typeof(T).Name}.");
                 }
         }
-        public void List()
-        {
-            List<T> allTheObjects = _repository.GetAll().ToList();
-            var properties = typeof(T).GetProperties().ToList();
-            foreach (T item in allTheObjects)
-            {
-                foreach (var property in properties)
-                {
-                    if (ShouldSkipPropertie(property, true)) continue;
-                    if (property.PropertyType.IsGenericType &&
-                        property.PropertyType.GetGenericTypeDefinition() == typeof(List<>))
-                    {
-                        continue;
-                    }
-                    Presentator.WriteLine($"{property.Name}: {property.GetValue(item)}.");
-                }
-            }
-        }
         public T Search(int id) => _repository.GetByID(id);
         public virtual T SearchWhitIncludes(int id, params Expression<Func<T, object>>[] includes)
         {

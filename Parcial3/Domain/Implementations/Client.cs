@@ -79,10 +79,7 @@ namespace Parcial3.Domain.Implementations
             {
                 throw new ArgumentException("ERROR: El Domicilio no puede estar vacío.");
             }
-            if (value.Trim().Length < 5)
-            {
-                throw new ArgumentException("ERROR: El Domicilio debe tener al menos 5 caracteres.");
-            }
+            
             return value;
         }
     }
