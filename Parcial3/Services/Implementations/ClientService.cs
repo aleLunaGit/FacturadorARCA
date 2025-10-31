@@ -22,17 +22,6 @@ namespace Parcial3.Services.Implementations
             => _repository.GetByProperty(nameof(Client.Address), address, includes);
         public void RegisterNewClient(string cuitCuil, string legalName, string address)
         {
-            var existingClient = FindByCuitCuil(cuitCuil);
-            if (existingClient != null)
-                throw new InvalidOperationException($"Ya existe un cliente registrado con el CUIT/CUIL: {cuitCuil}");
-            existingClient = FindByAddress(address);
-
-            if (existingClient != null)
-                throw new InvalidOperationException($"Ya existe un cliente registrado con el Domicilio: {address}");
-
-            existingClient = FindClientByLegalName(legalName);
-            if (existingClient != null)
-                throw new InvalidOperationException($"Ya existe un cliente registrado con esta Razon Social: {legalName}");
             Client newClient = new Client
             {
                 CuitCuil = cuitCuil,

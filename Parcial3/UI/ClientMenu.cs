@@ -1,10 +1,13 @@
-﻿using Parcial3.Services.Implementations;
-using System.Collections;
-using System.Linq.Expressions;
-using System.Reflection;
-using System;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore.Query;
 using Parcial3.Domain.Implementations;
+using Parcial3.Services.Implementations;
+using System;
+using System.Collections;
+using System.Diagnostics.Metrics;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Reflection;
 
 namespace Parcial3.Modules
 {
@@ -106,14 +109,10 @@ namespace Parcial3.Modules
 
             try
             {
-                Client newClient = new Client();
-
-                string cuit = Reader.ReadString("Ingrese su Cuit - Cuil");
-                string cleanCuit = newClient.ValidateCuitCuil(cuit);
-                string legalName = ReadAndValidateField(newClient.ValidateLegalName, "Ingresa la Razón Social");
-                string address = ReadAndValidateField(newClient.ValidateAddress, "Ingrese su Domicilio");
-
-                _clientService.RegisterNewClient(cleanCuit, legalName, address);
+                string cuit = ValidateCuit();
+                string legalName = ValidateLegalName();
+                string address = ValidateAddress();
+                _clientService.RegisterNewClient(cuit, legalName, address);
                 Presentator.WriteLine("\n¡Cliente registrado exitosamente!");
             }
             catch (OperationCanceledException)
@@ -125,7 +124,51 @@ namespace Parcial3.Modules
                 Presentator.WriteLine($"\nError al registrar cliente: {ex.Message}");
             }
         }
-
+        public string ValidateAddress()
+        {
+            while (true)
+            {
+                Client exist = new Client();
+                string address = "";
+                do
+                {
+                    string inputAddress = Reader.ReadString("Ingrese el Domicilio");
+                    string readAddress = exist.ValidateAddress(inputAddress);
+                    if (readAddress == null || readAddress.Length >= 5)
+                    {
+                        address = readAddress;
+                        break;
+                    }
+                    else Presentator.WriteLine("El cliente debe tener al menos 5 caracteres");
+                } while (true);
+                exist = _clientService.FindByAddress(address);
+                if (exist == null) { return address; }
+                else { Presentator.WriteLine("Se encontro un usuario con ese Domicilio"); }
+            }
+        }
+        public string ValidateLegalName()
+        {
+            while (true)
+            {
+                Client exist = new Client();
+                string legalName = exist.ValidateLegalName(Reader.ReadString("Ingrese la Razon Social"));
+                exist = _clientService.FindClientByLegalName(legalName);
+                if (exist == null) { return legalName; }
+                else { Presentator.WriteLine("Se encontro un usuario con esa Razon Social"); }
+            }
+        }
+        public string ValidateCuit()
+        {
+                while (true)
+                {
+                    Client exist = new Client();
+                        string cuit = Reader.ReadString("Ingrese su Cuit - Cuil");
+                        string cleanCuit = exist.ValidateCuitCuil(cuit);
+                    exist = _clientService.FindByCuitCuil(cleanCuit);
+                if (exist == null) return cleanCuit;
+                else { Presentator.WriteLine("Se encontro un usuario con ese Cuit / Cuil"); }
+            } 
+        }
         public void HandleUpdateClient()
         {
             Presentator.Clear();

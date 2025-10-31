@@ -22,7 +22,7 @@ namespace Parcial3.Services.Implementations
 
         public void Dispose()
         {
-            //_context.Dispose(); Cuando escalemos el proyecto usarémos el dispose para contenedores DI automaticos
+            //_context.Dispose(); //Cuando escalemos el proyecto usarémos el dispose para contenedores DI automaticos
             //GC.SuppressFinalize(this); aún no entendí bien para qué sirve esto, mañana veré
         }
     }
