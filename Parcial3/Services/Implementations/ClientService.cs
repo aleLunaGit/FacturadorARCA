@@ -41,5 +41,30 @@ namespace Parcial3.Services.Implementations
 
         }
 
+        public void Update(Client entity, string changeToValue, int inputOption)
+        {
+            if (entity == null || changeToValue == null || inputOption == null) return;
+            var modifiablePropertys = ListModifyableProperties(entity);
+            foreach (var prop in modifiablePropertys)
+            {
+                Client entityFound = _repository.GetByProperty(prop.Name, changeToValue);
+                if (entityFound != null)
+                {
+                    throw new Exception("Entidad encontrada con ese valor");
+                }
+            }
+            var changeProperty = modifiablePropertys.ElementAt(inputOption - 1);
+            var convertedValue = Convert.ChangeType(changeToValue, changeProperty.PropertyType);
+            changeProperty.SetValue(entity, convertedValue);
+            try
+            {
+                _repository.Update(entity);
+                _unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al actualizar cliente.");
+            }
+        }
     }
 }
