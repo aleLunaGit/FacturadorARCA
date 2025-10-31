@@ -14,5 +14,6 @@ namespace Parcial3.Services.Interfaces
         Client FindByCuitCuil(string cuitCuil, params Expression<Func<Client, object>>[] includes);
         Client FindByAddress(string address, params Expression<Func<Client, object>>[] includes);
         void RegisterNewClient(string legalName, string address, string cuitCuil);
+        public void Update(Client entity, string changeToValue, int inputOption);
     }
 }
