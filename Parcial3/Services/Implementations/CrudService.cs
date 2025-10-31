@@ -66,32 +66,6 @@ namespace Parcial3.Services.Implementations
             return listProperties;
         }
 
-        //public void Update(T entity, string changeToValue, int inputOption)
-        //{
-        //    if (entity == null || changeToValue == null || inputOption == null) return;
-        //    var modifiablePropertys = ListModifyableProperties(entity);
-        //    foreach (var prop in modifiablePropertys)
-        //    {
-        //        T entityFound = _repository.GetByProperty(prop.Name, changeToValue);
-        //        if (entityFound != null)
-        //        {
-        //            throw new Exception("Entidad encontrada con ese valor");
-        //        }
-        //    }
-        //    var changeProperty = modifiablePropertys.ElementAt(inputOption - 1);
-        //    var convertedValue = Convert.ChangeType(changeToValue, changeProperty.PropertyType);
-        //    changeProperty.SetValue(entity, convertedValue);
-        //    try
-        //    {
-        //        _repository.Update(entity);
-        //        _unitOfWork.Save();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception($"Error al actualizar {typeof(T).Name}.");
-        //    }
-        //}
-
         public bool ShouldSkipPropertie(PropertyInfo property, bool allowLists = false)
         {
             if (property.Name == "Id") return true;
