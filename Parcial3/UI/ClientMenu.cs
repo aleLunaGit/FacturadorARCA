@@ -134,7 +134,7 @@ namespace Parcial3.Modules
                 {
                     string inputAddress = Reader.ReadString("Ingrese el Domicilio");
                     string readAddress = exist.ValidateAddress(inputAddress);
-                    if (readAddress != null || readAddress.Length >= 5)
+                    if (readAddress == null || readAddress.Length >= 5)
                     {
                         address = readAddress;
                         break;
