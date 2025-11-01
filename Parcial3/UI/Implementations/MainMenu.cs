@@ -1,6 +1,8 @@
-﻿namespace Parcial3.Modules
+﻿using Parcial3.Modules;
+
+namespace Parcial3.UI.Implementations
 {
-    public class MainMenu
+    public class MainMenu : IMainMenu
     {
         private readonly ClientMenu _clientMenu;
         private readonly InvoiceMenu _invoiceMenu;

@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Parcial3.Services.Implementations
 {
-    public class InvoiceService : IInvoiceService
+    public class InvoiceService : IInvoiceService, IInvoiceService
     {
         private readonly IRepository<Invoice> _invoiceRepository;
         private readonly IRepository<Client> _clientRepository;
@@ -25,13 +25,14 @@ namespace Parcial3.Services.Implementations
 
         public Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items)
         {
-            
+
             Client client = _clientRepository.GetByID(clientId);
 
             if (client == null)
                 throw new InvalidOperationException($"Cliente no encontrado con el ID: {clientId}");
 
-            Invoice draftInvoice = new Invoice {
+            Invoice draftInvoice = new Invoice
+            {
                 Client = client,
                 Items = items
             };

@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace Parcial3.Services.Implementations
 {
-    public class ClientService : CrudService<Client>, IClientService
+    public class ClientService : CrudService<Client>, IClientService, IClientService
     {
         private readonly IUnitOfWork _unitOfWork;
         public ClientService(IRepository<Client> entity, IUnitOfWork unitOfWork) : base(entity, unitOfWork)

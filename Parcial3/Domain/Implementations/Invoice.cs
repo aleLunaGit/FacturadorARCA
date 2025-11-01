@@ -3,6 +3,7 @@ using Parcial3.Modules;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
+using Parcial3.UI.Implementations;
 
 namespace Parcial3.Domain.Implementations
 {

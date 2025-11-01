@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using Parcial3.Domain.Implementations;
+using Parcial3.Modules;
 
-namespace Parcial3.Modules
+namespace Parcial3.UI.Implementations
 {
-    public class InvoiceMenu
+    public class InvoiceMenu : IInvoiceMenu
     {
         private readonly InvoiceService _invoiceService;
         private readonly ClientMenu _clientMenu;
@@ -348,7 +349,7 @@ namespace Parcial3.Modules
 
         private void ShowTotalOfTypeE(Invoice invoice)
         {
-            Presentator.WriteLine($"Total (Exportación): ${invoice.AmountTotal :F2}");
+            Presentator.WriteLine($"Total (Exportación): ${invoice.AmountTotal:F2}");
         }
 
         private void ShowTotalOfTypeB(Invoice invoice)

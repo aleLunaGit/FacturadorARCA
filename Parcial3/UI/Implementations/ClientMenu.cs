@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using Parcial3.Domain.Implementations;
+using Parcial3.Modules;
 using Parcial3.Services.Implementations;
 using System;
 using System.Collections;
@@ -9,9 +10,9 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 
-namespace Parcial3.Modules
+namespace Parcial3.UI.Implementations
 {
-    public class ClientMenu
+    public class ClientMenu : IClientMenu
     {
         private readonly ClientService _clientService;
 
@@ -159,15 +160,15 @@ namespace Parcial3.Modules
         }
         public string ValidateCuit()
         {
-                while (true)
-                {
-                    Client exist = new Client();
-                        string cuit = Reader.ReadString("Ingrese su Cuit - Cuil");
-                        string cleanCuit = exist.ValidateCuitCuil(cuit);
-                    exist = _clientService.FindByCuitCuil(cleanCuit);
+            while (true)
+            {
+                Client exist = new Client();
+                string cuit = Reader.ReadString("Ingrese su Cuit - Cuil");
+                string cleanCuit = exist.ValidateCuitCuil(cuit);
+                exist = _clientService.FindByCuitCuil(cleanCuit);
                 if (exist == null) return cleanCuit;
                 else { Presentator.WriteLine("Se encontro un usuario con ese Cuit / Cuil"); }
-            } 
+            }
         }
         public void HandleUpdateClient()
         {
