@@ -8,7 +8,6 @@ namespace Parcial3.Repositories.Implementations
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly DbSet<T> _dbSet;
-public Repository(ApplicationDbContext context){
 
         public Repository(ApplicationDbContext context)
         {
