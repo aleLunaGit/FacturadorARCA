@@ -1,10 +1,10 @@
-﻿using Parcial3.Services.Implementations;
+﻿using Parcial3.Services.Interfaces;
 
 namespace Parcial3.UI.Interfaces
 {
     public interface IClientMenu
     {
-        ClientService GetClientService();
+        IClientService GetClientService();
         void HandleDeleteClient();
         void HandleListClients();
         void HandleRegisterClient();

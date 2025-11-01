@@ -7,5 +7,6 @@ namespace Parcial3.Services.Interfaces
         void UpdateItemDescription(Item item, string newDescription);
         void UpdateItemPrice(Item item, float newPrice);
         void UpdateItemQuantity(Item item, float newQuantity);
+        bool RemoveItem(List<Item> itemsList, int index);
     }
 }

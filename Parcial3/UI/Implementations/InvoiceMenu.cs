@@ -1,7 +1,4 @@
-﻿
-using Parcial3.Services.Implementations;
-
-using Parcial3.Domain.Implementations;
+﻿using Parcial3.Domain.Implementations;
 using Parcial3.Modules;
 using Parcial3.UI.Interfaces;
 using Parcial3.Services.Interfaces;

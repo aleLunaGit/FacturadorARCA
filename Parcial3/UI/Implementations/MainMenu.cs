@@ -5,10 +5,10 @@ namespace Parcial3.UI.Implementations
 {
     public class MainMenu : IMainMenu
     {
-        private readonly ClientMenu _clientMenu;
-        private readonly InvoiceMenu _invoiceMenu;
+        private readonly IClientMenu _clientMenu;
+        private readonly IInvoiceMenu _invoiceMenu;
 
-        public MainMenu(ClientMenu clientMenu, InvoiceMenu invoiceMenu)
+        public MainMenu(IClientMenu clientMenu, IInvoiceMenu invoiceMenu)
         {
             _clientMenu = clientMenu;
             _invoiceMenu = invoiceMenu;

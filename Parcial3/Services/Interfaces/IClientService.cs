@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Parcial3.Services.Interfaces
 {
-    public interface IClientService
+    public interface IClientService : ICrudService<Client>
     {
         Client FindByAddress(string address, params Expression<Func<Client, object>>[] includes);
         Client FindByCuitCuil(string cuitCuil, params Expression<Func<Client, object>>[] includes);
