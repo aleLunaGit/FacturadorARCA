@@ -1,25 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
-using Parcial3.Domain.Implementations;
-using Parcial3.Services.Implementations;
-using System;
+﻿using Parcial3.Domain.Implementations;
+using Parcial3.Modules;
+using Parcial3.Services.Interfaces;
+using Parcial3.UI.Interfaces;
 using System.Collections;
-using System.Diagnostics.Metrics;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 
-namespace Parcial3.Modules
+namespace Parcial3.UI.Implementations
 {
-    public class ClientMenu
+    public class ClientMenu : IClientMenu
     {
-        private readonly ClientService _clientService;
+        private readonly IClientService _clientService;
 
-        public ClientMenu(ClientService clientService)
+        public ClientMenu(IClientService clientService)
         {
             _clientService = clientService;
         }
-        public ClientService GetClientService() => _clientService;
+        public IClientService GetClientService() => _clientService;
 
         public void Run()
         {
@@ -159,15 +156,15 @@ namespace Parcial3.Modules
         }
         public string ValidateCuit()
         {
-                while (true)
-                {
-                    Client exist = new Client();
-                        string cuit = Reader.ReadString("Ingrese su Cuit - Cuil");
-                        string cleanCuit = exist.ValidateCuitCuil(cuit);
-                    exist = _clientService.FindByCuitCuil(cleanCuit);
+            while (true)
+            {
+                Client exist = new Client();
+                string cuit = Reader.ReadString("Ingrese su Cuit - Cuil");
+                string cleanCuit = exist.ValidateCuitCuil(cuit);
+                exist = _clientService.FindByCuitCuil(cleanCuit);
                 if (exist == null) return cleanCuit;
                 else { Presentator.WriteLine("Se encontro un usuario con ese Cuit / Cuil"); }
-            } 
+            }
         }
         public void HandleUpdateClient()
         {

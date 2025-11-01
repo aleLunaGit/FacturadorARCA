@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Parcial3.Repositories.Interfaces;
+using Parcial3.Services.Interfaces;
 using System.Linq.Expressions;
 
 namespace Parcial3.Repositories.Implementations
@@ -8,12 +9,14 @@ namespace Parcial3.Repositories.Implementations
     {
         private readonly DbSet<T> _dbSet;
 
-        public Repository(ApplicationDbContext context){
+        public Repository(ApplicationDbContext context)
+        {
             _dbSet = context.Set<T>();
-            }
-        public T GetByID(int Id) { 
-            
-            return _dbSet.Find(Id); 
+        }
+        public T GetByID(int Id)
+        {
+
+            return _dbSet.Find(Id);
         }
         public T GetByIdWithIncludes(int id, params Expression<Func<T, object>>[] includes)
         {
@@ -31,7 +34,7 @@ namespace Parcial3.Repositories.Implementations
 
             return query.FirstOrDefault(lambda);
         }
-        public T GetByProperty(string propertyName,string value, params Expression<Func<T, object>>[] includes)
+        public T GetByProperty(string propertyName, string value, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbSet;
 

@@ -1,6 +1,5 @@
 ﻿using Parcial3.Domain.Implementations;
 using Parcial3.Domain.Interfaces;
-using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
 using System.Linq.Expressions;
@@ -25,13 +24,14 @@ namespace Parcial3.Services.Implementations
 
         public Invoice DraftInvoice(int clientId, string invoiceType, List<Item> items)
         {
-            
+
             Client client = _clientRepository.GetByID(clientId);
 
             if (client == null)
                 throw new InvalidOperationException($"Cliente no encontrado con el ID: {clientId}");
 
-            Invoice draftInvoice = new Invoice {
+            Invoice draftInvoice = new Invoice
+            {
                 Client = client,
                 Items = items
             };

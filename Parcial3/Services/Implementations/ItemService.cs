@@ -1,5 +1,4 @@
 ﻿using Parcial3.Domain.Implementations;
-using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Implementations;
 using Parcial3.Services.Interfaces;
@@ -19,7 +18,7 @@ namespace Parcial3.Modules.Services
             {
                 return new Item();
             }
-            public Item  CreateItem(string description, float quantity, float price)
+            public Item CreateItem(string description, float quantity, float price)
             {
                 var item = new Item
                 {
@@ -50,5 +49,5 @@ namespace Parcial3.Modules.Services
                 return true;
             }
         }
-        }
+    }
     }
