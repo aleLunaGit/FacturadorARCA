@@ -1,4 +1,4 @@
-﻿namespace Parcial3.UI.Implementations
+﻿namespace Parcial3.UI.Interfaces
 {
     public interface IMainMenu
     {

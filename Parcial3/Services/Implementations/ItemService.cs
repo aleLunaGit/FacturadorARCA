@@ -1,5 +1,4 @@
 ﻿using Parcial3.Domain.Implementations;
-using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Implementations;
 using Parcial3.Services.Interfaces;
@@ -15,11 +14,19 @@ namespace Parcial3.Modules.Services
             {
 
             }
-
-            // Crea un item con los datos proporcionados y lo valida
             public Item CreateItem()
             {
                 return new Item();
+            }
+            public Item CreateItem(string description, float quantity, float price)
+            {
+                var item = new Item
+                {
+                    Description = description,
+                    Quantity = quantity,
+                    Price = price
+                };
+                return item;
             }
 
             public void UpdateItemDescription(Item item, string newDescription)

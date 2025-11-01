@@ -1,6 +1,6 @@
 ﻿using Parcial3.Services.Implementations;
 
-namespace Parcial3.UI.Implementations
+namespace Parcial3.UI.Interfaces
 {
     public interface IClientMenu
     {

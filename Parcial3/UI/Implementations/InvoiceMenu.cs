@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Parcial3.Domain.Implementations;
 using Parcial3.Modules;
+using Parcial3.UI.Interfaces;
 
 namespace Parcial3.UI.Implementations
 {

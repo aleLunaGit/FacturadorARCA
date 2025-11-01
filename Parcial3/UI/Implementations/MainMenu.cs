@@ -1,4 +1,5 @@
 ﻿using Parcial3.Modules;
+using Parcial3.UI.Interfaces;
 
 namespace Parcial3.UI.Implementations
 {

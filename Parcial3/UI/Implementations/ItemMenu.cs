@@ -3,6 +3,7 @@ using Parcial3.Domain.Implementations;
 using System;
 using System.Collections.Generic;
 using Parcial3.Modules;
+using Parcial3.UI.Interfaces;
 
 namespace Parcial3.UI.Implementations
 {

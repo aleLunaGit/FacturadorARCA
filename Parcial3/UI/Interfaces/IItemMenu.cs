@@ -1,6 +1,6 @@
 ﻿using Parcial3.Domain.Implementations;
 
-namespace Parcial3.UI.Implementations
+namespace Parcial3.UI.Interfaces
 {
     public interface IItemMenu
     {

@@ -1,13 +1,12 @@
 ﻿using Parcial3.Domain.Implementations;
 using Parcial3.Domain.Interfaces;
-using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
 using System.Linq.Expressions;
 
 namespace Parcial3.Services.Implementations
 {
-    public class InvoiceService : IInvoiceService, IInvoiceService
+    public class InvoiceService : IInvoiceService
     {
         private readonly IRepository<Invoice> _invoiceRepository;
         private readonly IRepository<Client> _clientRepository;
