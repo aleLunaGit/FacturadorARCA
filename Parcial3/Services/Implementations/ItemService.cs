@@ -15,27 +15,12 @@ namespace Parcial3.Modules.Services
             {
 
             }
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
+            // Crea un item con los datos proporcionados y lo valida
             public Item CreateItem()
             {
                 return new Item();
             }
-<<<<<<< Updated upstream
-            public Item CreateItem(string description, float quantity, float price)
-            {
-                var item = new Item
-                {
-                    Description = description,
-                    Quantity = quantity,
-                    Price = price
-                };
-                return item;
-            }
-=======
->>>>>>> Stashed changes
 
             public void UpdateItemDescription(Item item, string newDescription)
                 => item.Description = newDescription;

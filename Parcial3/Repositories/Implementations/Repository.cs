@@ -8,13 +8,10 @@ namespace Parcial3.Repositories.Implementations
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly DbSet<T> _dbSet;
-<<<<<<< Updated upstream
+public Repository(ApplicationDbContext context){
 
         public Repository(ApplicationDbContext context)
         {
-=======
-public Repository(ApplicationDbContext context){
->>>>>>> Stashed changes
             _dbSet = context.Set<T>();
         }
         public T GetByID(int Id)
