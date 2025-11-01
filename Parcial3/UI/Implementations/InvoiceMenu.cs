@@ -1,21 +1,20 @@
-﻿using Parcial3.Modules.Services.Parcial3.Modules.Services;
+﻿
 using Parcial3.Services.Implementations;
-using System.Collections.Generic;
-using System;
-using System.Linq;
+
 using Parcial3.Domain.Implementations;
 using Parcial3.Modules;
 using Parcial3.UI.Interfaces;
+using Parcial3.Services.Interfaces;
 
 namespace Parcial3.UI.Implementations
 {
     public class InvoiceMenu : IInvoiceMenu
     {
-        private readonly InvoiceService _invoiceService;
-        private readonly ClientMenu _clientMenu;
-        private readonly ItemMenu _itemMenu;
+        private readonly IInvoiceService _invoiceService;
+        private readonly IClientMenu _clientMenu;
+        private readonly IItemMenu _itemMenu;
 
-        public InvoiceMenu(InvoiceService invoiceService, ClientMenu clientMenu, ItemMenu itemMenu)
+        public InvoiceMenu(IInvoiceService invoiceService, IClientMenu clientMenu, IItemMenu itemMenu)
         {
             _invoiceService = invoiceService;
             _clientMenu = clientMenu;

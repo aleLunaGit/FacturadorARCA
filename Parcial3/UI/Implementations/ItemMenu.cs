@@ -1,17 +1,15 @@
-﻿using Parcial3.Modules.Services.Parcial3.Modules.Services;
-using Parcial3.Domain.Implementations;
-using System;
-using System.Collections.Generic;
+﻿using Parcial3.Domain.Implementations;
 using Parcial3.Modules;
 using Parcial3.UI.Interfaces;
+using Parcial3.Services.Interfaces;
 
 namespace Parcial3.UI.Implementations
 {
     public class ItemMenu : IItemMenu
     {
-        private readonly ItemService _itemService;
+        private readonly IItemService _itemService;
 
-        public ItemMenu(ItemService itemService)
+        public ItemMenu(IItemService itemService)
         {
             _itemService = itemService;
         }

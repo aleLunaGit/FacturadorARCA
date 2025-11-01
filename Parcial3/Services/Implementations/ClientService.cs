@@ -1,5 +1,4 @@
 ﻿using Parcial3.Domain.Implementations;
-using Parcial3.Repositories.Implementations;
 using Parcial3.Repositories.Interfaces;
 using Parcial3.Services.Interfaces;
 using System.Linq.Expressions;
@@ -7,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Parcial3.Services.Implementations
 {
-    public class ClientService : CrudService<Client>, IClientService, IClientService
+    public class ClientService : CrudService<Client>, IClientService
     {
         private readonly IUnitOfWork _unitOfWork;
         public ClientService(IRepository<Client> entity, IUnitOfWork unitOfWork) : base(entity, unitOfWork)

@@ -1,27 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore.Query;
-using Parcial3.Domain.Implementations;
+﻿using Parcial3.Domain.Implementations;
 using Parcial3.Modules;
-using Parcial3.Services.Implementations;
+using Parcial3.Services.Interfaces;
 using Parcial3.UI.Interfaces;
-using System;
 using System.Collections;
-using System.Diagnostics.Metrics;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 
 namespace Parcial3.UI.Implementations
 {
     public class ClientMenu : IClientMenu
     {
-        private readonly ClientService _clientService;
+        private readonly IClientService _clientService;
 
-        public ClientMenu(ClientService clientService)
+        public ClientMenu(IClientService clientService)
         {
             _clientService = clientService;
         }
-        public ClientService GetClientService() => _clientService;
+        public IClientService GetClientService() => _clientService;
 
         public void Run()
         {
