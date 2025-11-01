@@ -7,4 +7,4 @@ Este `README.md` describe la estructura de un sistema de gestión de facturació
 El sistema está estructurado alrededor de varias entidades y sus interacciones, utilizando interfaces para definir contratos y herencia para reutilizar comportamiento.
 
 
-<img width="1080" height="570" alt="UMLFacturadorV2" src="https://github.com/user-attachments/assets/5374ee29-00bc-4b8c-bcb7-bf2a501ec65e" />
+<img width="8569" height="1876" alt="UMLFacturadorV1" src="https://github.com/user-attachments/assets/33725273-4c97-4696-936d-95d812b4b47d" />
