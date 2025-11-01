@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Parcial3.Repositories.Interfaces;
+using Parcial3.Services.Interfaces;
 using System.Linq.Expressions;
 
 namespace Parcial3.Repositories.Implementations
@@ -7,9 +8,13 @@ namespace Parcial3.Repositories.Implementations
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly DbSet<T> _dbSet;
+<<<<<<< Updated upstream
 
         public Repository(ApplicationDbContext context)
         {
+=======
+public Repository(ApplicationDbContext context){
+>>>>>>> Stashed changes
             _dbSet = context.Set<T>();
         }
         public T GetByID(int Id)

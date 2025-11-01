@@ -3,8 +3,8 @@ using Parcial3.Repositories.Implementations;
 using Parcial3.Modules.Services.Parcial3.Modules.Services;
 using Parcial3.Services.Implementations;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Parcial3.Modules;
 using Parcial3.Services.Interfaces;
+using Parcial3.UI.Implementations;
 namespace Parcial3
 {
     internal class Program
@@ -13,6 +13,7 @@ namespace Parcial3
         {
             // CONFIGURACIÓN 
             var context = new ApplicationDbContext();
+
             // UnitOfWork gestiona DbContext para el manejo de recursos
             var unitOfWork = new UnitOfWork(context);
 

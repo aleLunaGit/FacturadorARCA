@@ -15,10 +15,15 @@ namespace Parcial3.Modules.Services
             {
 
             }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             public Item CreateItem()
             {
                 return new Item();
             }
+<<<<<<< Updated upstream
             public Item CreateItem(string description, float quantity, float price)
             {
                 var item = new Item
@@ -29,6 +34,8 @@ namespace Parcial3.Modules.Services
                 };
                 return item;
             }
+=======
+>>>>>>> Stashed changes
 
             public void UpdateItemDescription(Item item, string newDescription)
                 => item.Description = newDescription;

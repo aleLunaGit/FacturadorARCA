@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Parcial3.UI.Interfaces;
+using System;
 using System.Threading;
 
 namespace Parcial3.UI.Implementations
 {
-    public static class Presentator : IPresentator
+    public static class Presentator
     {
         public static void Clear()
         {
