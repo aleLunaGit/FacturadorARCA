@@ -34,7 +34,7 @@ namespace Parcial3.Repositories.Implementations
 
             return query.FirstOrDefault(lambda);
         }
-        public T GetByProperty(string propertyName, string value, params Expression<Func<T, object>>[] includes)
+        public IEnumerable<T> Find(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _dbSet;
 
@@ -43,12 +43,7 @@ namespace Parcial3.Repositories.Implementations
                 query = query.Include(include);
             }
 
-            var parameter = Expression.Parameter(typeof(T), "e");
-            var property = Expression.Property(parameter, propertyName);
-            var equal = Expression.Equal(property, Expression.Constant(value));
-            var lambda = Expression.Lambda<Func<T, bool>>(equal, parameter);
-
-            return query.FirstOrDefault(lambda);
+            return query.Where(predicate).ToList();
         }
 
         public IEnumerable<T> GetAll() => _dbSet.ToList();

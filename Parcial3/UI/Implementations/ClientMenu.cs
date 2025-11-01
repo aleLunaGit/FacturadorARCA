@@ -213,7 +213,6 @@ namespace Parcial3.UI.Implementations
                 count++;
             }
         }
-
         public void HandleSearchClientByLegalName()
         {
             Presentator.Clear();
@@ -222,16 +221,42 @@ namespace Parcial3.UI.Implementations
 
             try
             {
-                string clientName = Reader.ReadString("Ingrese la Razón Social del Cliente");
-                Client client = _clientService.FindClientByLegalName(clientName, c => c.Invoices);
-
-                if (client == null)
+                string clientName = Reader.ReadString("Ingrese la Razón Social (o parte) del Cliente");
+                var clients = _clientService.FindClientsByLegalName(clientName, c => c.Invoices).ToList();
+                if (clients.Count == 0)
                 {
-                    Presentator.WriteLine($"Error: No se encontró ningún cliente con el nombre '{clientName}'.");
+                    Presentator.WriteLine($"\nNo se encontró ningún cliente que contenga '{clientName}'.");
                     return;
                 }
 
-                ShowClient(client);
+                if (clients.Count == 1)
+                {
+                    Presentator.WriteLine("\n¡Se encontró un único cliente! Mostrando detalles:");
+                    ShowClient(clients.First());
+                }
+                else
+                {
+                    Presentator.WriteLine($"\nSe encontraron {clients.Count} clientes:");
+                    foreach (var client in clients)
+                    {
+                        Presentator.WriteLine($"  - ID: {client.Id} | Nombre: {client.LegalName} | CUIT: {client.CuitCuil}");
+                    }
+                    Presentator.WriteLine("\n"); 
+                    int idToView = Reader.ReadInt("Ingrese el ID del cliente para ver detalles (o 'Escape' para volver)");
+
+                    var selectedClient = clients.FirstOrDefault(c => c.Id == idToView);
+
+                    if (selectedClient != null)
+                    {
+                        Presentator.Clear();
+                        Presentator.WriteLine($"--- Detalles del Cliente ID: {selectedClient.Id} ---");
+                        ShowClient(selectedClient);
+                    }
+                    else
+                    {
+                        Presentator.WriteLine($"\nEl ID {idToView} no corresponde a ninguno de los clientes encontrados.");
+                    }
+                }
             }
             catch (OperationCanceledException)
             {

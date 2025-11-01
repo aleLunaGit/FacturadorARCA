@@ -10,5 +10,6 @@ namespace Parcial3.Services.Interfaces
         Client FindClientByLegalName(string legalName, params Expression<Func<Client, object>>[] includes);
         void RegisterNewClient(string cuitCuil, string legalName, string address);
         void Update(Client entity, string changeToValue, int inputOption);
+        IEnumerable<Client> FindClientsByLegalName(string partialName, params Expression<Func<Client, object>>[] includes);
     }
 }

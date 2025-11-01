@@ -14,11 +14,11 @@ namespace Parcial3.Services.Implementations
             _unitOfWork = unitOfWork;
         }
         public virtual Client FindClientByLegalName(string legalName, params Expression<Func<Client, object>>[] includes)
-            => _repository.GetByProperty(nameof(Client.LegalName), legalName, includes);
+            => _repository.Find(c => c.LegalName.Equals(legalName), includes).FirstOrDefault();
         public Client FindByCuitCuil(string cuitCuil, params Expression<Func<Client, object>>[] includes)
-            => _repository.GetByProperty(nameof(Client.CuitCuil), cuitCuil, includes);
+            => _repository.Find(c => c.CuitCuil.Equals(cuitCuil), includes).FirstOrDefault();
         public Client FindByAddress(string address, params Expression<Func<Client, object>>[] includes)
-            => _repository.GetByProperty(nameof(Client.Address), address, includes);
+            => _repository.Find(c => c.Address.Equals(address), includes).FirstOrDefault();
         public void RegisterNewClient(string cuitCuil, string legalName, string address)
         {
             Client newClient = new Client
@@ -38,6 +38,13 @@ namespace Parcial3.Services.Implementations
                 throw new InvalidOperationException("Falló el registro del cliente.");
             }
 
+        }
+        public IEnumerable<Client> FindClientsByLegalName(string partialName, params Expression<Func<Client, object>>[] includes)
+        {
+            return _repository.Find(
+                client => client.LegalName.Contains(partialName),
+                includes
+            );
         }
 
         public void Update(Client entity, string changeToValue, int inputOption)
