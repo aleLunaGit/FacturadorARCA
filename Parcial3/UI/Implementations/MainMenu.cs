@@ -1,14 +1,13 @@
 ﻿using Parcial3.Modules;
-using Parcial3.UI.Interfaces;
 
 namespace Parcial3.UI.Implementations
 {
-    public class MainMenu : IMainMenu
+    public class MainMenu
     {
-        private readonly IClientMenu _clientMenu;
-        private readonly IInvoiceMenu _invoiceMenu;
+        private readonly ClientMenu _clientMenu;
+        private readonly InvoiceMenu _invoiceMenu;
 
-        public MainMenu(IClientMenu clientMenu, IInvoiceMenu invoiceMenu)
+        public MainMenu(ClientMenu clientMenu, InvoiceMenu invoiceMenu)
         {
             _clientMenu = clientMenu;
             _invoiceMenu = invoiceMenu;

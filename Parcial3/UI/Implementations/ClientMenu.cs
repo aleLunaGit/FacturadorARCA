@@ -1,14 +1,13 @@
 ﻿using Parcial3.Domain.Implementations;
 using Parcial3.Modules;
 using Parcial3.Services.Interfaces;
-using Parcial3.UI.Interfaces;
 using System.Collections;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Parcial3.UI.Implementations
 {
-    public class ClientMenu : IClientMenu
+    public class ClientMenu
     {
         private readonly IClientService _clientService;
 

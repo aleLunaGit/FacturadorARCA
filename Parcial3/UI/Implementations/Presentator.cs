@@ -1,8 +1,4 @@
-﻿using Parcial3.UI.Interfaces;
-using System;
-using System.Threading;
-
-namespace Parcial3.UI.Implementations
+﻿namespace Parcial3.UI.Implementations
 {
     public static class Presentator
     {
